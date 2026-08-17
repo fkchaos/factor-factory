@@ -1,0 +1,9 @@
+# Tushare token 配置文件（复制为 tushare.yaml 并填入真实 token；该文件已被 .gitignore 忽略）
+# 也可直接用环境变量 TUSHARE_TOKEN（推荐，更安全）。详见 docs/SOP_TUSHARE_TOKEN.md。
+token: "YOUR_TOKEN_HERE"
+# 可选覆盖项（与 TushareProvider 构造参数一致）：
+# cache_dir: ".cache/tushare"
+# universe: "L"          # L=全A上市列表；hs300=沪深300成分（需更高积分）
+# index_code: "000300.SH"
+# calls_per_min: 50
+# retry: 3

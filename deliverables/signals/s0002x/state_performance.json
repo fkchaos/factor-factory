@@ -1,0 +1,66 @@
+{
+  "window": 20,
+  "threshold": 0.0,
+  "exec_lag": 1,
+  "n": 2815,
+  "raw_mean": 0.0011551196255181152,
+  "raw_std": 0.010140424407139746,
+  "states": {
+    "state_1": {
+      "count": 1911,
+      "mean_ret_contemp": 0.0015046251544719844,
+      "sharpe_contemp": 1.630323638007476,
+      "win_rate_contemp": 0.5688121402407117,
+      "fwd_ret_1d": 0.0009564939804060112,
+      "fwd_win_1d": 0.5544502617801047,
+      "fwd_ret_5d": 0.0010459017017670133,
+      "fwd_win_5d": 0.5545645330535152,
+      "fwd_ret_20d": 0.0006715659206613084,
+      "fwd_win_20d": 0.5419525065963061
+    },
+    "state_0": {
+      "count": 904,
+      "mean_ret_contemp": -0.0008064519616107519,
+      "sharpe_contemp": -0.7862696391164505,
+      "win_rate_contemp": 0.48451327433628316,
+      "fwd_ret_1d": 0.0003373715858860876,
+      "fwd_win_1d": 0.5143805309734514,
+      "fwd_ret_5d": 0.00018098925159695445,
+      "fwd_win_5d": 0.5154867256637168,
+      "fwd_ret_20d": 0.0009446326662209718,
+      "fwd_win_20d": 0.5422222222222223
+    }
+  },
+  "direction_hit": {
+    "risk_on_days": 1911,
+    "risk_on_fwd1_up_rate": 0.5544502617801047,
+    "risk_off_fwd1_up_rate": 0.5143805309734514,
+    "hit_spread": 0.040069730806653325,
+    "state_fwd_corr": 0.018986499848415835
+  },
+  "overlay": {
+    "baseline_sharpe": 0.7947728800458255,
+    "baseline_max_dd": -0.4549309588562468,
+    "baseline_ann_ret": 0.1921382367384583,
+    "overlay_sharpe": 0.843257406576692,
+    "overlay_max_dd": -0.44497070752344126,
+    "overlay_ann_ret": 0.1635451803371301,
+    "sharpe_improve": 0.048484526530866545,
+    "dd_improve": 0.009960251332805536,
+    "long_days_ratio": 0.6785079928952042,
+    "note": "overlay 用 state.shift(1)，T日信号T+1日建仓，无前视",
+    "dsr": 1.0,
+    "_contemp_sharpe_ref": 1.3411174716712295
+  },
+  "transition": {
+    "from_0": {
+      "to_0": 803,
+      "to_1": 101
+    },
+    "from_1": {
+      "to_0": 100,
+      "to_1": 1810
+    }
+  },
+  "switch_rate": 0.07178393745557925
+}

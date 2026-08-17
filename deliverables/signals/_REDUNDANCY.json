@@ -1,0 +1,35 @@
+[
+  {
+    "pair": "s0001x vs s0002x",
+    "n_days": 2816,
+    "state_agreement": 0.5927,
+    "random_baseline": 0.4723,
+    "excess_agreement": 0.1203,
+    "raw_correlation": 0.3377,
+    "s0001x_on_ratio": 0.4226,
+    "s0002x_on_ratio": 0.6786,
+    "verdict": "✅ 视角独立"
+  },
+  {
+    "pair": "s0001x vs s0003x",
+    "n_days": 2816,
+    "state_agreement": 0.4947,
+    "random_baseline": 0.4939,
+    "excess_agreement": 0.0008,
+    "raw_correlation": -0.0412,
+    "s0001x_on_ratio": 0.4226,
+    "s0003x_on_ratio": 0.5394,
+    "verdict": "✅ 视角独立"
+  },
+  {
+    "pair": "s0002x vs s0003x",
+    "n_days": 2816,
+    "state_agreement": 0.5419,
+    "random_baseline": 0.5141,
+    "excess_agreement": 0.0278,
+    "raw_correlation": -0.0504,
+    "s0002x_on_ratio": 0.6786,
+    "s0003x_on_ratio": 0.5394,
+    "verdict": "✅ 视角独立"
+  }
+]

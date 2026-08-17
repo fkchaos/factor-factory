@@ -1,0 +1,41 @@
+# 因子声明示例（参数即代码，禁止硬编码）
+# 用途：在 factors/ 下实现对应 Factor 类后，由 registry 按 name 加载。
+
+factor:
+  name: momentum_reversal_1m        # 对应 factors/<impl>.py 中 register_factor 的 name
+  category: momentum_reversal
+  direction: low                     # 低=多头（A股短期反转：上月输家本月赢）
+  fields: [open, close, volume, amount]
+  params:
+    lookback: 21                     # 约 1 个月交易日
+  preprocess:
+    winsorize_mad_n: 3.0
+    zscore: true
+    neutralize:
+      industry: sw2021_level1
+      log_mktcap: true
+
+# 回测配置
+backtest:
+  train_days: 252
+  test_days: 126
+  step_days: 63
+  top_n: 10
+  execution: t1_open                 # next-available-price，防乐观假设
+  cost_model: quadratic
+  max_participation: 0.10
+
+# 验证门禁
+validate:
+  min_rank_ic: 0.03
+  min_icir: 0.5
+  min_t: 3.0
+  dsr_p_min: 0.95
+  pbo_max: 0.25
+
+# 数据源
+data:
+  provider: tushare                   # 主；akshare 作 fallback，由 DataProvider 解析
+  universe: zz1800_pit                # point-in-time 成分股（消除幸存者偏差）
+  start: "2021-01-01"
+  end: "2026-07-31"

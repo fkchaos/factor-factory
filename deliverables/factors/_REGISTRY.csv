@@ -1,0 +1,6 @@
+fcode,name,type,components,status,supersedes,created,note
+f0001a,隔夜-日内反转,single,,current,,2026-08-09,
+f0002a,特质波动率(低波溢价),single,,current,,2026-08-10,
+f0003a,等权组合(隔夜反转+低波),combo,"f0001a,f0002a",current,,2026-08-10,
+f0004a,筹码成本偏离,single,,current,,2026-08-17,
+f0005a,量能扩张速度,single,,current,,2026-08-17,

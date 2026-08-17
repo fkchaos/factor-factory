@@ -1,0 +1,442 @@
+{
+  "generated": "2026-08-16 20:57",
+  "source": "external",
+  "producer": "factor-factory",
+  "factors": [
+    {
+      "name": "f0001a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "overnight_intraday | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_intraday --pool sz50",
+      "ic_mean": 0.03122590107025099,
+      "ir": 0.35489613864305913,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "隔夜-日内反转（f0001a）｜overnight_intraday",
+      "_factory_extra": {
+        "fcode": "f0001a",
+        "factor_impl": "overnight_intraday",
+        "display_name": "隔夜-日内反转（f0001a）",
+        "home_pool": "zz1000",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs1800",
+            "ic_mean": 0.02832763911524512,
+            "ir": 0.3263521486737656,
+            "ic_win_rate": 0.6398996235884568,
+            "n_days": 1594,
+            "sharpe_net": 2.2756080541019017,
+            "max_dd_net": -0.403497688764869,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs300",
+            "ic_mean": 0.02561508383449126,
+            "ir": 0.2623115665680015,
+            "ic_win_rate": 0.5984943538268507,
+            "n_days": 1594,
+            "sharpe_net": 1.059107809951363,
+            "max_dd_net": -0.39653441876555606,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.025940726231968126,
+            "ir": 0.2843901552408985,
+            "ic_win_rate": 0.609159347553325,
+            "n_days": 1594,
+            "sharpe_net": 1.2510878336018763,
+            "max_dd_net": -0.5273677594894725,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "sz50",
+            "ic_mean": 0.009530404905007707,
+            "ir": 0.06835582650644001,
+            "ic_win_rate": 0.5244667503136763,
+            "n_days": 1594,
+            "sharpe_net": 0.3124718896658475,
+            "max_dd_net": -0.38559090281043484,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "zz1000",
+            "ic_mean": 0.03122590107025099,
+            "ir": 0.35489613864305913,
+            "ic_win_rate": 0.6493099121706399,
+            "n_days": 1594,
+            "sharpe_net": 1.249113960525893,
+            "max_dd_net": -0.4483195658069883,
+            "gate_7_2_verdict": "valid"
+          },
+          {
+            "pool": "zz500",
+            "ic_mean": 0.025785826241365137,
+            "ir": 0.26848266324956366,
+            "ic_win_rate": 0.6110414052697616,
+            "n_days": 1594,
+            "sharpe_net": 0.8122170291655717,
+            "max_dd_net": -0.5777399101171514,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "valid",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "sz50",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "sz50": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "zz500": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "zz1000": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs1800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0001a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_intraday --pool sz50",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0002a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ivol | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ivol --pool sz50",
+      "ic_mean": 0.048378924535313186,
+      "ir": 0.5090678515566756,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "特质波动率(低波溢价)（f0002a）｜ivol",
+      "_factory_extra": {
+        "fcode": "f0002a",
+        "factor_impl": "ivol",
+        "display_name": "特质波动率(低波溢价)（f0002a）",
+        "home_pool": "zz1000",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs1800",
+            "ic_mean": 0.03857397243175981,
+            "ir": 0.37968379170399325,
+            "ic_win_rate": 0.6677316293929713,
+            "n_days": 626,
+            "sharpe_net": 0.9153075631382885,
+            "max_dd_net": -0.27398069961075333,
+            "gate_7_2_verdict": "valid"
+          },
+          {
+            "pool": "hs300",
+            "ic_mean": 0.018477013401736266,
+            "ir": 0.17488108192755422,
+            "ic_win_rate": 0.5747460087082729,
+            "n_days": 1378,
+            "sharpe_net": 1.034161375911295,
+            "max_dd_net": -0.30584076892839684,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.027009154452000295,
+            "ir": 0.2700389603822621,
+            "ic_win_rate": 0.5943025540275049,
+            "n_days": 1018,
+            "sharpe_net": 0.925973919726536,
+            "max_dd_net": -0.31758694121729847,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "sz50",
+            "ic_mean": 0.009900246593844761,
+            "ir": 0.06659111095913374,
+            "ic_win_rate": 0.5405405405405406,
+            "n_days": 1554,
+            "sharpe_net": 0.855649110499396,
+            "max_dd_net": -0.23839409925241517,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "zz1000",
+            "ic_mean": 0.048378924535313186,
+            "ir": 0.5090678515566756,
+            "ic_win_rate": 0.6967963386727689,
+            "n_days": 874,
+            "sharpe_net": 1.0876487033303393,
+            "max_dd_net": -0.3024146301484467,
+            "gate_7_2_verdict": "valid"
+          },
+          {
+            "pool": "zz500",
+            "ic_mean": 0.030686107154832852,
+            "ir": 0.29094322000319245,
+            "ic_win_rate": 0.6193379790940766,
+            "n_days": 1148,
+            "sharpe_net": 0.7980509297635084,
+            "max_dd_net": -0.3014991480515148,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "valid",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "sz50",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "sz50": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "zz500": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "zz1000": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs1800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0002a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ivol --pool sz50",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0003a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "等权组合因子：成分 z-score 后按方向系数等权平均。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor combo_equal_v1 --pool sz50 | 组合成分：f0001a,f0002a（等权 z-score）",
+      "ic_mean": 0.04401403510682762,
+      "ir": 0.5217585713635028,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "等权组合(隔夜反转+低波)（f0003a）｜等权组合因子：成分 z-score 后按方向系数等权平均。",
+      "_factory_extra": {
+        "fcode": "f0003a",
+        "factor_impl": "combo_equal_v1",
+        "display_name": "等权组合(隔夜反转+低波)（f0003a）",
+        "home_pool": "zz1000",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs1800",
+            "ic_mean": 0.03592612863151138,
+            "ir": 0.43640379770293597,
+            "ic_win_rate": 0.676913425345044,
+            "n_days": 1594,
+            "sharpe_net": 2.1157019464477065,
+            "max_dd_net": -0.4118748720881993,
+            "gate_7_2_verdict": "valid"
+          },
+          {
+            "pool": "hs300",
+            "ic_mean": 0.029952287116400727,
+            "ir": 0.3176062418562973,
+            "ic_win_rate": 0.6317440401505646,
+            "n_days": 1594,
+            "sharpe_net": 1.0281776635017605,
+            "max_dd_net": -0.37520656465269053,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.03256905766639029,
+            "ir": 0.37871193149148935,
+            "ic_win_rate": 0.6461731493099122,
+            "n_days": 1594,
+            "sharpe_net": 1.0563180530887406,
+            "max_dd_net": -0.5544644464894617,
+            "gate_7_2_verdict": "valid"
+          },
+          {
+            "pool": "sz50",
+            "ic_mean": 0.010259524975668635,
+            "ir": 0.07400161450138003,
+            "ic_win_rate": 0.5351317440401505,
+            "n_days": 1594,
+            "sharpe_net": 0.44112267163466967,
+            "max_dd_net": -0.3360654722613169,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "zz1000",
+            "ic_mean": 0.04401403510682762,
+            "ir": 0.5217585713635028,
+            "ic_win_rate": 0.7120451693851945,
+            "n_days": 1594,
+            "sharpe_net": 1.2011679691179695,
+            "max_dd_net": -0.3984553309325368,
+            "gate_7_2_verdict": "valid"
+          },
+          {
+            "pool": "zz500",
+            "ic_mean": 0.03483143692365672,
+            "ir": 0.3804967643128084,
+            "ic_win_rate": 0.644918444165621,
+            "n_days": 1594,
+            "sharpe_net": 0.5416927956304053,
+            "max_dd_net": -0.582615205725735,
+            "gate_7_2_verdict": "valid"
+          }
+        ],
+        "gate_7_2_at_home_pool": "valid",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "sz50",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "sz50": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "zz500": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "zz1000": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs1800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0003a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor combo_equal_v1 --pool sz50",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "pool": "sz50",
+  "dsr": 1.0,
+  "pbo": null,
+  "verdict": "PASS",
+  "n_trials": 8,
+  "n_splits": 12,
+  "by_pool": {
+    "sz50": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    },
+    "hs300": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    },
+    "zz500": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    },
+    "hs800": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    },
+    "zz1000": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    },
+    "hs1800": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    }
+  }
+}

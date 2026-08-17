@@ -1,0 +1,317 @@
+{
+  "generated": "2026-08-16 20:57",
+  "source": "external",
+  "producer": "factor-factory",
+  "exec_lag_notice": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",
+  "signals": [
+    {
+      "name": "s0001x",
+      "type": "timing",
+      "category": "regime",
+      "trigger_logic": "raw = 每日(上涨家数-下跌家数)/总数；状态 = breadth_MA20 > 0 → risk_on，否则 risk_off（20日窗口、阈值0，交付卡片说明）（池=hs800，MA20 > 0.0 → state=1）",
+      "position_logic": "state.shift(1) 后叠加：risk_on 允许因子多头暴露/持仓，risk_off 减仓或空仓。T 日信号最早 T+1 日建仓。",
+      "thresholds": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "backtest_sharpe": 0.9395836556738515,
+      "win_rate": 0.5592935239697224,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "广度Regime（s0001x）｜市场级状态判断（每天一个标量），不是选股因子，勿并入横截面组合。",
+      "exec_lag": 1,
+      "exec_lag_warning": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",
+      "_factory_extra": {
+        "scode": "s0001x",
+        "signal_impl": "breadth_regime",
+        "display_name": "广度Regime（s0001x）",
+        "universe": "hs800",
+        "window_start": "2015-01-01",
+        "state_window": "20",
+        "state_threshold": 0.0,
+        "n_days": 2815,
+        "switch_rate": 0.10660980810234541,
+        "hit_spread": 0.03067813935433783,
+        "state_fwd_corr": 0.03655827894280018,
+        "states": {
+          "state_1": {
+            "count": 1190,
+            "mean_ret_contemp": 0.0038825878909397875,
+            "sharpe_contemp": 4.196098696481774,
+            "win_rate_contemp": 0.6411764705882353,
+            "fwd_ret_1d": 0.0014083739311108307,
+            "fwd_win_1d": 0.5592935239697224,
+            "fwd_ret_5d": 0.0008971903340723586,
+            "fwd_win_5d": 0.5561181434599156,
+            "fwd_ret_20d": 0.0006640788605148133,
+            "fwd_win_20d": 0.5393068469991547
+          },
+          "state_0": {
+            "count": 1625,
+            "mean_ret_contemp": -0.0015224452266575416,
+            "sharpe_contemp": -1.5882654487489212,
+            "win_rate_contemp": 0.46892307692307694,
+            "fwd_ret_1d": 0.0002814343459235241,
+            "fwd_win_1d": 0.5286153846153846,
+            "fwd_ret_5d": 0.0006731891576220488,
+            "fwd_win_5d": 0.5316923076923077,
+            "fwd_ret_20d": 0.0008295170764658991,
+            "fwd_win_20d": 0.544044665012407
+          }
+        },
+        "transition": {
+          "from_0": {
+            "to_0": 1475,
+            "to_1": 150
+          },
+          "from_1": {
+            "to_0": 149,
+            "to_1": 1040
+          }
+        },
+        "overlay": {
+          "baseline_sharpe": 0.7947728800458255,
+          "baseline_max_dd": -0.4549309588562468,
+          "baseline_ann_ret": 0.1921382367384583,
+          "overlay_sharpe": 0.9395836556738515,
+          "overlay_max_dd": -0.31224041843874484,
+          "overlay_ann_ret": 0.14990702104116377,
+          "sharpe_improve": 0.14481077562802602,
+          "dd_improve": 0.14269054041750195,
+          "long_days_ratio": 0.42238010657193603,
+          "note": "overlay 用 state.shift(1)，T日信号T+1日建仓，无前视",
+          "dsr": 1.0,
+          "_contemp_sharpe_ref": 2.6754202249233785
+        },
+        "gate_7_2_verdict": "refuted",
+        "gate_7_2_rule": {
+          "valid": "sharpe>1.5",
+          "refuted": "sharpe<1.0"
+        },
+        "overfit_audit": {
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 4,
+          "n_splits": 12
+        },
+        "pit_certified": true,
+        "package_path": "deliverables/signals/s0001x",
+        "reproduce": "FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal breadth_regime --scode s0001x --pool hs800",
+        "todo": [
+          "regime_dependency 待量化（强/弱市依赖）",
+          "decay_status 待 P0『信号半衰期』补丁量化",
+          "category 枚举已覆盖 regime / sentiment / volatility；trend 类待新建信号"
+        ]
+      }
+    },
+    {
+      "name": "s0002x",
+      "type": "timing",
+      "category": "sentiment",
+      "trigger_logic": "raw = 小市值组(后30%)日收益均值 − 大市值组(前30%)日收益均值（市值=PIT流通市值 amount/换手率 的前一日近5日中位数，非面板 market_cap 快照列）；状态 = raw_MA20 > 0 → risk_on（风险偏好上行），否则 risk_off（池=hs800，MA20 > 0.0 → state=1）",
+      "position_logic": "state.shift(1) 后叠加：risk_on 允许因子多头暴露/持仓，risk_off 减仓或空仓。T 日信号最早 T+1 日建仓。",
+      "thresholds": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "backtest_sharpe": 0.843257406576692,
+      "win_rate": 0.5544502617801047,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "风险偏好Regime（s0002x）｜市场级状态判断（每天一个标量），不是选股因子，勿并入横截面组合。",
+      "exec_lag": 1,
+      "exec_lag_warning": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",
+      "_factory_extra": {
+        "scode": "s0002x",
+        "signal_impl": "risk_appetite",
+        "display_name": "风险偏好Regime（s0002x）",
+        "universe": "hs800",
+        "window_start": "2015-01-01",
+        "state_window": "20",
+        "state_threshold": 0.0,
+        "n_days": 2815,
+        "switch_rate": 0.07178393745557925,
+        "hit_spread": 0.040069730806653325,
+        "state_fwd_corr": 0.018986499848415835,
+        "states": {
+          "state_1": {
+            "count": 1911,
+            "mean_ret_contemp": 0.0015046251544719844,
+            "sharpe_contemp": 1.630323638007476,
+            "win_rate_contemp": 0.5688121402407117,
+            "fwd_ret_1d": 0.0009564939804060112,
+            "fwd_win_1d": 0.5544502617801047,
+            "fwd_ret_5d": 0.0010459017017670133,
+            "fwd_win_5d": 0.5545645330535152,
+            "fwd_ret_20d": 0.0006715659206613084,
+            "fwd_win_20d": 0.5419525065963061
+          },
+          "state_0": {
+            "count": 904,
+            "mean_ret_contemp": -0.0008064519616107519,
+            "sharpe_contemp": -0.7862696391164505,
+            "win_rate_contemp": 0.48451327433628316,
+            "fwd_ret_1d": 0.0003373715858860876,
+            "fwd_win_1d": 0.5143805309734514,
+            "fwd_ret_5d": 0.00018098925159695445,
+            "fwd_win_5d": 0.5154867256637168,
+            "fwd_ret_20d": 0.0009446326662209718,
+            "fwd_win_20d": 0.5422222222222223
+          }
+        },
+        "transition": {
+          "from_0": {
+            "to_0": 803,
+            "to_1": 101
+          },
+          "from_1": {
+            "to_0": 100,
+            "to_1": 1810
+          }
+        },
+        "overlay": {
+          "baseline_sharpe": 0.7947728800458255,
+          "baseline_max_dd": -0.4549309588562468,
+          "baseline_ann_ret": 0.1921382367384583,
+          "overlay_sharpe": 0.843257406576692,
+          "overlay_max_dd": -0.44497070752344126,
+          "overlay_ann_ret": 0.1635451803371301,
+          "sharpe_improve": 0.048484526530866545,
+          "dd_improve": 0.009960251332805536,
+          "long_days_ratio": 0.6785079928952042,
+          "note": "overlay 用 state.shift(1)，T日信号T+1日建仓，无前视",
+          "dsr": 1.0,
+          "_contemp_sharpe_ref": 1.3411174716712295
+        },
+        "gate_7_2_verdict": "refuted",
+        "gate_7_2_rule": {
+          "valid": "sharpe>1.5",
+          "refuted": "sharpe<1.0"
+        },
+        "overfit_audit": {
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 4,
+          "n_splits": 12
+        },
+        "pit_certified": true,
+        "package_path": "deliverables/signals/s0002x",
+        "reproduce": "FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal risk_appetite --scode s0002x --pool hs800",
+        "todo": [
+          "regime_dependency 待量化（强/弱市依赖）",
+          "decay_status 待 P0『信号半衰期』补丁量化",
+          "category 枚举已覆盖 regime / sentiment / volatility；trend 类待新建信号"
+        ]
+      }
+    },
+    {
+      "name": "s0003x",
+      "type": "timing",
+      "category": "volatility",
+      "trigger_logic": "raw = ln( RV_prior20 / RV_recent20 )，RV = 等权市场日收益标准差，两腿各 20 交易日且不重叠（等长 → 平稳性下期望为 0，阈值免拟合）；状态 = raw_MA20 > 0 → risk_on（波动收缩），否则 risk_off（波动扩张）（池=hs800，MA20 > 0.0 → state=1）",
+      "position_logic": "state.shift(1) 后叠加：risk_on 允许因子多头暴露/持仓，risk_off 减仓或空仓。T 日信号最早 T+1 日建仓。",
+      "thresholds": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "backtest_sharpe": 0.5049469171521228,
+      "win_rate": 0.532587228439763,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "波动率Regime（s0003x）｜市场级状态判断（每天一个标量），不是选股因子，勿并入横截面组合。",
+      "exec_lag": 1,
+      "exec_lag_warning": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",
+      "_factory_extra": {
+        "scode": "s0003x",
+        "signal_impl": "volatility_regime",
+        "display_name": "波动率Regime（s0003x）",
+        "universe": "hs800",
+        "window_start": "2015-01-01",
+        "state_window": "20",
+        "state_threshold": 0.0,
+        "n_days": 2776,
+        "switch_rate": 0.03351351351351351,
+        "hit_spread": -0.01996054226087396,
+        "state_fwd_corr": -0.008614963423955473,
+        "states": {
+          "state_1": {
+            "count": 1519,
+            "mean_ret_contemp": 0.000641257537806485,
+            "sharpe_contemp": 0.7349723059668464,
+            "win_rate_contemp": 0.5358788676761027,
+            "fwd_ret_1d": 0.0006105593521785455,
+            "fwd_win_1d": 0.532587228439763,
+            "fwd_ret_5d": 0.0009913164661259869,
+            "fwd_win_5d": 0.5391705069124424,
+            "fwd_ret_20d": 0.0008762519899243131,
+            "fwd_win_20d": 0.5365371955233706
+          },
+          "state_0": {
+            "count": 1257,
+            "mean_ret_contemp": 0.0008456116656169929,
+            "sharpe_contemp": 0.8008232022399691,
+            "win_rate_contemp": 0.548926014319809,
+            "fwd_ret_1d": 0.0008742295758621847,
+            "fwd_win_1d": 0.552547770700637,
+            "fwd_ret_5d": 0.0003963942823861884,
+            "fwd_win_5d": 0.5431309904153354,
+            "fwd_ret_20d": 0.00039466034156812705,
+            "fwd_win_20d": 0.5424413904607922
+          }
+        },
+        "transition": {
+          "from_0": {
+            "to_0": 1210,
+            "to_1": 46
+          },
+          "from_1": {
+            "to_0": 46,
+            "to_1": 1473
+          }
+        },
+        "overlay": {
+          "baseline_sharpe": 0.7645660491339759,
+          "baseline_max_dd": -0.45493095885624657,
+          "baseline_ann_ret": 0.18491535447743876,
+          "overlay_sharpe": 0.5049469171521228,
+          "overlay_max_dd": -0.3411583400980289,
+          "overlay_ann_ret": 0.08419120796171509,
+          "sharpe_improve": -0.25961913198185305,
+          "dd_improve": 0.11377261875821765,
+          "long_days_ratio": 0.5471902017291066,
+          "note": "overlay 用 state.shift(1)，T日信号T+1日建仓，无前视",
+          "dsr": 1.0,
+          "_contemp_sharpe_ref": 0.5434931655965609
+        },
+        "gate_7_2_verdict": "refuted",
+        "gate_7_2_rule": {
+          "valid": "sharpe>1.5",
+          "refuted": "sharpe<1.0"
+        },
+        "overfit_audit": {
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 4,
+          "n_splits": 12
+        },
+        "pit_certified": true,
+        "package_path": "deliverables/signals/s0003x",
+        "reproduce": "FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal volatility_regime --scode s0003x --pool hs800",
+        "todo": [
+          "regime_dependency 待量化（强/弱市依赖）",
+          "decay_status 待 P0『信号半衰期』补丁量化",
+          "category 枚举已覆盖 regime / sentiment / volatility；trend 类待新建信号"
+        ]
+      }
+    }
+  ]
+}

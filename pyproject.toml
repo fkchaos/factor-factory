@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "factor-factory"
+version = "0.1.0"
+description = "A 股日频多因子研发工厂：持续产出经样本外验证、可正交组合、可监控衰减的因子与时序信号库（研究/模拟盘，非实盘）。"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "fkchaos" }]
+keywords = ["quant", "factor", "alpha", "a-share", "research", "backtest"]
+dependencies = [
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "scipy>=1.10",
+]
+
+[project.optional-dependencies]
+# 数据源适配器（按本地可用情况选装；本项目测试用 LocalProvider，不强制）
+data-baostock = ["baostock"]
+data-tushare = ["tushare"]
+data-akshare = ["akshare"]
+dev = ["pytest>=7.0"]
+
+[project.scripts]
+factor-board = "scripts.factor_board:main"
+build-factor = "scripts.build_deliverable:main"
+build-signal = "scripts.build_signal_deliverable:main"
+
+[tool.setuptools]
+packages = [
+    "factors",
+    "signals",
+    "data",
+    "engine",
+    "validate",
+    "portfolio",
+    "monitor",
+    "configs",
+    "scripts",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

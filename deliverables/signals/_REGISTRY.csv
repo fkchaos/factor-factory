@@ -1,0 +1,4 @@
+scode,name,type,components,status,supersedes,created,note
+s0001x,广度Regime,single,,current,,2026-08-07,
+s0002x,风险偏好Regime,single,,current,,2026-08-08,
+s0003x,波动率Regime,single,,current,,2026-08-12,方向与先验相反(命中价差-2.0%/Sharpe改善-0.26)，价值在回撤削减+11.38pct；判refuted，刻意不反转符号

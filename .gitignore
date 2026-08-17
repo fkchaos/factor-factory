@@ -1,0 +1,32 @@
+# ============================================================
+# factor-factory · .gitignore
+# 仓库为开源公开仓；以下规则确保：大文件/缓存/凭证绝不入库。
+# ============================================================
+
+# ---- 缓存（真实行情数据落盘，含全市场 parquet，禁止入库）----
+.cache/
+__pycache__/
+*.pyc
+
+# ---- Python 测试 / 环境 ----
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# ---- 敏感凭证（仅保留 .example 模板，真实文件本地持有）----
+.env
+*.token
+*.secret
+configs/tushare.yaml
+
+# ---- 编辑器 / OS 噪音 ----
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# ---- 本地草稿（非交付物）----
+.cache/pending_*.md
