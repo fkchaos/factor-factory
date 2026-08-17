@@ -9,6 +9,13 @@
 
 ## [Unreleased]
 
+### 文档（开源就绪）
+- 新增 `docs/DELIVERABLES.md`：**交付物查阅地图**——面向外部用户/下游策略组，逐一给出因子/信号/矩阵/导出 JSON/CHANGELOG 的精确路径、内容、消费方式，弥补 README/ARCHITECTURE 仅类别级说明的空白
+- README 文档导航新增 `DELIVERABLES` 行；`生产线 vs 交付物` 注释与 USER_GUIDE §4 交叉引用该地图
+
+### 仓库（开源发布）
+- 首次推送到公开仓 `github.com/fkchaos/factor-factory`：MIT 许可、六层解耦架构、双线（因子 f-code / 信号 s-code）、PIT 合规、DSR/PBO 过拟合审计、CHANGELOG 发布、单文件美观看板
+
 ## [0.1.0] - 2026-08-17
 
 初始交付批次（研究/模拟盘，非实盘）。

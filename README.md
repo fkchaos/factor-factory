@@ -56,7 +56,7 @@ factor-factory/
 └── docs/         # 用户文档（下方导航）
 ```
 
-> **生产线 vs 交付物**：`data/…monitor/scripts/` 是生成侧（代码与流程），`deliverables/` 是产物侧（下游只读消费），二者只在看板聚合、互不耦合。详见 `docs/ARCHITECTURE.md` §8。
+> **生产线 vs 交付物**：`data/…monitor/scripts/` 是生成侧（代码与流程），`deliverables/` 是产物侧（下游只读消费），二者只在看板聚合、互不耦合。详见 `docs/ARCHITECTURE.md` §8。**外部用户查具体交付物去哪，见 [docs/DELIVERABLES.md](docs/DELIVERABLES.md)。**
 
 ## 文档导航
 
@@ -65,6 +65,7 @@ factor-factory/
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | 架构/研发 | 六层解耦、双线、接口契约、数据流、扩展点、**生产线与交付物边界** |
 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | 部署/运维 | 环境、依赖、数据源 token、数据准备、定时任务、GitHub 同步 |
 | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) | 使用者 | 看板怎么看、怎么加因子/信号、怎么读交付卡、灵感池 |
+| [docs/DELIVERABLES.md](docs/DELIVERABLES.md) | 外部用户/下游 | **交付物查阅地图**：每个交付物去哪个路径、里面是什么、怎么消费 |
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | 贡献者 | PR 检查清单、PIT 规则、测试纪律、文档要求 |
 | [docs/DATA_CONTRACT.md](docs/DATA_CONTRACT.md) | 数据层 | 单位/格式防火墙、多源一致性契约 |
 | [docs/INTERFACE_CONTRACTS.md](docs/INTERFACE_CONTRACTS.md) | 接口层 | Factor/Signal/Engine/CostModel 签名与约束 |

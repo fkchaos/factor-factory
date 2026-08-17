@@ -77,6 +77,8 @@ make signal S=my_regime SCODE=s0004x NAME=我的Regime
 
 > 本厂**不设质量门槛**：审计通过即出包，因子强弱由下游策略组在 `deliverables/strategy_export/*.json` 层筛选。
 
+> 想看**全部**交付物类型（因子 / 信号 / 矩阵 / 导出 JSON / CHANGELOG）的精确路径与消费方式，见 [docs/DELIVERABLES.md](docs/DELIVERABLES.md)（面向外部用户的查阅地图）。
+
 ## 5. 灵感池
 
 `research/idea_backlog.csv` 是候选假设池，状态机：`backlog → hypothesized → in_pipeline → validated/rejected`。
