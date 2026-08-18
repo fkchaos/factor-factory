@@ -461,14 +461,6 @@ def main():
     with open(args.out, "w", encoding="utf-8") as f:
         f.write(html_out)
 
-    # GitHub Pages 发布副本：site/index.html 单独发布（分支部署 main /site），
-    # 不发布整个 docs/（docs/dev/ 内部文档不得公开）。
-    site_out = os.path.join(ROOT, "site", "index.html")
-    os.makedirs(os.path.dirname(site_out), exist_ok=True)
-    with open(site_out, "w", encoding="utf-8") as f:
-        f.write(html_out)
-    print(f"[factor_board] Pages 副本: {site_out}")
-
     # 控制台摘要
     c = {k: 0 for k in STAGE_META}
     for r in rows:

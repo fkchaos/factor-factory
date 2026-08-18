@@ -1,0 +1,46 @@
+name: Deploy dashboard to GitHub Pages
+
+# 把单文件美观看板 docs/factor_board.html 发布为 GitHub Pages 站点。
+# 只发布看板这一个自包含文件（复制为 index.html）——绝不发布整个 /docs，
+# 因为 docs/dev/ 下是内部开发文档（HANDOFF / SOP 等），不得公开。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/factor_board.html'
+      - 'scripts/factor_board.py'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch: # 手动触发
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare site (single-file dashboard)
+        run: |
+          mkdir -p _site
+          cp docs/factor_board.html _site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
