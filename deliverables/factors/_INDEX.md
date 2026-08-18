@@ -8,3 +8,8 @@
 | f0003a | 等权组合(隔夜反转+低波) | combo | f0001a,f0002a | current | 2026-08-10 |
 | f0004a | 筹码成本偏离 | single |  | current | 2026-08-17 |
 | f0005a | 量能扩张速度 | single |  | current | 2026-08-17 |
+| f0006a | 动量20日 | single |  | current | 2026-08-17 |
+| f0007a | 反转5日 | single |  | current | 2026-08-17 |
+| f0008a | 隔夜跳空缺口 | single |  | current | 2026-08-17 |
+| f0009a | 涨停封板强度 | single |  | current | 2026-08-17 |
+| f0010a | 市值对数 | single |  | current | 2026-08-17 |

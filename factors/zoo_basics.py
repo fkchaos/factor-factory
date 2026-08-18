@@ -41,6 +41,7 @@ class Momentum20Factor:
     """
 
     name = "momentum_20"
+    fcode = "f0006a"  # 交付包代号（对齐 deliverables/factors/_REGISTRY.csv）
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:
         as_of = pd.Timestamp(as_of_date)
@@ -67,6 +68,7 @@ class Reversal5Factor:
     """
 
     name = "reversal_5"
+    fcode = "f0007a"  # 交付包代号（对齐 deliverables/factors/_REGISTRY.csv）
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:
         as_of = pd.Timestamp(as_of_date)
@@ -93,6 +95,7 @@ class SizeFactor:
     """
 
     name = "size_log_mcap"
+    fcode = "f0010a"  # 交付包代号（对齐 deliverables/factors/_REGISTRY.csv）
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:
         as_of = pd.Timestamp(as_of_date)

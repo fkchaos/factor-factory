@@ -37,6 +37,8 @@ make board
 make test
 ```
 
+> 📊 **在线看板（GitHub Pages）**：`https://fkchaos.github.io/factor-factory/`（由 `.github/workflows/pages.yml` 自动发布 `docs/factor_board.html`，只发布看板单文件，不公开 `docs/dev/` 内部文档）。
+
 ## 目录结构
 
 ```

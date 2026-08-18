@@ -33,6 +33,7 @@ def _prev_close(sub: pd.DataFrame, as_of) -> pd.Series | None:
 class OvernightGapFactor:
     """隔夜跳空因子：open / 前收 - 1。正值=隔夜跳空高开。"""
     name = "overnight_gap"
+    fcode = "f0008a"  # 交付包代号（对齐 deliverables/factors/_REGISTRY.csv）
     universe_hint = None
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:
@@ -60,6 +61,7 @@ class LimitUpSealFactor:
       - 未涨停 -> 0.0
     """
     name = "limit_up_seal"
+    fcode = "f0009a"  # 交付包代号（对齐 deliverables/factors/_REGISTRY.csv）
     universe_hint = None
     LIMIT = 1.098  # 近似涨停阈值（±10%，留 0.2% 容差）
 

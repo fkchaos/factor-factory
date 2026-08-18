@@ -1,0 +1,19 @@
+# 因子交付包元数据（溯源 / 复现 / 防火墙基准）
+fcode: f0008a
+factor: overnight_gap
+version: 1.0.0
+doc_rev: 1
+status: current
+supersedes: null
+components: null
+generated: 2026-08-17
+contract_version: 1
+provider: baostock
+adj_policy: qfq
+universe: hs300
+pools: [hs300, hs800]
+corr_pool: hs300
+window_start: 2020-01-01
+neutralization: industry+mktcap(PIT: amount/turnover)
+pit_certified: true
+reproduce: FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_gap --pool hs300

@@ -16,6 +16,13 @@
 ### 仓库（开源发布）
 - 首次推送到公开仓 `github.com/fkchaos/factor-factory`：MIT 许可、六层解耦架构、双线（因子 f-code / 信号 s-code）、PIT 合规、DSR/PBO 过拟合审计、CHANGELOG 发布、单文件美观看板
 
+### 因子（f0006a–f0010a 批量交付）
+- `2026-08-17 | factor | f0006a | 动量20日（momentum_20） | deliverables/factors/f0006a/`（反向：动量赢家未来偏弱；RankIC -0.0077，审计通过即出包）
+- `2026-08-17 | factor | f0007a | 反转5日（reversal_5） | deliverables/factors/f0007a/`
+- `2026-08-17 | factor | f0008a | 隔夜跳空缺口（overnight_gap） | deliverables/factors/f0008a/`
+- `2026-08-17 | factor | f0009a | 涨停封板强度（limit_up_seal） | deliverables/factors/f0009a/`
+- `2026-08-17 | factor | f0010a | 市值对数（size_log_mcap） | deliverables/factors/f0010a/`
+
 ## [0.1.0] - 2026-08-17
 
 初始交付批次（研究/模拟盘，非实盘）。
