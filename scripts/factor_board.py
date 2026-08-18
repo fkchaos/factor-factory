@@ -388,7 +388,7 @@ def esc(s):
     return html.escape(str(s or ""), quote=True)
 
 
-def render_html(rows, generated, hs_n, unreleased=0):
+def render_html(rows, generated, unreleased=0):
     counts = {k: 0 for k in STAGE_META}
     for r in rows:
         counts[r["stage"]] = counts.get(r["stage"], 0) + 1
@@ -416,8 +416,8 @@ def render_html(rows, generated, hs_n, unreleased=0):
             sections += (
                 f'<section><h2 class="h2"><span class="dot" style="background:{color}"></span>{label} '
                 f'<span class="cnt">{counts[st]}</span></h2>'
-                f'<p class="empty">暂无已交付因子包。hs1800 全市场缓存拉取完成（{hs_n}/{HS1800_TARGET}）'
-                f'后将由交付流水线产出 f0001a / f0002a 等，看板会自动出现在此区。</p></section>'
+                f'<p class="empty">暂无已交付因子包。交付流水线产出 f0001a / f0002a 等后，'
+                f'看板会自动出现在此区。</p></section>'
             )
             continue
         if not srows:
@@ -447,7 +447,7 @@ def render_html(rows, generated, hs_n, unreleased=0):
         for k, (lbl, c, _) in STAGE_META.items()
     )
 
-    pct = min(100, hs_n * 100 // HS1800_TARGET)  # 缓存≥目标即视作满进度
+    # 2026-08-18：缓存进度（hs1800）已从看板移除，pct/hs 渲染全部删除，仅 console 摘要保留。
     if unreleased:
         unreleased_html = (
             f'<div class="unreleased">📦 待发布交付物（CHANGELOG [Unreleased]）：'
@@ -518,10 +518,6 @@ body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang
 .tiles.attach .tile:hover{{transform:none;box-shadow:none}}
 .tiles.attach .tile-n{{font-size:20px}}
 .tiles.attach .tile-l{{font-size:12px}}
-.hshead{{font-size:15px;color:var(--muted);font-weight:600;margin:4px 0 0}}
-.hsbar{{height:8px;border-radius:6px;background:#e9ecf4;overflow:hidden;margin:7px 0 4px}}
-.hsbar>i{{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#22d3ee)}}
-.hssub{{color:var(--muted);font-size:12.5px;margin:0}}
 section{{margin:30px 0 8px}}
 .h2{{font-size:18px;font-weight:700;display:flex;align-items:center;gap:9px;margin:0 0 4px}}
 .dot{{width:11px;height:11px;border-radius:50%;display:inline-block;flex:none}}
@@ -552,9 +548,6 @@ footer{{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:
 <div class="tiles">{tiles_main}</div>
 <div class="attach-head">附属视图 · 无编号（机器可读发货形态 / 跨池检验记录）</div>
 <div class="tiles attach">{tiles_attach}</div>
-<div class="hshead">数据管线 hs1800 全市场缓存</div>
-<div class="hsbar"><i style="width:{pct}%"></i></div>
-<p class="hssub">{hs_n}/{HS1800_TARGET} 已缓存（{pct}%）</p>
 {sections}
 <div class="legend">{legend}</div>
 <footer>双事业部：横截面因子线（f-code，选股打分）+ 时序信号线（s-code，市场状态 overlay）。
@@ -577,7 +570,7 @@ def main():
     unreleased = changelog_unreleased_count()
 
     os.makedirs(os.path.dirname(args.out), exist_ok=True)
-    html_out = render_html(rows, generated, hs_n, unreleased)
+    html_out = render_html(rows, generated, unreleased)
     with open(args.out, "w", encoding="utf-8") as f:
         f.write(html_out)
 
