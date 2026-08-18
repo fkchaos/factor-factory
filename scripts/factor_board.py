@@ -372,6 +372,14 @@ def render_html(rows, generated, hs_n, unreleased=0):
             f'<div class="unreleased ok">✅ CHANGELOG [Unreleased] 已清空，交付物均已归档</div>'
         )
 
+    # 2026-08-18：交付物查看入口从 footer 提升到 hero（红框位置），重跑不再丢。
+    deliv_html = (
+        '<div class="deliv-hint">📦 交付物查看：因子明细 '
+        '<code>deliverables/factors/&lt;fcode&gt;/card.md</code> · 信号明细 '
+        '<code>deliverables/signals/&lt;scode&gt;/card.md</code> · 完整查阅地图见 '
+        '<a href="https://github.com/fkchaos/factor-factory/blob/main/docs/DELIVERABLES.md">docs/DELIVERABLES.md</a></div>'
+    )
+
     return f"""<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -394,6 +402,10 @@ body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang
  padding:5px 13px;border-radius:20px;margin-top:14px}}
 .unreleased.ok{{background:rgba(255,255,255,.12);border-style:dashed}}
 .unreleased .n{{background:#fff;color:var(--brand);border-radius:12px;padding:0 8px;font-size:12px;font-weight:800}}
+.deliv-hint{{margin-top:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.30);
+ color:#fff;font-size:14px;padding:8px 14px;border-radius:10px;line-height:1.85;word-break:break-all}}
+.deliv-hint code{{background:rgba(255,255,255,.20);padding:1px 7px;border-radius:5px;font-size:13px;font-weight:500}}
+.deliv-hint a{{color:#fff;text-decoration:underline;font-weight:600}}
 .tiles{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:24px 0}}
 .tile{{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
  box-shadow:0 2px 8px rgba(31,35,48,.04);transition:transform .15s,box-shadow .15s}}
@@ -430,6 +442,7 @@ footer{{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:
 <h1><span class="logo">🧪</span>因子研发看板 · Factor Factory Board</h1>
 <div class="sub">生成时间：{generated} ｜ 数据源：factors/ + research/idea_backlog.csv + deliverables/*/_REGISTRY.csv</div>
 {unreleased_html}
+{deliv_html}
 </div></div>
 <div class="wrap">
 <div class="tiles">{tiles}</div>
@@ -440,7 +453,7 @@ footer{{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:
 <div class="legend">{legend}</div>
 <footer>双事业部：横截面因子线（f-code，选股打分）+ 时序信号线（s-code，市场状态 overlay）。
 生命周期：灵感池 → 研究中 → 已交付。｜ 本看板由 <code>scripts/factor_board.py</code> 生成，重跑即刷新。
-<br>📦 交付物查看：因子明细 <code>deliverables/factors/&lt;fcode&gt;/card.md</code> · 信号明细 <code>deliverables/signals/&lt;scode&gt;/card.md</code> · 完整查阅地图见 <a href="https://github.com/fkchaos/factor-factory/blob/main/docs/DELIVERABLES.md">docs/DELIVERABLES.md</a></footer>
+</footer>
 </div></body></html>"""
 
 
