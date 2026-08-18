@@ -337,6 +337,10 @@ def _render_card(args, signal, perf: dict, audit_res: dict, seq: pd.DataFrame) -
 - 状态序列见 state_sequence.csv；各状态绩效见 state_performance.json。
 - 复现命令：FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal {args.signal} --scode {args.scode} --pool {args.pool}
 - 已知陷阱：{getattr(signal, 'caveat', None) or DEFAULT_CAVEAT}
+
+## 聚合视图（本信号在聚合交付中的位置）
+- 机器可读发货形态：`../strategy_export/timing_signals.json`（条目 name={args.scode}，含 exec_lag 钢印，供策略组阶段 0 消费）
+- 说明：聚合视图由 `scripts/export_to_strategy_json.py` 生成，与本卡同源，不另立交付编号。
 """
 
 

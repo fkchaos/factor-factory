@@ -56,3 +56,7 @@
 - 状态序列见 state_sequence.csv；各状态绩效见 state_performance.json。
 - 复现命令：FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal breadth_regime --scode s0001x --pool hs800
 - 已知陷阱：广度在极端流动性枯竭 / 涨跌停潮时会失真（涨跌家数被停牌与封板锁死），且同期 Sharpe 2.68 远高于滞后口径 0.94，说明高度依赖当日信息——必须按 exec_lag=1 消费，需结合其他 regime 信号交叉验证。
+
+## 聚合视图（本信号在聚合交付中的位置）
+- 机器可读发货形态：`../strategy_export/timing_signals.json`（条目 name=s0001x，含 exec_lag 钢印，供策略组阶段 0 消费）
+- 说明：聚合视图由 `scripts/export_to_strategy_json.py` 生成，与本卡同源，不另立交付编号。

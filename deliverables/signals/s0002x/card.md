@@ -56,3 +56,7 @@
 - 状态序列见 state_sequence.csv；各状态绩效见 state_performance.json。
 - 复现命令：FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal risk_appetite --scode s0002x --pool hs800
 - 已知陷阱：小盘组在流动性枯竭 / 批量停牌时代表性下降；风格极端切换期（2017 蓝筹行情、2021 抱团瓦解）价差含义会漂移。分组依赖 PIT 流通市值（amount/换手率现算），若 turnover 字段缺失比例升高会静默降低分组质量，需与其他 regime 信号交叉验证。
+
+## 聚合视图（本信号在聚合交付中的位置）
+- 机器可读发货形态：`../strategy_export/timing_signals.json`（条目 name=s0002x，含 exec_lag 钢印，供策略组阶段 0 消费）
+- 说明：聚合视图由 `scripts/export_to_strategy_json.py` 生成，与本卡同源，不另立交付编号。

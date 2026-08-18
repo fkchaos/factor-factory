@@ -448,12 +448,16 @@ def render_html(rows, generated, hs_n, unreleased=0):
     # 2026-08-18：交付物查看入口从 footer 提升到 hero（红框位置），重跑不再丢。
     # 2026-08-18 15:2x：补 strategy_export（组合导出）+ universe_matrix（跨因子矩阵）两个入口。
     # 2026-08-18 15:3x：每条一句一行，避免长句折行难看。
+    # 2026-08-18 15:5x：用户定调主从架构——核心交付只有因子/信号（带编号），
+    #   策略导出与跨因子矩阵是附属视图（发货形态/检验记录），加说明小字并标注"附属"。
     deliv_html = (
         '<div class="deliv-hint">📦 交付物查看'
+        '<div class="note">核心交付 = 因子 / 信号包（f-code / s-code，带编号）；'
+        '策略导出与跨因子矩阵为其附属视图（机器可读发货形态 / 跨池检验记录），不另立编号</div>'
         '<div class="l">因子明细 <code>deliverables/factors/&lt;fcode&gt;/card.md</code></div>'
         '<div class="l">信号明细 <code>deliverables/signals/&lt;scode&gt;/card.md</code></div>'
-        '<div class="l">策略导出 <code>deliverables/strategy_export/*.json</code>（机器可读真源）</div>'
-        '<div class="l">跨因子矩阵 <code>deliverables/universe_matrix/</code></div>'
+        '<div class="l">附属 · 机器可读发货形态 <code>deliverables/strategy_export/*.json</code></div>'
+        '<div class="l">附属 · 跨池检验记录 <code>deliverables/universe_matrix/</code></div>'
         '<div class="l">完整查阅地图见 '
         '<a href="https://github.com/fkchaos/factor-factory/blob/main/docs/DELIVERABLES.md">docs/DELIVERABLES.md</a></div>'
         '</div>'
@@ -485,6 +489,7 @@ body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang
  color:#fff;font-size:14px;padding:8px 14px;border-radius:10px;line-height:1.85;word-break:break-all}}
 .deliv-hint code{{background:rgba(255,255,255,.20);padding:1px 7px;border-radius:5px;font-size:13px;font-weight:500}}
 .deliv-hint .l{{margin-top:2px}}
+.deliv-hint .note{{margin-top:6px;font-size:12px;color:rgba(255,255,255,.78);line-height:1.6}}
 .deliv-hint a{{color:#fff;text-decoration:underline;font-weight:600}}
 .tiles{{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:24px 0}}
 .tile{{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;

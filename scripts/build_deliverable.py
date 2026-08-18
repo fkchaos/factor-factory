@@ -513,6 +513,11 @@ def _render_card(args, factor, audit_records: dict, pool_list: list,
 - 成本敏感性：净 alpha 对换手敏感，低换手场景优先。
 - 冗余关系：见 correlation.csv（ρ≥0.7 勿重复入模）；该矩阵在 **{args.corr_pool or pool_list[0]}** 单池上计算，非六池平均，换池后相关性可能变化。
 - 复现命令：FF_PROVIDER=baostock python scripts/real_research.py --factor {args.factor} --pool {pool_list[0]}
+
+## 聚合视图（本因子在聚合交付中的位置）
+- 机器可读发货形态：`../strategy_export/stock_factors.json`（条目 name={args.fcode}，供策略组阶段 0 消费）
+- 跨池检验记录：`../universe_matrix/ic_matrix_<最新日期>.csv` 及同批 icir / dsr 三表（本因子行以矩阵实际收录为准）
+- 说明：上述为同一交付物的聚合 / 检验视图，由 `scripts/export_to_strategy_json.py` / `scripts/factor_universe_matrix.py` 生成，与本卡同源，不另立交付编号。
 - 已知陷阱：特定牛熊阶段 / 流动性枯竭。
 """
 

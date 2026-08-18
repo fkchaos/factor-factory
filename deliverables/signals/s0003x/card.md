@@ -56,3 +56,7 @@
 - 状态序列见 state_sequence.csv；各状态绩效见 state_performance.json。
 - 复现命令：FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal volatility_regime --scode s0003x --pool hs800
 - 已知陷阱：🔴 实测方向与经济先验相反，不可按字面 risk_on 加仓：hs800 / 2015 起 2776 日样本（2026-08-12 出包 s0003x）显示 risk_off（波动扩张）后次日上涨率 55.3% 反而高于 risk_on 的 53.3%，命中率价差 −2.0%，叠加后 Sharpe 0.76→0.50（−0.26）。原因推测：A 股波动扩张多由**放量上涨**贡献（上行波动），并非只有下跌尾部。本信号的实际价值集中在**回撤削减**（MaxDD −45.49%→−34.12%，+11.38pct），宜作风险闸门而非收益增强器；按对方 §7.2 门槛（Sharpe>1.5 有效 / <1.0 证伪）判 refuted。⚠️ 我方刻意不因这个观测结果反转符号——那是看过全样本才改方向 = 数据窥探；若要用反向读法，须作为**新信号重新走一遍出包与审计**。
+
+## 聚合视图（本信号在聚合交付中的位置）
+- 机器可读发货形态：`../strategy_export/timing_signals.json`（条目 name=s0003x，含 exec_lag 钢印，供策略组阶段 0 消费）
+- 说明：聚合视图由 `scripts/export_to_strategy_json.py` 生成，与本卡同源，不另立交付编号。

@@ -31,6 +31,8 @@
 | `fXXXX/correlation.csv` | 同池冗余相关（与已交付因子的 RankIC 相关） | 人类+程序 |
 | `fXXXX/overfit_audit.json` | DSR / PBO 过拟合审计（**只证明真实性，不评价质量高低**） | 程序 |
 
+> 📎 本因子在聚合交付中的位置（策略导出条目 / 跨池矩阵行）见各 `fXXXX/card.md` 的「聚合视图」节。
+
 > 一个因子目录示例：`deliverables/factors/f0001a/`（隔夜-日内反转）。
 
 ---
@@ -47,11 +49,15 @@
 | `sXXXX/state_performance.json` | 状态叠加绩效（已 `shift(1)`） | 程序 |
 | `sXXXX/overfit_audit.json` | DSR / PBO 审计 | 程序 |
 
+> 📎 本信号在聚合交付中的位置（策略导出条目）见各 `sXXXX/card.md` 的「聚合视图」节。
+
 > ⚠️ **exec_lag 红线**：时序信号 T 日收盘才算得出 T 日状态，最早 T+1 建仓；评估必须用 `shift(1)` 口径，同期口径对广度类信号近似同义反复。详情见 `deliverables/strategy_export/README.md`。
 
 ---
 
-## 3. 组合导出 · `deliverables/strategy_export/`
+## 3. 因子/信号的机器可读发货形态 · `deliverables/strategy_export/`
+
+> **从属说明**：本层不是独立交付物，是 §1 因子包 / §2 信号包的**机器可读聚合视图**（同一批货的另一种形态）。编号仍在各条目 `name` 字段（f-code / s-code），各 card.md 的「聚合视图」节已指向这里。
 
 下游消费**用这一层**，不是看板。
 
@@ -66,7 +72,9 @@
 
 ---
 
-## 4. 跨因子矩阵 · `deliverables/universe_matrix/`
+## 4. 因子/信号的跨池检验记录 · `deliverables/universe_matrix/`
+
+> **从属说明**：本层不是独立交付物，是 §1 因子包的**跨池检验记录**（IC / ICIR / DSR 体检报告）。矩阵行=因子实现名、列=池子；按日留存快照，可对比因子库扩张前后的冗余演化。
 
 | 文件 | 内容 |
 |---|---|
