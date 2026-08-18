@@ -17,6 +17,7 @@ import csv
 import datetime as dt
 import glob
 import html
+import json
 import os
 import sys
 
@@ -182,6 +183,71 @@ def collect_signal_registry():
     return []
 
 
+def collect_strategy_export():
+    """扫描 deliverables/strategy_export/*.json（策略组阶段 0 输入包，机器可读真源）。"""
+    d = os.path.join(ROOT, "deliverables", "strategy_export")
+    out = []
+    if not os.path.isdir(d):
+        return out
+    desc = {
+        "stock_factors.json": "横截面选股因子（f-code）",
+        "timing_signals.json": "市场级择时信号（s-code，含 exec_lag 钢印）",
+        "risk_params.json": "风控参数（策略层范围，本厂占位）",
+    }
+    array_key = {
+        "stock_factors.json": "factors",
+        "timing_signals.json": "signals",
+        "risk_params.json": "params",
+    }
+    for fn in sorted(os.listdir(d)):
+        if not fn.endswith(".json"):
+            continue
+        try:
+            with open(os.path.join(d, fn), encoding="utf-8") as f:
+                data = json.load(f)
+            n = len(data.get(array_key.get(fn, ""), []))
+            generated = (data.get("generated") or "").split(" ")[0]
+        except Exception:
+            n, generated = "?", ""
+        out.append({
+            "stage": "strategy_export",
+            "title": fn,
+            "code": fn.replace(".json", ""),
+            "source": "deliverables/strategy_export/",
+            "detail": f"{n} 条 · {desc.get(fn, '')}",
+            "meta": f"generated {generated} ｜ 机器可读真源",
+        })
+    return out
+
+
+def collect_universe_matrix():
+    """扫描 deliverables/universe_matrix/*.csv，按日期聚合为矩阵快照批次。"""
+    d = os.path.join(ROOT, "deliverables", "universe_matrix")
+    out = []
+    if not os.path.isdir(d):
+        return out
+    batches = {}
+    for fn in sorted(os.listdir(d)):
+        if not fn.endswith(".csv"):
+            continue
+        date = fn.rsplit("_", 1)[1][:-4]  # ic_matrix_2026-08-06.csv -> 2026-08-06
+        batches.setdefault(date, []).append(fn)
+    today = dt.date.today()
+    for date in sorted(batches, reverse=True):
+        kinds = sorted(fn.split("_")[0] for fn in batches[date])
+        days = (today - dt.date.fromisoformat(date)).days
+        stale = "⚠️ " if days > 3 else ""
+        out.append({
+            "stage": "universe_matrix",
+            "title": f"矩阵快照 {date}",
+            "code": date,
+            "source": "deliverables/universe_matrix/",
+            "detail": " · ".join(kinds) + " 全因子矩阵（冗余/ICIR/过拟合）",
+            "meta": f"{stale}{len(batches[date])} 件 · {days} 天前",
+        })
+    return out
+
+
 # ---------------------------------------------------------------- 状态归类
 def build_rows(impls, ideas, registry):
     delivered_codes = {r.get("fcode") for r in registry if r.get("fcode")}
@@ -291,6 +357,11 @@ def build_rows(impls, ideas, registry):
             "detail": it["doc"],
             "meta": "已实现 · 待交付",
         })
+
+    # 7) 策略导出（strategy_export）：JSON 输入包
+    rows.extend(collect_strategy_export())
+    # 8) 跨因子矩阵（universe_matrix）：按日快照
+    rows.extend(collect_universe_matrix())
     return rows
 
 
@@ -302,6 +373,8 @@ STAGE_META = {
     "rejected":   ("已拒绝",   "#9333ea", "检验未过或被证伪"),
     "sig_delivered":("信号已交付", "#16a34a", "s-code 包已产出，含状态定义+叠加改善"),
     "sig_researching":("信号研究中", "#2563eb", "Signal 类已实现，等待或正在检验"),
+    "strategy_export":("策略导出", "#0d9488", "给策略组阶段 0 的 JSON 输入包（机器可读真源）"),
+    "universe_matrix":("跨因子矩阵", "#ea580c", "IC / ICIR / DSR 全因子矩阵（按日快照）"),
 }
 
 
@@ -323,7 +396,7 @@ def render_html(rows, generated, hs_n, unreleased=0):
 
     sections = ""
     order = ["delivered", "researching", "idea", "rejected",
-             "sig_delivered", "sig_researching"]
+             "sig_delivered", "sig_researching", "strategy_export", "universe_matrix"]
     for st in order:
         srows = [r for r in rows if r["stage"] == st]
         if not srows and st == "delivered":
