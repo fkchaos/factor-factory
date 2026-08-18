@@ -439,7 +439,8 @@ footer{{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:
 {sections}
 <div class="legend">{legend}</div>
 <footer>双事业部：横截面因子线（f-code，选股打分）+ 时序信号线（s-code，市场状态 overlay）。
-生命周期：灵感池 → 研究中 → 已交付。｜ 本看板由 <code>scripts/factor_board.py</code> 生成，重跑即刷新。</footer>
+生命周期：灵感池 → 研究中 → 已交付。｜ 本看板由 <code>scripts/factor_board.py</code> 生成，重跑即刷新。
+<br>📦 交付物查看：因子明细 <code>deliverables/factors/&lt;fcode&gt;/card.md</code> · 信号明细 <code>deliverables/signals/&lt;scode&gt;/card.md</code> · 完整查阅地图见 <a href="https://github.com/fkchaos/factor-factory/blob/main/docs/DELIVERABLES.md">docs/DELIVERABLES.md</a></footer>
 </div></body></html>"""
 
 
