@@ -23,6 +23,7 @@ body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang 
 .deliv-hint{margin-top:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.30);
  color:#fff;font-size:14px;padding:8px 14px;border-radius:10px;line-height:1.85;word-break:break-all}
 .deliv-hint code{background:rgba(255,255,255,.20);padding:1px 7px;border-radius:5px;font-size:13px;font-weight:500}
+.deliv-hint .l{margin-top:4px}
 .deliv-hint a{color:#fff;text-decoration:underline;font-weight:600}
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin:24px 0}
 .tile{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;
@@ -58,9 +59,9 @@ footer{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:#
 </style></head><body>
 <div class="hero"><div class="inner">
 <h1><span class="logo">🧪</span>因子研发看板 · Factor Factory Board</h1>
-<div class="sub">生成时间：2026-08-18 15:18 ｜ 数据源：factors/ + research/idea_backlog.csv + deliverables/*/_REGISTRY.csv</div>
+<div class="sub">生成时间：2026-08-18 15:26 ｜ 数据源：factors/ + research/idea_backlog.csv + deliverables/*/_REGISTRY.csv</div>
 <div class="unreleased">📦 待发布交付物（CHANGELOG [Unreleased]）：<span class="n">8</span> 项</div>
-<div class="deliv-hint">📦 交付物查看：因子明细 <code>deliverables/factors/&lt;fcode&gt;/card.md</code> · 信号明细 <code>deliverables/signals/&lt;scode&gt;/card.md</code> · 完整查阅地图见 <a href="https://github.com/fkchaos/factor-factory/blob/main/docs/DELIVERABLES.md">docs/DELIVERABLES.md</a></div>
+<div class="deliv-hint">📦 交付物查看<div class="l">因子明细 <code>deliverables/factors/&lt;fcode&gt;/card.md</code> · 信号明细 <code>deliverables/signals/&lt;scode&gt;/card.md</code></div><div class="l">策略导出 <code>deliverables/strategy_export/*.json</code>（机器可读真源）· 跨因子矩阵 <code>deliverables/universe_matrix/</code> · 完整查阅地图见 <a href="https://github.com/fkchaos/factor-factory/blob/main/docs/DELIVERABLES.md">docs/DELIVERABLES.md</a></div></div>
 </div></div>
 <div class="wrap">
 <div class="tiles"><div class="tile"><div class="tile-n" style="color:#16a34a">10</div><div class="tile-l">因子已交付</div><div class="bar"><i style="width:100%"></i></div></div><div class="tile"><div class="tile-n" style="color:#2563eb">3</div><div class="tile-l">因子研究中</div><div class="bar"><i style="width:36%"></i></div></div><div class="tile"><div class="tile-n" style="color:#d97706">28</div><div class="tile-l">灵感池</div><div class="bar"><i style="width:100%"></i></div></div><div class="tile"><div class="tile-n" style="color:#9333ea">0</div><div class="tile-l">已拒绝</div><div class="bar"><i style="width:0%"></i></div></div><div class="tile"><div class="tile-n" style="color:#16a34a">3</div><div class="tile-l">信号已交付</div><div class="bar"><i style="width:36%"></i></div></div><div class="tile"><div class="tile-n" style="color:#2563eb">0</div><div class="tile-l">信号研究中</div><div class="bar"><i style="width:0%"></i></div></div></div>
