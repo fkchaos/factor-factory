@@ -373,9 +373,15 @@ STAGE_META = {
     "rejected":   ("已拒绝",   "#9333ea", "检验未过或被证伪"),
     "sig_delivered":("信号已交付", "#16a34a", "s-code 包已产出，含状态定义+叠加改善"),
     "sig_researching":("信号研究中", "#2563eb", "Signal 类已实现，等待或正在检验"),
-    "strategy_export":("策略导出", "#0d9488", "给策略组阶段 0 的 JSON 输入包（机器可读真源）"),
-    "universe_matrix":("跨因子矩阵", "#ea580c", "IC / ICIR / DSR 全因子矩阵（按日快照）"),
+    "strategy_export":("策略导出", "#0d9488", "附属：机器可读发货形态（不另立编号）"),
+    "universe_matrix":("跨因子矩阵", "#ea580c", "附属：跨池检验记录（不另立编号）"),
 }
+
+# 2026-08-18 主从架构（用户决策）：核心交付=因子/信号（带编号）；
+# strategy_export / universe_matrix 是附属视图，tile 区拆出、section 标题加"附属 · "前缀。
+MAIN_STAGES = ["delivered", "researching", "idea", "rejected",
+               "sig_delivered", "sig_researching"]
+ATTACH_STAGES = ["strategy_export", "universe_matrix"]
 
 
 def esc(s):
@@ -387,16 +393,21 @@ def render_html(rows, generated, hs_n, unreleased=0):
     for r in rows:
         counts[r["stage"]] = counts.get(r["stage"], 0) + 1
 
-    tiles = "".join(
-        f'<div class="tile"><div class="tile-n" style="color:{c}">{counts[k]}</div>'
-        f'<div class="tile-l">{lbl}</div>'
-        f'<div class="bar"><i style="width:{min(100, counts[k]*12)}%"></i></div></div>'
-        for k, (lbl, c, _) in STAGE_META.items()
+    def _tile_html(k, lbl, c, n, attach=False):
+        cls = ' tile-a' if attach else ''
+        return (
+            f'<div class="tile{cls}"><div class="tile-n" style="color:{c}">{n}</div>'
+            f'<div class="tile-l">{lbl}</div>'
+            f'<div class="bar"><i style="width:{min(100, n*12)}%"></i></div></div>'
+        )
+
+    tiles_main = "".join(_tile_html(k, *STAGE_META[k][:2], counts[k]) for k in MAIN_STAGES)
+    tiles_attach = "".join(
+        _tile_html(k, *STAGE_META[k][:2], counts[k], attach=True) for k in ATTACH_STAGES
     )
 
     sections = ""
-    order = ["delivered", "researching", "idea", "rejected",
-             "sig_delivered", "sig_researching", "strategy_export", "universe_matrix"]
+    order = MAIN_STAGES + ATTACH_STAGES
     for st in order:
         srows = [r for r in rows if r["stage"] == st]
         if not srows and st == "delivered":
@@ -412,6 +423,7 @@ def render_html(rows, generated, hs_n, unreleased=0):
         if not srows:
             continue
         label, color, hint = STAGE_META[st]
+        prefix = "附属 · " if st in ATTACH_STAGES else ""
         cards = ""
         for r in srows:
             cards += (
@@ -424,14 +436,15 @@ def render_html(rows, generated, hs_n, unreleased=0):
                 f'</div>'
             )
         sections += (
-            f'<section><h2 class="h2"><span class="dot" style="background:{color}"></span>{label} '
+            f'<section><h2 class="h2"><span class="dot" style="background:{color}"></span>{prefix}{label} '
             f'<span class="cnt">{counts[st]}</span></h2>'
             f'<p class="hint">{esc(hint)}</p><div class="grid">{cards}</div></section>'
         )
 
     legend = "".join(
-        f'<span><span class="dot" style="background:{c}"></span>{lbl}</span>'
-        for lbl, c, _ in STAGE_META.values()
+        f'<span><span class="dot" style="background:{c}"></span>'
+        f'{"附属 · " if k in ATTACH_STAGES else ""}{lbl}</span>'
+        for k, (lbl, c, _) in STAGE_META.items()
     )
 
     pct = min(100, hs_n * 100 // HS1800_TARGET)  # 缓存≥目标即视作满进度
@@ -499,6 +512,12 @@ body{{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang
 .tile-l{{font-size:13px;color:var(--muted);margin-top:6px}}
 .tile .bar{{height:5px;border-radius:4px;background:#eef0f6;margin-top:12px;overflow:hidden}}
 .tile .bar>i{{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#a855f7)}}
+.attach-head{{font-size:12.5px;color:var(--muted);font-weight:600;margin:22px 0 -10px}}
+.tiles.attach{{margin-top:14px}}
+.tiles.attach .tile{{background:rgba(255,255,255,.55);border:1px dashed var(--line);box-shadow:none}}
+.tiles.attach .tile:hover{{transform:none;box-shadow:none}}
+.tiles.attach .tile-n{{font-size:20px}}
+.tiles.attach .tile-l{{font-size:12px}}
 .hshead{{font-size:15px;color:var(--muted);font-weight:600;margin:4px 0 0}}
 .hsbar{{height:8px;border-radius:6px;background:#e9ecf4;overflow:hidden;margin:7px 0 4px}}
 .hsbar>i{{display:block;height:100%;background:linear-gradient(90deg,#2563eb,#22d3ee)}}
@@ -530,7 +549,9 @@ footer{{margin-top:40px;border-top:1px solid var(--line);padding-top:16px;color:
 {deliv_html}
 </div></div>
 <div class="wrap">
-<div class="tiles">{tiles}</div>
+<div class="tiles">{tiles_main}</div>
+<div class="attach-head">附属视图 · 无编号（机器可读发货形态 / 跨池检验记录）</div>
+<div class="tiles attach">{tiles_attach}</div>
 <div class="hshead">数据管线 hs1800 全市场缓存</div>
 <div class="hsbar"><i style="width:{pct}%"></i></div>
 <p class="hssub">{hs_n}/{HS1800_TARGET} 已缓存（{pct}%）</p>
