@@ -15,3 +15,7 @@ from . import microstructure  # noqa: F401
 from . import combo  # noqa: F401
 from . import chip_cost_distance  # noqa: F401
 from . import volume_expansion_speed  # noqa: F401
+from . import avg_turnover_120d  # noqa: F401
+from . import avg_turnover_10d  # noqa: F401
+from . import avg_turnover_240d  # noqa: F401
+from . import amount_std_20d  # noqa: F401

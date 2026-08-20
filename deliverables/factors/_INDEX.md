@@ -13,3 +13,7 @@
 | f0008a | 隔夜跳空缺口 | single |  | current | 2026-08-17 |
 | f0009a | 涨停封板强度 | single |  | current | 2026-08-17 |
 | f0010a | 市值对数 | single |  | current | 2026-08-17 |
+| f0011a | 120日平均换手率 | single |  | current | 2026-08-20 |
+| f0012a | 10日平均换手率 | single |  | current | 2026-08-20 |
+| f0013a | 240日平均换手率 | single |  | current | 2026-08-20 |
+| f0016a | 20日成交金额标准差 | single |  | current | 2026-08-20 |
