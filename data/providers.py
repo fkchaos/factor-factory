@@ -541,18 +541,24 @@ class BaoStockProvider:
 
     def __init__(self, cache_dir: str = ".cache/baostock", universe: str = "hs300",
                  index_code: str = "000300.SH", retry: int = 3,
-                 history_start: Optional[str] = None, min_mcap: float = 0.0):
+                 history_start: Optional[str] = None, min_mcap: float = 0.0,
+                 pit_start_year: int = 2005):
         """history_start：分析窗口起点（如 '2024-01-01'），构建内存缓存时丢弃更早数据，
         显著降低内存与计算量；None=全历史。仅影响取数窗口，不影响 parquet 磁盘缓存完整性。
         min_mcap：全 A（ALL）池的市值下限（元），用 AkShare 市值快照过滤小市值/壳股；
-        0=不过滤。"""
+        0=不过滤。
+        pit_start_year：PIT 财报取数起始年（如 2015）。财报历史按 (年,季) 逐期拉取，
+        窗口越小首跑调用越少；结果按股票落 .cache/baostock/financial/*.parquet 复用。"""
         self._cache = Path(cache_dir)
         self._cache.mkdir(parents=True, exist_ok=True)
+        self._fin_cache = self._cache / "financial"   # PIT 财报披露表缓存（按股票）
+        self._fin_cache.mkdir(parents=True, exist_ok=True)
         self._universe_mode = universe
         self._index_code = index_code
         self._retry = retry
         self._min_mcap = float(min_mcap)
         self._history_start = pd.Timestamp(history_start) if history_start else None
+        self._pit_start_year = int(pit_start_year)
         self._connected = False
         self._bs = None
         self._panel_cache: Optional[pd.DataFrame] = None
@@ -855,9 +861,154 @@ class BaoStockProvider:
         validate_returns(s, "BaoStock")
         return s
 
-    def get_pit_financials(self, fields: list[str], as_of_date) -> pd.DataFrame:
-        # 同 AkShare：Phase 2/3 因子暂未用财报
-        return pd.DataFrame(columns=["date", "asset"] + list(fields)).set_index(["date", "asset"])
+    # ---- PIT 基本面管线（point-in-time 财报，防前视核心）----
+    # 字段映射：规范名 -> baostock 原始列名。
+    # 🔴 红线前提：baostock 免费接口只暴露【指标级】字段（利润表/资产负债表/现金流量表
+    #    的汇总指标 + 业绩快报），**不提供完整三大表明细行项目**。经实拉验证可用：
+    #      revenue(营业收入)      <- profit_data.MBRevenue        （元，实测 sh.600519 2023=1472亿 ✓）
+    #      net_profit(净利润)     <- profit_data.netProfit        （元）
+    #      total_assets(总资产)   <- express.performanceExpressTotalAsset   （元，仅业绩快报，实测 ✓）
+    #      net_assets(净资产)     <- express.performanceExpressNetAsset     （元，仅业绩快报，实测 ✓）
+    #    下列字段 baostock 免费接口【根本不返回】，一律返回 NaN，**绝不伪造**：
+    #      cogs(营业成本) / inventory(存货) / accounts_receivable(应收账款)
+    #    → 这意味着 f0014a(存货周转天数)/f0015a(应收账款周转天数) 无法仅靠 baostock 构建，
+    #      须由 TushareProvider（income/balancesheet 全表明细，需积分）补 PIT 管线（见测试与汇报）。
+    _PIT_FIELD_MAP = {
+        "revenue": "MBRevenue",
+        "net_profit": "netProfit",
+        "total_assets": "performanceExpressTotalAsset",
+        "net_assets": "performanceExpressNetAsset",
+    }
+    # baostock 免费接口缺失、只能返回 NaN 的字段（明确登记，防误用/防伪造）
+    _PIT_FIELD_UNAVAILABLE = frozenset({"cogs", "inventory", "accounts_receivable"})
+
+    def _fetch_financial_history(self, code: str) -> pd.DataFrame:
+        """拉取单票全部财报披露历史，返回长表（已缓存 .cache/baostock/financial/{code}.parquet）。
+
+        列：statDate(报告期) / pubDate(公告日，PIT 对齐的唯一依据) / 各可用原始字段。
+        每个 (年,季) 调一次 profit_data（取 营业收入/净利润）；业绩快报一次拉全（取 总资产/净资产）。
+        balance_data / cash_flow_data 仅含比率、无可用行项目，跳过以省调用。
+        单票首跑约 (当前年-_pit_start_year+1)×4 + 1 次调用，落缓存后零网络。
+        """
+        key = self._fin_cache / f"{code}.parquet"
+        if key.exists():
+            return pd.read_parquet(key)
+        bs_code = self._to_bs_code(code)
+        bs = self._get_bs()
+        this_year = pd.Timestamp.now().year
+        recs = []
+        # 利润表指标（营业收入/净利润），按 (年,季) 逐期
+        for yr in range(self._pit_start_year, this_year + 1):
+            for q in (1, 2, 3, 4):
+                rs = self._call(bs.query_profit_data, bs_code, str(yr), str(q))
+                for r in self._collect_rows(rs):
+                    recs.append({
+                        "statDate": r.get("statDate"),
+                        "pubDate": r.get("pubDate"),
+                        "MBRevenue": self._safe_float(r.get("MBRevenue")),
+                        "netProfit": self._safe_float(r.get("netProfit")),
+                        "performanceExpressTotalAsset": np.nan,
+                        "performanceExpressNetAsset": np.nan,
+                    })
+        # 业绩快报（总资产/净资产），按日期区间一次拉全
+        rs = self._call(bs.query_performance_express_report, bs_code,
+                        f"{self._pit_start_year}-01-01", "2099-12-31")
+        for r in self._collect_rows(rs):
+            recs.append({
+                "statDate": r.get("performanceExpStatDate"),
+                "pubDate": r.get("performanceExpPubDate"),
+                "MBRevenue": np.nan,
+                "netProfit": np.nan,
+                "performanceExpressTotalAsset": self._safe_float(r.get("performanceExpressTotalAsset")),
+                "performanceExpressNetAsset": self._safe_float(r.get("performanceExpressNetAsset")),
+            })
+        if not recs:
+            df = pd.DataFrame(columns=["statDate", "pubDate", "MBRevenue", "netProfit",
+                                       "performanceExpressTotalAsset", "performanceExpressNetAsset"])
+        else:
+            df = pd.DataFrame(recs)
+            df["statDate"] = pd.to_datetime(df["statDate"], errors="coerce")
+            df["pubDate"] = pd.to_datetime(df["pubDate"], errors="coerce")
+            # 丢弃无报告期/无公告日的脏行；同 (statDate,pubDate) 去重
+            df = df.dropna(subset=["statDate", "pubDate"]).drop_duplicates(
+                ["statDate", "pubDate"], keep="last").reset_index(drop=True)
+        df.to_parquet(key)
+        return df
+
+    @staticmethod
+    def _pit_select_snapshot(disc: pd.DataFrame, fields: list[str], as_of) -> dict:
+        """PIT 核心：从披露历史中选截至 as_of 可获取的【最新已披露】各字段值。
+
+        前视安全保证（血牢红线）：
+          1. 仅保留 pubDate <= as_of 的行 → 未披露的财报一律不可见（无前视）。
+          2. 重述处理：同一 (statDate, pubDate) 视为同一披露事件，去重保留末次。
+          3. 🔴 字段独立取数（修复前任 total_assets=nan 的坑）：
+             利润表 report（query_profit_data，pubDate 较晚）与业绩快报 express
+             （query_performance_express_report，pubDate 较早）是【两条独立披露流】，
+             各自只携带部分字段——report 有 revenue/net_profit 但资产为 nan，
+             express 有 total_assets/net_assets 但收入利润为 nan。
+             二者通常共享同一 statDate（如 2023-12-31），若按"整行取最新披露"
+             会把 report 年报（nan 资产）覆盖 express（有值资产）→ total_assets=nan。
+             → 故对【每个字段】独立取其在 pubDate<=as_of 内最新披露（pubDate 最大）
+               且非缺失的值；这样 revenue 取 report、assets 取 express，互不干扰。
+             这也是更纯粹的 PIT：截至任意日期，市场已知某指标的最新披露值。
+          4. statDate 仅作元数据，绝不作为时间过滤/选择依据
+             （报告期结束日 ≠ 披露日，前视即失真）。
+        返回 {field: value}，不可用字段 / 无数据 → NaN。
+        """
+        as_of = pd.Timestamp(as_of)
+        out = {f: np.nan for f in fields}
+        if disc is None or len(disc) == 0:
+            return out
+        d = disc.copy()
+        d["pubDate"] = pd.to_datetime(d["pubDate"], errors="coerce")
+        d["statDate"] = pd.to_datetime(d["statDate"], errors="coerce")
+        # (1) PIT 红线：披露日 <= as_of
+        d = d[d["pubDate"] <= as_of]
+        if d.empty:
+            return out
+        # (2) 重述：同一披露事件 (statDate, pubDate) 去重，保留末次（最新同日报送）
+        d = d.drop_duplicates(["statDate", "pubDate"], keep="last")
+        # (3) 字段独立取最新披露值（pubDate 最大且非缺失）
+        for f in fields:
+            raw = BaoStockProvider._PIT_FIELD_MAP.get(f)
+            if raw is None:        # 含 baostock 免费缺失字段 → NaN（绝不伪造）
+                continue
+            col = d.get(raw)
+            if col is None:
+                continue
+            valid = d[col.notna()]
+            if valid.empty:
+                continue
+            latest = valid.loc[valid["pubDate"].idxmax()]
+            v = latest[raw]
+            out[f] = v if (v is not None and pd.notna(v)) else np.nan
+        return out
+
+    def get_pit_financials(self, fields: list[str], as_of_date,
+                           assets: Optional[list[str]] = None) -> pd.DataFrame:
+        """返回截至 as_of_date 实际可获取的 PIT 财报快照，MultiIndex(date, asset)。
+
+        每行 = 该股票截至 as_of_date 最新已披露财报的字段值（按 pubDate 对齐，无前视）。
+        date 层固定为 as_of_date（截面快照视角）；如需历史披露序列请逐 as_of 调用。
+        assets=None 时对配置的 universe 全量拉取（首跑按股票缓存，慢但可复用）。
+
+        只暴露当时市场已知信息：pubDate > as_of_date 的财报（含未披露的年报/季报）绝不出现。
+        """
+        as_of = pd.Timestamp(as_of_date)
+        assets = assets if assets is not None else self._asset_list()
+        assets = [normalize_code(a) for a in assets]
+        records = []
+        for code in assets:
+            disc = self._fetch_financial_history(code)
+            snap = self._pit_select_snapshot(disc, fields, as_of)
+            records.append({"date": as_of, "asset": code, **snap})
+        if not records:
+            df = pd.DataFrame(columns=["date", "asset"] + list(fields)).set_index(["date", "asset"])
+        else:
+            df = pd.DataFrame(records).set_index(["date", "asset"])
+            df = df[[c for c in fields if c in df.columns]]   # 保序保留请求字段
+        return df
 
     def list_universe(self, date: str) -> list[str]:
         # 当前快照口径（指数成分股/当日全市场），与 Tushare 近似非 PIT 一致

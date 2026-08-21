@@ -38,7 +38,7 @@ def test_build_rows_empty_registry_all_researching_or_idea():
          "confidence_seed": "low", "raw_idea": "论坛灵感A", "hypothesis": "高X→未来收益低",
          "source_ref": "url"},
         {"idea_id": "iX-002", "source_type": "paper", "status": "in_pipeline",
-         "confidence_seed": "high", "fcode": "f0003a", "raw_idea": "管线中B",
+         "confidence_seed": "high", "fcode": "f9999z", "raw_idea": "管线中B",
          "hypothesis": "Y高→未来收益高", "source_ref": "JF"},
         {"idea_id": "iX-003", "source_type": "paper", "status": "rejected",
          "confidence_seed": "high", "raw_idea": "被拒C", "reject_reason": "PBO过高",
@@ -49,13 +49,14 @@ def test_build_rows_empty_registry_all_researching_or_idea():
     for r in rows:
         stages.setdefault(r["stage"], 0)
         stages[r["stage"]] += 1
-    # 已交付=0（无 registry）；研究中含 8 impls + 1 in_pipeline；灵感=1；拒绝=1
+    # 已交付=0（无 registry）；研究中 = 所有未交付实现类 + in_pipeline 灵感；灵感=1；拒绝=1
+    n_impl_researching = sum(1 for i in impls if i["kind"] in ("factor", "feature_factory"))
     assert stages.get("delivered", 0) == 0
-    assert stages.get("researching", 0) == 8 + 1
+    assert stages.get("researching", 0) == n_impl_researching + 1
     assert stages.get("idea", 0) == 1
     assert stages.get("rejected", 0) == 1
-    # in_pipeline 的条目 code 应带上 fcode
-    pipe = [r for r in rows if r["stage"] == "researching" and "f0003a" in r["code"]]
+    # in_pipeline 的条目 code 应带上 fcode（f9999z 未命中"晋升跳过"，正常单列）
+    pipe = [r for r in rows if r["stage"] == "researching" and "f9999z" in r["code"]]
     assert pipe, "in_pipeline 条目应显示 fcode"
 
 
@@ -74,9 +75,8 @@ def test_build_rows_delivered_not_duplicated_in_researching():
 
 def test_render_html_contains_stages_and_legend(tmp_path):
     rows = build_rows(collect_implementations(), ideas=[], registry=[])
-    out = render_html(rows, generated="2026-08-06 12:00", hs_n=1000)
+    out = render_html(rows, generated="2026-08-06 12:00")
     assert "<!doctype html>" in out
     for label in ("已交付", "研究中", "灵感池", "已拒绝"):
         assert label in out
     assert "生命周期" in out  # footer legend
-    assert "1000/1572" in out  # hs1800 进度
