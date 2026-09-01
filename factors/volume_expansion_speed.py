@@ -24,6 +24,7 @@ from factors.interface import register_factor
 @register_factor
 class VolumeExpansionSpeedFactor:
     name = "volume_expansion_speed"
+    fcode = "f0026a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

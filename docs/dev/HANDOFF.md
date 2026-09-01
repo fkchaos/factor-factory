@@ -30,7 +30,8 @@
 - ✅ **已修**：cwds 恢复正常 `D:/ai-workspace/WorkBuddy/A股研究`；prompt 重构——「落盘保障」（CHANGELOG/HANDOFF/看板每轮必达，不出包成功也写）+ 候选源扩展到「研究中因子」（纯价量可离线出包）+ 加 `.cache/propel_last_run.json` 运行日志；下次运行已排程。
 - ✅ **离线出包验证通**：手动出包 f0026a（量能扩张速度，纯价量，baostock 缓存 cache hit，30s 完成，RankIC -0.0057）——证明「研究中因子」可稳定 drain，推进器每轮出 1 个不再卡。
 - ✅ **落盘闭环**：CHANGELOG 补 f0011a–f0026a 共 15 条漏记交付；3 条评估洞察类灵感(i20260820-028/029/030)归档 archived（hypothesized 64→61）；看板刷新（因子已交付=26/研究中=18/信号=3）；propel_last_run.json 写本轮摘要。
-- ⚠️ **遗留**：看板「研究中=18」口径有小偏差（volume_expansion_speed 已出包 f0026a 仍计入），待修 factor_board.py 匹配逻辑；f0011a–f0025a 中部分因子需后续补 PIT 真口径重测（非阻塞）。
+- ✅ **看板口径偏差已修（2026-09-01 晚）**：`factors/volume_expansion_speed.py` 补 `fcode="f0026a"`，看板"研究中"计数 18→17，f0026a 不再误计（根因 = 看板 AST 只认 Factor 类 `fcode` 类属性，缺 fcode 则判"待分配 f-code"）。后续任何新因子模块出包时，`fcode` 类属性为必填，否则看板会重复计数。
+- ⚠️ **PIT 重测清单（已 grep 审计收敛，2026-09-01 晚）**：已交付 f0011a–f0025a 量价因子 `compute` 层**均不读 `market_cap`**（市值暴露由 harness 用 `pit_float_mcap` 中性化剥离，08-08 已修），**无需重测**；研究中 `zoo_basics.size_log_mcap`（name=size_log_mcap，未交付）与 `feature_factory.py:204` 仍直接读脏 `market_cap`（今日快照回填全历史），为 PIT 重测首要对象——已排进推进器**步骤0.5** 常设体检（每次自动登记，改造为 `pit_float_mcap` 后再出包）。
 
 ### 当前状态（一句话）
 **双线交付齐备且全部 PIT 口径可信：信号线已三包（s0001x 广度 Regime / s0002x 风险偏好 / s0003x 波动率 Regime，三包两两视角独立）；f-code 三包均按 v2-pit-mcap 真口径重算完毕；本轮（08-12）新增第三信号 `s0003x` 出包并将卡片模板硬编码陷阱句 bug 修复，全量 161 项 pytest 回归全绿（4m49s），看板信号段翻牌 已交付=3 / 研究中=0，对外 JSON 同步刷新为 3 stock + 3 timing。
@@ -102,7 +103,7 @@
 ### 下一步待办（按优先级）
 1. ✅ **（已发送 2026-08-17 16:19）** `deliverables/strategy_collab_issue.md` 已成功建 issue 到 `fkchaos/a-share-quant-sim`：**[#1](https://github.com/fkchaos/a-share-quant-sim/issues/1)**。路径：本地 GCM 凭证中的 fkchaos PAT → GitHub REST API（`POST /repos/fkchaos/a-share-quant-sim/issues`），**绕开 WorkBuddy GitHub 连接器**（该连接器对仓库只读/已断开，写操作全 403）。注意：WorkBuddy 连接器仍不可用，后续若需再发 issue/PR，继续走本地 PAT/API 或用户在 Web 手动操作。
 2. **P0 信号半衰期补丁**：`decay_status` / `regime_dependency` 现为 unknown，是导出 JSON 里唯二的空洞。
-3. **审计其他 PIT 嫌疑字段**：本轮只修了 `market_cap`，`factors/zoo_basics.py::size_log_mcap`（研究中未交付）仍读脏列；provider 里还有没有别的"今日快照回填"字段值得逐一 `nunique()` 过一遍。
+3. **审计其他 PIT 嫌疑字段（2026-09-01 已收敛）**：grep 全 `factors/` 确认仅 `zoo_basics.size_log_mcap`（研究中未交付）+ `feature_factory.py:204` 读脏 `market_cap`；已交付 f0011a–f0025a 量价因子 `compute` 层无脏市值读取、中性化已走 `pit_float_mcap`，**无需重测**。PIT 重测（zoo_basics 改造为 `pit_float_mcap` 后出包）已排进推进器**步骤0.5** 常设体检（2026-09-01 加）。
 4. （可选）从灵感池 promote 高优候选（#3 日夜动量分解、#7 非对称反转）进流水线验证。
 5. （中期）第三条腿 ML 挖掘：特征工厂已就位 → 上 Purged CV + Walk-forward + SHAP 可解释。
 6. （P1）因子线补分状态 IC + IC 衰减 + 经济逻辑长文（v75 复盘盲区① + 需求对接项）。
