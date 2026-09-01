@@ -32,6 +32,7 @@
 - ✅ **落盘闭环**：CHANGELOG 补 f0011a–f0026a 共 15 条漏记交付；3 条评估洞察类灵感(i20260820-028/029/030)归档 archived（hypothesized 64→61）；看板刷新（因子已交付=26/研究中=18/信号=3）；propel_last_run.json 写本轮摘要。
 - ✅ **看板口径偏差已修（2026-09-01 晚）**：`factors/volume_expansion_speed.py` 补 `fcode="f0026a"`，看板"研究中"计数 18→17，f0026a 不再误计（根因 = 看板 AST 只认 Factor 类 `fcode` 类属性，缺 fcode 则判"待分配 f-code"）。后续任何新因子模块出包时，`fcode` 类属性为必填，否则看板会重复计数。
 - ⚠️ **PIT 重测清单（已 grep 审计收敛，2026-09-01 晚）**：已交付 f0011a–f0025a 量价因子 `compute` 层**均不读 `market_cap`**（市值暴露由 harness 用 `pit_float_mcap` 中性化剥离，08-08 已修），**无需重测**；研究中 `zoo_basics.size_log_mcap`（name=size_log_mcap，未交付）与 `feature_factory.py:204` 仍直接读脏 `market_cap`（今日快照回填全历史），为 PIT 重测首要对象——已排进推进器**步骤0.5** 常设体检（每次自动登记，改造为 `pit_float_mcap` 后再出包）。
+- ✅ **灵感池积压分流处置（2026-09-01 晚 · 用户拍板"想办法处理掉80个灵感"）**：80 条 = 16 validated + 3 archived(旧) + 61 hypothesized。逐条分流文档 `docs/dev/BACKLOG_TRIAGE_2026-09-01.md`。**34 条 hypothesized→archived（拿到明确 disposition，移出待处理池）**：A桶可离线出包 27 条（纯量价/收益/OHLC，baostock 缓存可建，交推进器 K=5/晚排期，约 6 晚清空）+ B桶 Overlay/Gating 5 条（归档→信号线/合成层，非截面 f-code）+ C桶数据源阻塞 22 条（归档+标注所需源：PIT财报/分析师预期/龙虎榜/两融/基金持仓/研报文本/iVIX/概念板块，待接入后可复活）+ D桶元研究/非因子 6 条（归档→研究轨道）+ E桶重复 1 条（i20260805-011 低换手已被 f0011-16a 覆盖，合并）。处置后 **hypothesized 61→27**，积压从"只进不出"转为可 drain 状态；看板/灵感池计数将随推进器出包下降。
 
 ### 当前状态（一句话）
 **双线交付齐备且全部 PIT 口径可信：信号线已三包（s0001x 广度 Regime / s0002x 风险偏好 / s0003x 波动率 Regime，三包两两视角独立）；f-code 三包均按 v2-pit-mcap 真口径重算完毕；本轮（08-12）新增第三信号 `s0003x` 出包并将卡片模板硬编码陷阱句 bug 修复，全量 161 项 pytest 回归全绿（4m49s），看板信号段翻牌 已交付=3 / 研究中=0，对外 JSON 同步刷新为 3 stock + 3 timing。
