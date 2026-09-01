@@ -121,6 +121,7 @@
 ### 关键环境变化（续作必读）
 - hs1800 全市场缓存 **1672 parquet 已就绪**（数据阻塞解除，P4/P5/P7/f0003a 可跑）。
 - 两个自动化在跑（2026-08-17 精简：原看门狗 21:30 已并入驱动器 21:00，单一 session 完成工作+自检，减少 session 数、且全程零用户交互）：侦察兵（供给，周一/四 12:00；截至 2026-08-17 已累计供给 57 条候选）+ 驱动器（执行+自检，每日 21:00，含信号线 s-code 构建 + 看板双段刷新 + HANDOFF 同步 + 当月月报动态生成 + 原看门狗四项巡检内联：signals/_REGISTRY.csv 存在性 / ic_matrix hs1800 列 / P5 baseline 40 天新鲜度 / board mtime<24h）。
+- 🆕 **每日 22:00 自动同步 automation（automation-1788263669961，2026-09-01 用户拍板「后续提交不需要拍板，本地修改全部提交保持线上最新」）**：每天 22:00 自动 `git add -A → commit(auto-sync: 日期 本地改动自动提交) → push origin main`，零交互、零询问；`.gitignore` 已排除 `.cache/`/`.workbuddy/`/`.env`/`*.token`/`configs/tushare.yaml` 等，自动跳过。**后续 session 无需再问用户要不要 commit/push**，本地改动每晚 22:00 自动上线；当日无改动则跳过。人工提交用 `feat/fix/chore` 前缀，自动同步统一 `auto-sync:` 前缀。
 - **GitHub issue 批次队列（2026-08-17 用户拍板「按批次累积提」，替代此前暂停态）**：驱动器不再直发 issue（cron 零交互 + headless 取不到 GCM 凭证）。每实际新交付一个 f/s-code，驱动器向 `.cache/pending_handoff.md` 追加一行（日期|类型|编号|名称|JSON路径）；看板 `factor_board.py` 顶部注入「📤 待提 issue：N 个」（N=队列数据行数）；主理人在交互会话时读队列 → 用 `scripts/gh_issue.py` 经本地 PAT+API 汇总成一个 issue 发出 → 清空队列。已交付的 3 因子(f0001a/f0002a/f0003a)+3 信号(s0001x/s0002x/s0003x)已在 Issue #1 整体交接，不重复入队。
 - 双线架构：`factors/`（f-code 选股）+ `signals/`（s-code 市场状态 overlay），详见 `docs/PLAN_SIGNAL_LINE.md`；看板单文件双段 `docs/factor_board.html`。
 - baostock 单实例端口锁已加（cache_universe.py）；拉取前确认无遗留 python 进程。
