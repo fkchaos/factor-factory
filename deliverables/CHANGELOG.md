@@ -23,6 +23,24 @@
 - `2026-08-17 | factor | f0009a | 涨停封板强度（limit_up_seal） | deliverables/factors/f0009a/`
 - `2026-08-17 | factor | f0010a | 市值对数（size_log_mcap） | deliverables/factors/f0010a/`
 
+### 因子（f0011a–f0026a 补录 · 批量价量 + 财报类 + 研究中因子）
+- `2026-08-20 | factor | f0011a | 120日平均换手率（avg_turnover_120d） | deliverables/factors/f0011a/`
+- `2026-08-20 | factor | f0012a | 10日平均换手率（avg_turnover_10d） | deliverables/factors/f0012a/`
+- `2026-08-20 | factor | f0013a | 240日平均换手率（avg_turnover_240d） | deliverables/factors/f0013a/`
+- `2026-08-20 | factor | f0016a | 20日成交金额标准差（amount_std_20d） | deliverables/factors/f0016a/`
+- `2026-08-20 | factor | f0017a | 5日平均换手率（avg_turnover_5d） | deliverables/factors/f0017a/`
+- `2026-08-20 | factor | f0018a | 5日EMA（ema_5d） | deliverables/factors/f0018a/`
+- `2026-08-20 | factor | f0019a | 10日EMA（ema_12d） | deliverables/factors/f0019a/`
+- `2026-08-20 | factor | f0020a | 12日EMA（ema_12d） | deliverables/factors/f0020a/`
+- `2026-08-20 | factor | f0021a | 120日EMA（ema_120d） | deliverables/factors/f0021a/`
+- `2026-08-20 | factor | f0022a | 5日MA（ma_5d） | deliverables/factors/f0022a/`
+- `2026-08-20 | factor | f0023a | 20日成交金额MA（amount_ma_20d） | deliverables/factors/f0023a/`
+- `2026-08-20 | factor | f0024a | 20日资金流量（money_flow_ma_20d） | deliverables/factors/f0024a/`
+- `2026-08-20 | factor | f0025a | 布林上轨20日（bollinger_upper_20d） | deliverables/factors/f0025a/`
+- `2026-08-24 | factor | f0014a | 存货周转天数（inventory_turnover_days） | deliverables/factors/f0014a/`（财报类·日频RankIC≈0(-0.0008)；迅投看板IC=0.83为同期相关口径非RankIC，不可比·高IC低超额陷阱实锤）
+- `2026-08-24 | factor | f0015a | 应收账款周转天数（ar_turnover_days） | deliverables/factors/f0015a/`（财报类·日频RankIC≈0(+0.0000)；同口径提示）
+- `2026-09-01 | factor | f0026a | 量能扩张速度（volume_expansion_speed） | deliverables/factors/f0026a/`（原研究中因子·离线cache hit出包验证·RankIC -0.0057）
+
 ## [0.1.0] - 2026-08-17
 
 初始交付批次（研究/模拟盘，非实盘）。

@@ -28,3 +28,4 @@ from . import ma_5d  # noqa: F401
 from . import amount_ma_20d  # noqa: F401
 from . import money_flow_ma_20d  # noqa: F401
 from . import bollinger_upper_20d  # noqa: F401
+from . import turnover_days  # noqa: F401  （f0014a 存货周转天数 / f0015a 应收账款周转天数）

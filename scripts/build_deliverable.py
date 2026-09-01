@@ -465,6 +465,21 @@ def _render_card(args, factor, audit_records: dict, pool_list: list,
     if rank_ic is not None and np.isfinite(rank_ic or np.nan):
         direction = "正向（因子值越大，未来收益越高）" if rank_ic > 0 else "反向（因子值越大，未来收益越低）"
 
+    # 财报类因子（带财务 pit_fields）专属警示：高 IC 低超额 / 方向或反向 / 年度化口径
+    pit = getattr(factor, "pit_fields", None) or []
+    fin_caveat = ""
+    if pit and ({"cogs", "inventory", "accounts_receivable", "revenue"} & set(pit)):
+        fin_caveat = (
+            "\n## 财报类因子特别警示\n"
+            "- **披露日口径**：值取自截至 as_of 最新*已披露*财报（AkShare NOTICE_DATE 真实公告日对齐，无前视）；"
+            "因子值随披露日阶梯跳变是财报特性，非前视。\n"
+            "- **高 IC 低超额陷阱**：财报类因子（存货/应收周转天数）常与质量/价值因子高度共线，"
+            "RankIC 可能为正但多空净超额极低；方向亦可能反向（高周转=运营高效 OR 渠道压货=质量差，经济含义非单调）。"
+            "落地前务必以分池 IC + 多头超额为最终判据，且勿与本池已装价值/质量因子重复入模。\n"
+            "- **年度化口径**：cogs/revenue 为流量项，按自身 statDate 月份年化"
+            "（Q1→×4 / H1→×2 / Q3→×4/3 / 年报→×1），存货/应收为时点值不年化，使季/年报可比。\n"
+        )
+
     # 分池 IC 表（决策5：覆盖全6池，不再只测 sz50）
     pool_rows = ""
     for p in pool_list:
@@ -519,6 +534,7 @@ def _render_card(args, factor, audit_records: dict, pool_list: list,
 - 跨池检验记录：`../universe_matrix/ic_matrix_<最新日期>.csv` 及同批 icir / dsr 三表（本因子行以矩阵实际收录为准）
 - 说明：上述为同一交付物的聚合 / 检验视图，由 `scripts/export_to_strategy_json.py` / `scripts/factor_universe_matrix.py` 生成，与本卡同源，不另立交付编号。
 - 已知陷阱：特定牛熊阶段 / 流动性枯竭。
+{ fin_caveat }
 """
 
 

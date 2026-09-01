@@ -8,11 +8,11 @@
 ---
 
 ## 0. 元信息
-- 更新日期：2026-08-17（P4/P5 根因排查 + 连接器只读实测 + 看门狗并入驱动器精简 cron + 看板刷新 + 灵感池 draining（f0004a/f0005a 交付）+ 系统性提速（驱动器消费端 + 侦察兵护栏））
+- 更新日期：2026-09-01（推进器机制瘫痪根治：cwds修复 + prompt重构落盘保障 + 候选扩研究中因子 + 运行日志；手动实跑验证离线出包通 + f0026a出包 + 归档3条评估洞察类 + CHANGELOG/HANDOFF/看板落盘）
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
 
-## 🆕 最新快照（2026-08-12 晚 21:00 · 驱动器推进：第三 s-code `s0003x` 出包 + 卡片陷阱 bug 修复 + 看板/JSON/回归刷新）
+## 🆕 最新快照（2026-09-01 · 推进器机制瘫痪根治 + 离线出包验证 + 灵感池 draining 重启）
 
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
@@ -24,6 +24,13 @@
 - 🔍 **P4 是假警报，非代码缺陷**：`scripts/factor_universe_matrix.py` 的 `universe_hint` AttributeError 在 `factors/interface.py:73` 已声明 `universe_hint: Optional[str] = None` 协议默认 + 矩阵脚本 `getattr(f,"universe_hint",None)` 防御读取后，**早已修复**；`deliverables/universe_matrix/ic_matrix_2026-08-07.csv` 六池（含 hs1800）两因子全部填满（overnight_intraday hs1800 +0.0283 / ivol hs1800 +0.0388）。真正的「P4 状态缺失 连续 8 晚告警」根因是**看门狗误查了从未被写出的 `.cache/review/p4_status.json`**——已纠正：驱动/看门狗 P4 检查现直接读 `ic_matrix_*.csv` 的 hs1800 列（真实完成标志），无需状态文件。
 - 🔍 **P5 是真卡住，现已疏通**：基线 `ic_overnight_intraday_hs800.csv` 存在但驱动器只在「文件缺失」时才跑 → 永不被触发；看门狗 36h 阈值对月度基线过严 → 连续误报。已双修：驱动器改为「>30 天或未存在→重跑基线，且每月都出当月月报（动态月份，非硬编码 2026-07）」；看门狗阈值放宽到 >40 天。并已在 2026-08-17 启动后台基线重刷（2020→now）+ 生成 `research/monthly/2026-08.md` 当月月报。
 - 🔴 **GitHub 连接器对该仓库为只读（read-only），非 disconnected**：实测 `get_me`→fkchaos（身份正常）、`get_file_contents`→可读、`list_*`→可读；但 `issue_write` / `create_pull_request` / `create_or_update_file` 等**所有写操作均 403 Resource not accessible by integration**。结论：**issue、PR、代码都无法经连接器推送**，必须用户以 fkchaos 身份在 GitHub Web 手动操作（仓库 owner 有完整写权限）。WorkBuddy 设置里点进 GitHub App 无 Repository access 开关——该连接器权限范围由平台服务端固守，用户侧改不了。
+
+### 2026-09-01 推进器修复（机制瘫痪根治 · 手动替跑一轮验证）
+- 🔴 **根因三连**：①cwds 字段损坏（数组被错序列化进 Program 路径字符串，框架取不到工作目录）；②原 prompt 只从 hypothesized 灵感挑候选，而池里 64 条待处理全是「需新数据源硬骨头」或「评估洞察类」，挑不到可出包的 → 空转；③出包成功才落盘 CHANGELOG/HANDOFF，联网财报因子(f0014a类)慢/卡把整轮拖崩 → CHANGELOG停8-17、HANDOFF停8-12、灵感池不降。
+- ✅ **已修**：cwds 恢复正常 `D:/ai-workspace/WorkBuddy/A股研究`；prompt 重构——「落盘保障」（CHANGELOG/HANDOFF/看板每轮必达，不出包成功也写）+ 候选源扩展到「研究中因子」（纯价量可离线出包）+ 加 `.cache/propel_last_run.json` 运行日志；下次运行已排程。
+- ✅ **离线出包验证通**：手动出包 f0026a（量能扩张速度，纯价量，baostock 缓存 cache hit，30s 完成，RankIC -0.0057）——证明「研究中因子」可稳定 drain，推进器每轮出 1 个不再卡。
+- ✅ **落盘闭环**：CHANGELOG 补 f0011a–f0026a 共 15 条漏记交付；3 条评估洞察类灵感(i20260820-028/029/030)归档 archived（hypothesized 64→61）；看板刷新（因子已交付=26/研究中=18/信号=3）；propel_last_run.json 写本轮摘要。
+- ⚠️ **遗留**：看板「研究中=18」口径有小偏差（volume_expansion_speed 已出包 f0026a 仍计入），待修 factor_board.py 匹配逻辑；f0011a–f0025a 中部分因子需后续补 PIT 真口径重测（非阻塞）。
 
 ### 当前状态（一句话）
 **双线交付齐备且全部 PIT 口径可信：信号线已三包（s0001x 广度 Regime / s0002x 风险偏好 / s0003x 波动率 Regime，三包两两视角独立）；f-code 三包均按 v2-pit-mcap 真口径重算完毕；本轮（08-12）新增第三信号 `s0003x` 出包并将卡片模板硬编码陷阱句 bug 修复，全量 161 项 pytest 回归全绿（4m49s），看板信号段翻牌 已交付=3 / 研究中=0，对外 JSON 同步刷新为 3 stock + 3 timing。
@@ -87,6 +94,10 @@
 - 🔵 **想法供给（侦察兵 2026-08-13 第 3 期）**：灵感池 **36 → 现 46 条候选**，漏斗卡住 0。本周新增 **10 条**（paper 2 / zoo 2 / sell_side 2 / forum 3 / observation 1）。本期新维度：**月末流动性清算窗口(PreTOM loser 季节性)、个股特异性动量残差(正交剥离因子暴露)、波动率门控反转、动量/反转自适应切换(结构扰动指数)、涨停后缩量横盘二次启动、股息率截面、skip-month 动量去噪、统一日收益异常和、行业资金流转向、ADD 月初择时叠加**。论坛源(IAMAIBOT/CHI 量化)数字不可核，仅取构造思路、置信度已标 low。
 - 🔵 **想法供给（侦察兵 2026-08-17 第 4 期，仅供给侧，与执行进度无关）**：灵感池 **46 → 现 57 条候选**，漏斗卡住 0。本周新增 **11 条**（paper 3 / sell_side 4 / zoo 2 / forum 1 / observation 1）。本期新维度：**高阶矩家族**（收益不对称性 Asymmetry、协偏度 Coskewness、偏度增强 overlay——纯日频可实现，且与现有 MAX5/MIN3 正交）、**低市场 Beta + 下行半方差**（防御性风险维度，与现有 ivol f0002a 严格正交）、**波动率的波动率 (vol-of-vol)**、**成交量市场跟随性 / 激增-骤降对称性**（量能结构类，区别于量能扩张速度比值）、**因子动量加权合成层**（与稀疏 PCA 合成互补的元信号）、**动量崩塌风格轮动 overlay**、**红利低波三维交集 composite**。⚠️ 低Beta/下行半方差/不对称性与现有 ivol、MAX5、MIN3 需先测截面相关性，相关系数>0.8 应合并而非并列。
 - 🔵 **想法供给（侦察兵 2026-08-20 第 5 期，仅供给侧，与执行进度无关）**：灵感池 **57 → 现 63 条候选**，漏斗卡住 1（i20260806-007 已 validated）。本周新增 **12 条**（paper 2 / zoo 2 / sell_side 5 / forum 3）。本期新维度：流动性改善度(LIQIM 差分) / 偏度管理二次倾斜 / SUE-PEAD 应计风险归因 / 相对+绝对动量双过滤 / 跳空-振幅背离(中金Loop) / 高低位放量事件簇(国盛) / 特异度 / 特质波动率比率 / 12-1动量(zz1000) / rank_autocorr 门控 / 盈利因子8月季节性 / 长上影线。各条 rationale 已标注与现有因子相关性检验与 PIT/exec_lag 红线。⚠️ 容量护栏生效：本期起 hypothesized 已 62，逼近 60 阈值上限，下期若 ≥60 将触发跳过供给（仅刷新看板）。
+- 🔵 **想法供给（侦察兵 2026-08-24 第 6 期，仅供给侧，与执行进度无关）**：灵感池 **63 → 现 72 条候选**（hypothesized 58 / validated 14，漏斗 58 可进、14 为终态 validated 非真卡住）。护栏实测 hypothesized=49 < 60 阈值，**正常供给**（第5期预言的爆满未实际触发，因 13 条已被下游 validated 消化）。本周新增 **9 条**（sell_side 8 / forum 1）。本期新维度：分析师预期修正动量(Revision Momentum) / 凸显性 Salience / 盈利质量·应计盈余质量(Sloan accruals) / 多维成长质量合成 / 中单净流入占比(中户资金层) / 不确定性动量增强(动量×iVIX交互) / 横截面收益离散度择时(meta-gating) / 质量×动量二次验证 overlay / 行业预期修正广度。各条 rationale 已标注与现有因子相关性检验要求及数据缺口（分析师一致预期源 / PIT 财务 / 分单资金流）。⚠️ 修复 idea_backlog.py 存储层：CSV 带 UTF-8 BOM 且被外部优先级工具扩至 18 列、而脚本 FIELDS 仍 14 列，致 list/funnel/add_idea 全 KeyError；已改 utf-8-sig + FIELDS 同步 18 列，命令链恢复，新行列数一致性 {18:72} 校验通过（fix 亦消除未来 _rewrite 冲掉 priority 等 4 列的隐患）。
+- 🔵 **想法供给（侦察兵 2026-08-27 第 7 期，仅供给侧，与执行进度无关）**：灵感池 **72 → 现 80 条候选**（hypothesized 64 / validated 16，漏斗 64 可进、16 为终态 validated 非真卡住）。护栏实测 hypothesized=56 < 60 阈值，**正常供给**。本周新增 **8 条**（paper 1 / sell_side 5 / forum 1 / observation 1）。本期新维度：**个股彩票型偏度(lottery skewness，日频三阶矩→低收益，区别于池内偏度管理overlay)、融资融券折算率相对行业(机构认可度代理)、盈利增速因子的风格状态门控(成长占优期有效/价值期失效→需Gating)、研报文本 LLM+FinBERT 情绪(纯NLP，区别于数值预期修正)、波动率扩张速度(方正"勇攀高峰"日频降级=波动突变预警)、市场状态 MOE 动态合成(东吴四指数路由，区别于离散度择时)、机构筹码集中度(公募持仓/总市值)、机构主动加仓环比(剔除股价波动的QoQ增幅)**。融券类搜索结果为头条阴谋论、数字不可核，按纪律跳过未灌。各条 rationale 已标注与现有因子相关性检验 + 数据缺口（折算率/研报语料NLP/基金季报PIT滞后）。⚠️ 容量护栏临界：本期后 hypothesized=64 ≥ 60 阈值，下期(08-31)若仍 ≥60 将触发跳过供给（仅刷新看板），符合"让它 drain"设计。
+
+- 🔵 **想法供给（侦察兵 2026-08-31 第 8 期，仅供给侧，与执行进度无关）**：⚠️ **容量护栏触发，本周跳过供给**：`idea_backlog.py list` 实测 `hypothesized=64 ≥ 60` 阈值，按纪律不跑 WebSearch、不写新灵感，仅刷新看板 + 漏斗体检。灵感池维持 **现 80 条候选**（hypothesized 64 / validated 16，漏斗 64 可进、16 为终态 validated 非真卡住）。漏斗体检：可进 64 / 卡 16（均 validated 终态）。看板刷新：因子 已交付=25 / 研究中=18 / 灵感池=80；信号 已交付=3 / 研究中=0。待驱动器消费端（灵感池 draining）把 hypothesized 降到 <60 阈值后再恢复供给。
 
 ### 下一步待办（按优先级）
 1. ✅ **（已发送 2026-08-17 16:19）** `deliverables/strategy_collab_issue.md` 已成功建 issue 到 `fkchaos/a-share-quant-sim`：**[#1](https://github.com/fkchaos/a-share-quant-sim/issues/1)**。路径：本地 GCM 凭证中的 fkchaos PAT → GitHub REST API（`POST /repos/fkchaos/a-share-quant-sim/issues`），**绕开 WorkBuddy GitHub 连接器**（该连接器对仓库只读/已断开，写操作全 403）。注意：WorkBuddy 连接器仍不可用，后续若需再发 issue/PR，继续走本地 PAT/API 或用户在 Web 手动操作。

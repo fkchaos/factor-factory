@@ -1,0 +1,28 @@
+===== [14:13:37] 构建 f0012a (avg_turnover_10d) =====
+    [cache hit] momentum_20 @ hs300
+    [cache hit] reversal_5 @ hs300
+    [cache hit] size_log_mcap @ hs300
+    [cache hit] ivol @ hs300
+    [cache hit] overnight_intraday @ hs300
+  [hs300] RankIC=-0.0161 ICIR=-0.15 胜率=43.5% n=1586
+✅ 交付包已生成：deliverables\factors\f0012a
+===== [14:17:37] f0012a 完成 (exit 0) =====
+===== [14:17:38] 构建 f0013a (avg_turnover_240d) =====
+    [cache hit] momentum_20 @ hs300
+    [cache hit] reversal_5 @ hs300
+    [cache hit] size_log_mcap @ hs300
+    [cache hit] ivol @ hs300
+    [cache hit] overnight_intraday @ hs300
+  [hs300] RankIC=-0.0106 ICIR=-0.10 胜率=47.1% n=1356
+✅ 交付包已生成：deliverables\factors\f0013a
+===== [14:21:16] f0013a 完成 (exit 0) =====
+===== [14:21:18] 构建 f0016a (amount_std_20d) =====
+    [cache hit] momentum_20 @ hs300
+    [cache hit] reversal_5 @ hs300
+    [cache hit] size_log_mcap @ hs300
+    [cache hit] ivol @ hs300
+    [cache hit] overnight_intraday @ hs300
+  [hs300] RankIC=-0.0079 ICIR=-0.11 胜率=44.8% n=1576
+✅ 交付包已生成：deliverables\factors\f0016a
+===== [14:26:19] f0016a 完成 (exit 0) =====
+ALL DONE at 14:26:20

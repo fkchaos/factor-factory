@@ -483,8 +483,129 @@ class AkShareProvider:
         validate_returns(s, "AkShare")
         return s
 
-    def get_pit_financials(self, fields: list[str], as_of_date) -> pd.DataFrame:
-        return pd.DataFrame(columns=["date", "asset"] + list(fields)).set_index(["date", "asset"])
+    # ---- PIT 基本面管线（point-in-time 财报，防前视；接 AkShare 东财明细表）----
+    # 字段映射：规范名 -> AkShare 东财原始列名。
+    # 🔴 红线前提：必须用【真实公告日 NOTICE_DATE】对齐（绝不用 REPORT_DATE 报告期结束日，
+    #   否则=前视未来财报）。经实拉验证（stock_profit_sheet_by_report_em /
+    #   stock_balance_sheet_by_report_em）：
+    #      profit_sheet  -> OPERATE_COST(营业成本) / OPERATE_INCOME(营业收入)
+    #      balance_sheet -> INVENTORY(存货) / ACCOUNTS_RECE(应收账款)
+    #    以上均带 NOTICE_DATE（真实披露日，与 REPORT_DATE 分离；实测 茅台 2025 年报
+    #    REPORT_DATE=2025-12-31 但 NOTICE_DATE=2026-04-17），PIT 安全。
+    #   ⚠️ 排除项：stock_financial_analysis_indicator 只有'日期'(=报告期)、无真实公告日
+    #    → 若用它对齐=前视，刻意不用。
+    #   baostock 免费接口不返这三类字段（见 BaoStockProvider._PIT_FIELD_UNAVAILABLE），
+    #   故 cogs/inventory/accounts_receivable 改由 AkShare 提供，f0014a/f0015a 才得以构建。
+    _PIT_FIELD_MAP = {
+        "revenue": "OPERATE_INCOME",
+        "cogs": "OPERATE_COST",
+        "inventory": "INVENTORY",
+        "accounts_receivable": "ACCOUNTS_RECE",
+    }
+    # AkShare 东财明细表缺失、只能返回 NaN 的字段（明确登记，防误用/防伪造）
+    _PIT_FIELD_UNAVAILABLE = frozenset()
+
+    def _to_em_symbol(self, code: str) -> str:
+        """规范代码 `600000.SH` → 东财 `SH600000`（EM 报表接口格式）。"""
+        s = str(code).strip().upper()
+        num, exch = s.split(".", 1) if "." in s else (s, "SH")
+        pfx = {"SH": "SH", "SZ": "SZ", "BJ": "BJ"}.get(exch, "SH")
+        return f"{pfx}{num}"
+
+    @staticmethod
+    def _ak_float(v) -> float:
+        """EM 报表数值转 float；空/非法 → NaN（缺失须 NaN，非 0）。"""
+        if v is None or (isinstance(v, float) and pd.isna(v)):
+            return np.nan
+        try:
+            return float(v)
+        except (ValueError, TypeError):
+            return np.nan
+
+    def _fetch_financial_history(self, code: str) -> pd.DataFrame:
+        """拉取单票利润表+资产负债表全部披露历史，返回长表（缓存 .cache/akshare/financial/{code}.parquet）。
+
+        列：statDate(报告期,仅元数据) / pubDate(公告日 NOTICE_DATE，PIT 对齐唯一依据) /
+            OPERATE_INCOME / OPERATE_COST / INVENTORY / ACCOUNTS_RECE。
+        两条独立披露流（利润表/资产负债表）各自仅带部分字段，按 (statDate,pubDate) 各自去重后
+        纵向拼接 → 交给 _pit_select_snapshot 做字段独立取数（修复整行取最新覆盖缺失字段的坑）。
+        """
+        key = self._cache / "financial" / f"{code}.parquet"
+        if key.exists():
+            return pd.read_parquet(key)
+        ak = self._ak
+        sym = self._to_em_symbol(code)
+        cols = ["statDate", "pubDate", "OPERATE_INCOME", "OPERATE_COST",
+                "INVENTORY", "ACCOUNTS_RECE"]
+        profit_recs, balance_recs = [], []
+        # 利润表流：营业收入 / 营业成本
+        try:
+            ps = ak.stock_profit_sheet_by_report_em(symbol=sym)
+            for r in ps.itertuples(index=False):
+                profit_recs.append({
+                    "statDate": getattr(r, "REPORT_DATE", np.nan),
+                    "pubDate": getattr(r, "NOTICE_DATE", np.nan),
+                    "OPERATE_INCOME": self._ak_float(getattr(r, "OPERATE_INCOME", np.nan)),
+                    "OPERATE_COST": self._ak_float(getattr(r, "OPERATE_COST", np.nan)),
+                    "INVENTORY": np.nan,
+                    "ACCOUNTS_RECE": np.nan,
+                })
+        except Exception as e:
+            print(f"[warn] AkShare 利润表拉取失败 {code}: {e}", flush=True)
+        # 资产负债表流：存货 / 应收账款
+        try:
+            bs = ak.stock_balance_sheet_by_report_em(symbol=sym)
+            for r in bs.itertuples(index=False):
+                balance_recs.append({
+                    "statDate": getattr(r, "REPORT_DATE", np.nan),
+                    "pubDate": getattr(r, "NOTICE_DATE", np.nan),
+                    "OPERATE_INCOME": np.nan,
+                    "OPERATE_COST": np.nan,
+                    "INVENTORY": self._ak_float(getattr(r, "INVENTORY", np.nan)),
+                    "ACCOUNTS_RECE": self._ak_float(getattr(r, "ACCOUNTS_RECE", np.nan)),
+                })
+        except Exception as e:
+            print(f"[warn] AkShare 资产负债表拉取失败 {code}: {e}", flush=True)
+        # 🔴 各披露流【独立】去重（按 statDate,pubDate 保留末次=重述修正版），再纵向拼接。
+        #   不得先拼接再按 (statDate,pubDate) 全局去重——同报告期利润表与资产负债表
+        #   常共享同一 NOTICE_DATE，全局去重会丢其中一条流的全部字段。
+        df_p = pd.DataFrame(profit_recs, columns=cols)
+        df_b = pd.DataFrame(balance_recs, columns=cols)
+        df_p = _clean_fin_stream(df_p, cols)
+        df_b = _clean_fin_stream(df_b, cols)
+        df = pd.concat([df_p, df_b], ignore_index=True)
+        key.parent.mkdir(parents=True, exist_ok=True)
+        df.to_parquet(key)
+        return df
+
+    def get_pit_financials(self, fields: list[str], as_of_date,
+                           assets: Optional[list[str]] = None) -> pd.DataFrame:
+        """返回截至 as_of_date 实际可获取的 PIT 财报快照，MultiIndex(date, asset)。
+
+        每行=该股票截至 as_of_date 最新已披露财报的字段值（按 NOTICE_DATE 真实公告日对齐，无前视）。
+        date 层固定为 as_of_date（截面快照视角）；如需历史披露序列请逐 as_of 调用。
+        assets=None 时对 AkShare 全市场拉取（首跑按股票缓存，慢但可复用）。
+
+        只暴露当时市场已知信息：NOTICE_DATE > as_of_date 的财报（含未披露的年报/季报）绝不出现。
+        """
+        as_of = pd.Timestamp(as_of_date)
+        if assets is None:                      # 默认全市场（与 BaoStock 口径一致）
+            try:
+                assets = self._asset_list()
+            except Exception:
+                assets = []
+        assets = [normalize_code(a) for a in assets]
+        records = []
+        for code in assets:
+            disc = self._fetch_financial_history(code)
+            snap = _pit_select_snapshot(disc, fields, as_of, AkShareProvider._PIT_FIELD_MAP)
+            records.append({"date": as_of, "asset": code, **snap})
+        if not records:
+            df = pd.DataFrame(columns=["date", "asset"] + list(fields)).set_index(["date", "asset"])
+        else:
+            df = pd.DataFrame(records).set_index(["date", "asset"])
+            df = df[[c for c in fields if c in df.columns]]   # 保序保留请求字段
+        return df
 
     def list_universe(self, date: str) -> list[str]:
         try:
@@ -494,6 +615,88 @@ class AkShareProvider:
 
     def get_adv(self, date: str, window: int = 20) -> pd.Series:
         return pd.Series(dtype=float)
+
+
+def _clean_fin_stream(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
+    """单条披露流内部清洗：解析日期、丢弃无报告期/无公告日的脏行、按 (statDate,pubDate) 去重保留末次。
+
+    仅在单流内去重——绝不在多流拼接后做 (statDate,pubDate) 全局去重，以免同公告日的
+    互补披露流（如东财利润表/资产负债表）相互覆盖丢掉字段。
+    """
+    if df.empty:
+        return pd.DataFrame(columns=cols)
+    df = df.copy()
+    df["statDate"] = pd.to_datetime(df["statDate"], errors="coerce")
+    df["pubDate"] = pd.to_datetime(df["pubDate"], errors="coerce")
+    df = df.dropna(subset=["statDate", "pubDate"]).drop_duplicates(
+        ["statDate", "pubDate"], keep="last").reset_index(drop=True)
+    return df
+
+
+def _pit_select_snapshot_dated(disc: pd.DataFrame, fields: list[str], as_of,
+                               field_map: dict) -> dict:
+    """PIT 核心（带披露日版）：返回 {field: (value, statDate)}。
+
+    与 :func:`_pit_select_snapshot` 同源逻辑，区别是额外回传每个字段取值所来源的
+    statDate（报告期）——财报类因子用它把**流量项**（cogs/revenue）按报告期年度化，
+    使存货/应收周转天数在季报与年报之间可比。
+
+    前视安全保证（血牢红线）：
+      1. 仅保留 pubDate <= as_of 的行 → 未披露的财报一律不可见（无前视）。
+      2. 重述处理：同一 (statDate, pubDate) 视为同一披露事件，去重保留末次。
+      3. 🔴 字段独立取数：利润表 / 资产负债表 / 业绩快报等是【多条独立披露流】，
+         各自只携带部分字段（如利润表有收入/成本、资产负债表有存货/应收）。
+         若按"整行取最新披露"会把后披露但缺字段的行覆盖先披露但有值行 → 字段变 NaN。
+         → 对【每个字段】独立取其在 pubDate<=as_of 内最新披露（pubDate 最大）且非缺失的值。
+      4. statDate 仅作元数据，绝不作为时间过滤/选择依据
+         （报告期结束日 ≠ 披露日，前视即失真）。
+    field_map 中无映射 / 无数据 → (NaN, None)。
+    """
+    as_of = pd.Timestamp(as_of)
+    out = {f: (np.nan, None) for f in fields}
+    if disc is None or len(disc) == 0:
+        return out
+    d = disc.copy()
+    d["pubDate"] = pd.to_datetime(d["pubDate"], errors="coerce")
+    d["statDate"] = pd.to_datetime(d["statDate"], errors="coerce")
+    # (1) PIT 红线：披露日 <= as_of
+    d = d[d["pubDate"] <= as_of]
+    if d.empty:
+        return out
+    # (2) 去重：仅剔除【完全相同的重复行】（同 statDate+pubDate+同值）。
+    #   🔴 关键：绝不做 (statDate, pubDate) 整行去重——利润表/资产负债表/业绩快报等
+    #   多条披露流常共享同一 (statDate, pubDate)（如东财利润表与资产负债表同公告日），
+    #   但各自只带部分字段（互补而非冲突）。若按 (statDate,pubDate) 整行去重会丢字段
+    #   → 存货/应收变 NaN。字段独立取数（见下）天然按字段分别选取，互补行都得保留。
+    d = d.drop_duplicates()
+    # (3) 字段独立取最新披露值（pubDate 最大且非缺失；同 pubDate=重述同日报送→取后报送=修正版）
+    for f in fields:
+        raw = field_map.get(f)
+        if raw is None:        # 该 provider 不支持字段 → NaN（绝不伪造）
+            continue
+        col = d.get(raw)
+        if col is None:
+            continue
+        valid = d[col.notna()]
+        if valid.empty:
+            continue
+        # 按 pubDate 升序稳定排序：末尾=最新披露；同 pubDate（重述修正）取后报送（insertion order 保持）
+        valid = valid.sort_values("pubDate", kind="mergesort")
+        latest = valid.iloc[-1]
+        v = latest[raw]
+        out[f] = (v if (v is not None and pd.notna(v)) else np.nan, latest["statDate"])
+    return out
+
+
+def _pit_select_snapshot(disc: pd.DataFrame, fields: list[str], as_of,
+                        field_map: dict) -> dict:
+    """PIT 核心：返回 {field: value}（见 :func:`_pit_select_snapshot_dated` 红线说明）。
+
+    为保持单一事实来源，本函数委托 ``_pit_select_snapshot_dated`` 并剥去 statDate，
+    行为与拆分前完全一致（get_pit_financials 与其测试不受影响）。
+    """
+    dated = _pit_select_snapshot_dated(disc, fields, as_of, field_map)
+    return {f: v for f, (v, _) in dated.items()}
 
 
 class BaoStockProvider:
@@ -937,53 +1140,8 @@ class BaoStockProvider:
 
     @staticmethod
     def _pit_select_snapshot(disc: pd.DataFrame, fields: list[str], as_of) -> dict:
-        """PIT 核心：从披露历史中选截至 as_of 可获取的【最新已披露】各字段值。
-
-        前视安全保证（血牢红线）：
-          1. 仅保留 pubDate <= as_of 的行 → 未披露的财报一律不可见（无前视）。
-          2. 重述处理：同一 (statDate, pubDate) 视为同一披露事件，去重保留末次。
-          3. 🔴 字段独立取数（修复前任 total_assets=nan 的坑）：
-             利润表 report（query_profit_data，pubDate 较晚）与业绩快报 express
-             （query_performance_express_report，pubDate 较早）是【两条独立披露流】，
-             各自只携带部分字段——report 有 revenue/net_profit 但资产为 nan，
-             express 有 total_assets/net_assets 但收入利润为 nan。
-             二者通常共享同一 statDate（如 2023-12-31），若按"整行取最新披露"
-             会把 report 年报（nan 资产）覆盖 express（有值资产）→ total_assets=nan。
-             → 故对【每个字段】独立取其在 pubDate<=as_of 内最新披露（pubDate 最大）
-               且非缺失的值；这样 revenue 取 report、assets 取 express，互不干扰。
-             这也是更纯粹的 PIT：截至任意日期，市场已知某指标的最新披露值。
-          4. statDate 仅作元数据，绝不作为时间过滤/选择依据
-             （报告期结束日 ≠ 披露日，前视即失真）。
-        返回 {field: value}，不可用字段 / 无数据 → NaN。
-        """
-        as_of = pd.Timestamp(as_of)
-        out = {f: np.nan for f in fields}
-        if disc is None or len(disc) == 0:
-            return out
-        d = disc.copy()
-        d["pubDate"] = pd.to_datetime(d["pubDate"], errors="coerce")
-        d["statDate"] = pd.to_datetime(d["statDate"], errors="coerce")
-        # (1) PIT 红线：披露日 <= as_of
-        d = d[d["pubDate"] <= as_of]
-        if d.empty:
-            return out
-        # (2) 重述：同一披露事件 (statDate, pubDate) 去重，保留末次（最新同日报送）
-        d = d.drop_duplicates(["statDate", "pubDate"], keep="last")
-        # (3) 字段独立取最新披露值（pubDate 最大且非缺失）
-        for f in fields:
-            raw = BaoStockProvider._PIT_FIELD_MAP.get(f)
-            if raw is None:        # 含 baostock 免费缺失字段 → NaN（绝不伪造）
-                continue
-            col = d.get(raw)
-            if col is None:
-                continue
-            valid = d[col.notna()]
-            if valid.empty:
-                continue
-            latest = valid.loc[valid["pubDate"].idxmax()]
-            v = latest[raw]
-            out[f] = v if (v is not None and pd.notna(v)) else np.nan
-        return out
+        """向后兼容委托：实际逻辑见模块级 `_pit_select_snapshot`（field_map=baostock 映射）。"""
+        return _pit_select_snapshot(disc, fields, as_of, BaoStockProvider._PIT_FIELD_MAP)
 
     def get_pit_financials(self, fields: list[str], as_of_date,
                            assets: Optional[list[str]] = None) -> pd.DataFrame:
@@ -1001,7 +1159,7 @@ class BaoStockProvider:
         records = []
         for code in assets:
             disc = self._fetch_financial_history(code)
-            snap = self._pit_select_snapshot(disc, fields, as_of)
+            snap = _pit_select_snapshot(disc, fields, as_of, BaoStockProvider._PIT_FIELD_MAP)
             records.append({"date": as_of, "asset": code, **snap})
         if not records:
             df = pd.DataFrame(columns=["date", "asset"] + list(fields)).set_index(["date", "asset"])

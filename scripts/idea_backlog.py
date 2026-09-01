@@ -23,6 +23,7 @@ FIELDS = [
     "idea_id", "source_type", "source_ref", "raw_idea", "hypothesis",
     "rationale", "confidence_seed", "status", "created_at", "owner",
     "linked_fcode", "review_cycle", "hit_status", "note",
+    "fcode", "priority", "priority_score", "priority_basis",
 ]
 
 BACKLOG_PATH = os.path.join("research", "idea_backlog.csv")
@@ -33,7 +34,7 @@ def _ensure_file(path: str) -> None:
     """首次写入建表 + 表头。已存在则不动。"""
     if not os.path.exists(path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
-        with open(path, "w", newline="", encoding="utf-8") as f:
+        with open(path, "w", newline="", encoding="utf-8-sig") as f:
             csv.DictWriter(f, fieldnames=FIELDS).writeheader()
 
 
@@ -57,13 +58,13 @@ def load_backlog(path: str) -> list[dict]:
     """读全表为 dict 列表；文件不存在返回空表。"""
     if not os.path.exists(path):
         return []
-    with open(path, "r", newline="", encoding="utf-8") as f:
+    with open(path, "r", newline="", encoding="utf-8-sig") as f:
         return list(csv.DictReader(f))
 
 
 def _append_row(path: str, row: dict) -> None:
     _ensure_file(path)
-    with open(path, "a", newline="", encoding="utf-8") as f:
+    with open(path, "a", newline="", encoding="utf-8-sig") as f:
         csv.DictWriter(f, fieldnames=FIELDS).writerow(row)
 
 
@@ -181,7 +182,7 @@ def set_hit(path: str, idea_id: str, hit_status: str, note: str = "") -> dict:
 
 def _rewrite(path: str, rows: list[dict]) -> None:
     _ensure_file(path)
-    with open(path, "w", newline="", encoding="utf-8") as f:
+    with open(path, "w", newline="", encoding="utf-8-sig") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)
         w.writeheader()
         w.writerows(rows)
