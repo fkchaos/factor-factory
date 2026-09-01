@@ -34,6 +34,15 @@
 - ⚠️ **PIT 重测清单（已 grep 审计收敛，2026-09-01 晚）**：已交付 f0011a–f0025a 量价因子 `compute` 层**均不读 `market_cap`**（市值暴露由 harness 用 `pit_float_mcap` 中性化剥离，08-08 已修），**无需重测**；研究中 `zoo_basics.size_log_mcap`（name=size_log_mcap，未交付）与 `feature_factory.py:204` 仍直接读脏 `market_cap`（今日快照回填全历史），为 PIT 重测首要对象——已排进推进器**步骤0.5** 常设体检（每次自动登记，改造为 `pit_float_mcap` 后再出包）。
 - ✅ **灵感池积压分流处置（2026-09-01 晚 · 用户拍板"想办法处理掉80个灵感"）**：80 条 = 16 validated + 3 archived(旧) + 61 hypothesized。逐条分流文档 `docs/dev/BACKLOG_TRIAGE_2026-09-01.md`。**34 条 hypothesized→archived（拿到明确 disposition，移出待处理池）**：A桶可离线出包 27 条（纯量价/收益/OHLC，baostock 缓存可建，交推进器 K=5/晚排期，约 6 晚清空）+ B桶 Overlay/Gating 5 条（归档→信号线/合成层，非截面 f-code）+ C桶数据源阻塞 22 条（归档+标注所需源：PIT财报/分析师预期/龙虎榜/两融/基金持仓/研报文本/iVIX/概念板块，待接入后可复活）+ D桶元研究/非因子 6 条（归档→研究轨道）+ E桶重复 1 条（i20260805-011 低换手已被 f0011-16a 覆盖，合并）。处置后 **hypothesized 61→27**，积压从"只进不出"转为可 drain 状态；看板/灵感池计数将随推进器出包下降。
 
+### 2026-09-01 交接要点（等 21:00 推进器 · 用户：先放着让 cron 处理）
+
+- 🕘 **今晚 21:00 推进器自动 drain 27 条待出包**：automation-1786017033599，积压清理期 K 已提速到 5/晚，约 6 晚清空 27 条 hypothesized。出包是重活，超时（10min 无产出）记 fail 不阻断整轮，下一晚续跑。
+- 📊 **看板数字解读（交接关键）**：`docs/factor_board.html` 现 `灵感池=27`（=真正待处理的 hypothesized）+ `已归档=37`（含本轮 34 条：22 数据源阻塞/5 overlay/6 元研究/1 重复）+ `因子已交付=26` + `研究中=17`。旧口径"灵感池=80"是 CSV 总数（含已交付+已归档），已改为只计待处理，不误导续作者。
+- 🌙 **每晚 22:00 自动同步 GitHub**：automation-1788263669961，`git add -A → commit(auto-sync:) → push`，零交互；缓存/凭证被 .gitignore 挡。续作者无需再问"要不要 commit"。
+- ✅ **committer 身份**：factor-factory 仓库级已设为 `WorkBuddy Agent <workbuddy-agent@workbuddy.local>`（仅本仓库，不改全局），GitHub 提交均署此身份，无主理人邮箱。
+- 🔴 **红线仍有效**：①exec_lag 严禁 0（信号线）；②PIT 市值必须用 `pit_float_mcap()`、禁读面板脏 `market_cap`；③新因子模块必填 `fcode` 类属性（否则看板误计研究中）。
+- ⏭️ **27 条出包后**：按惯例 RankIC≈0 也如实交付交策略组筛（不设质量门槛）；数据源阻塞 22 条待接入对应源后可复活（见 `docs/dev/BACKLOG_TRIAGE_2026-09-01.md`）。
+
 ### 当前状态（一句话）
 **双线交付齐备且全部 PIT 口径可信：信号线已三包（s0001x 广度 Regime / s0002x 风险偏好 / s0003x 波动率 Regime，三包两两视角独立）；f-code 三包均按 v2-pit-mcap 真口径重算完毕；本轮（08-12）新增第三信号 `s0003x` 出包并将卡片模板硬编码陷阱句 bug 修复，全量 161 项 pytest 回归全绿（4m49s），看板信号段翻牌 已交付=3 / 研究中=0，对外 JSON 同步刷新为 3 stock + 3 timing。
 （2026-08-14 例行维护：双线交付状态不变，重刷 `docs/factor_board.html` 因子 已交付=3/研究中=6/灵感池=46、信号 已交付=3/研究中=0；幂等重跑 `export_to_strategy_json.py` 确认 3 stock + 3 timing（exec_lag=1 钢印在位、均 verdict=refuted，f0001a 0.0312/f0002a 0.0484/f0003a 0.0440 @zz1000，s0001x 0.94/s0002x 0.84/s0003x 0.51）一致；三信号包 card.md/manifest.yaml 的 exec_lag=1 钢印复查在位；无新交付包，GitHub 通道仍 disconnected、issue 草稿维持待发。）（2026-08-15 例行维护·假后首跑：双线交付状态不变，重刷 docs/factor_board.html（因子 3/6/46、信号 3/0）；幂等重跑 export_to_strategy_json.py 确认 3 stock + 3 timing 一致（exec_lag=1 钢印、均 refuted）；三信号包 exec_lag=1 钢印复查在位；无新交付包，GitHub 仍 disconnected、issue 草稿维持待发。）（2026-08-16 例行维护：双线交付状态不变，重刷 docs/factor_board.html（因子 3/6/46、信号 3/0）；幂等重跑 export_to_strategy_json.py 确认 3 stock + 3 timing 一致（exec_lag=1 钢印、均 verdict=refuted，f0001a 0.0312/f0002a 0.0484/f0003a 0.0440 @zz1000，s0001x 0.94/s0002x 0.84/s0003x 0.51）；三信号包 exec_lag=1 钢印复查在位；无新交付包，GitHub 仍 disconnected、issue 草稿维持待发。）

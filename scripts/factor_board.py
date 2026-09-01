@@ -294,6 +294,19 @@ def build_rows(impls, ideas, registry):
         status = (r.get("status") or "backlog").strip()
         if status == "rejected":
             continue  # 单独归类
+        if status == "validated":
+            continue  # 已交付因子，交付区已呈现，避免重复计数
+        if status == "archived":
+            # 已拿 disposition 移出待处理池（数据源阻塞/overlay/元研究/重复），归档备查
+            rows.append({
+                "stage": "archived",
+                "title": (r.get("raw_idea") or r.get("idea_id", "")).strip()[:48],
+                "code": r.get("idea_id", ""),
+                "source": f"{r.get('source_type','')} / {r.get('source_ref','')[:40]}",
+                "detail": (r.get("hypothesis") or "")[:120],
+                "meta": f"归档: {r.get('note','')[:90]}",
+            })
+            continue
         idea_code = r.get("fcode")
         if status == "in_pipeline" and idea_code and (
             idea_code in impl_codes or idea_code in delivered_codes
@@ -369,7 +382,8 @@ def build_rows(impls, ideas, registry):
 STAGE_META = {
     "delivered":  ("因子已交付",   "#16a34a", "f-code 包已产出，含说明文档+相关性+回测"),
     "researching":("因子研究中",   "#2563eb", "代码已实现 / 已进入管线，等待或正在检验"),
-    "idea":       ("灵感池",   "#d97706", "候选假设，待 promote 进管线"),
+    "idea":       ("灵感池",   "#d97706", "候选假设（hypothesized），待 promote 进管线"),
+    "archived":   ("灵感已归档", "#64748b", "已拿 disposition 移出待处理池：数据源阻塞/overlay/元研究/重复，归档备查"),
     "rejected":   ("已拒绝",   "#9333ea", "检验未过或被证伪"),
     "sig_delivered":("信号已交付", "#16a34a", "s-code 包已产出，含状态定义+叠加改善"),
     "sig_researching":("信号研究中", "#2563eb", "Signal 类已实现，等待或正在检验"),
@@ -379,7 +393,7 @@ STAGE_META = {
 
 # 2026-08-18 主从架构（用户决策）：核心交付=因子/信号（带编号）；
 # strategy_export / universe_matrix 是附属视图，tile 区拆出、section 标题加"附属 · "前缀。
-MAIN_STAGES = ["delivered", "researching", "idea", "rejected",
+MAIN_STAGES = ["delivered", "researching", "idea", "archived", "rejected",
                "sig_delivered", "sig_researching"]
 ATTACH_STAGES = ["strategy_export", "universe_matrix"]
 
@@ -579,7 +593,7 @@ def main():
     for r in rows:
         c[r["stage"]] += 1
     print(f"[factor_board] 已生成: {args.out}")
-    print(f"  因子 已交付={c['delivered']} 研究中={c['researching']} 灵感池={c['idea']} 已拒绝={c['rejected']}")
+    print(f"  因子 已交付={c['delivered']} 研究中={c['researching']} 灵感池={c['idea']} 已归档={c['archived']} 已拒绝={c['rejected']}")
     print(f"  信号 已交付={c['sig_delivered']} 研究中={c['sig_researching']}")
     print(f"  hs1800 缓存: {hs_n}/{HS1800_TARGET}")
     print(f"  CHANGELOG [Unreleased]: {unreleased} 项")
