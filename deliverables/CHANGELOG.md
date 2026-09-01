@@ -40,6 +40,7 @@
 - `2026-08-24 | factor | f0014a | 存货周转天数（inventory_turnover_days） | deliverables/factors/f0014a/`（财报类·日频RankIC≈0(-0.0008)；迅投看板IC=0.83为同期相关口径非RankIC，不可比·高IC低超额陷阱实锤）
 - `2026-08-24 | factor | f0015a | 应收账款周转天数（ar_turnover_days） | deliverables/factors/f0015a/`（财报类·日频RankIC≈0(+0.0000)；同口径提示）
 - `2026-09-01 | factor | f0026a | 量能扩张速度（volume_expansion_speed） | deliverables/factors/f0026a/`（原研究中因子·离线cache hit出包验证·RankIC -0.0057）
+- `2026-09-01 | factor | f0027a | 近20日已实现偏度（realized_skew_20d） | deliverables/factors/f0027a/`（出包后台进行中·i20260827-001·博彩偏好异象·带 fcode 类属性）
 
 ## [0.1.0] - 2026-08-17
 

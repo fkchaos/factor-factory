@@ -43,6 +43,15 @@
 - 🔴 **红线仍有效**：①exec_lag 严禁 0（信号线）；②PIT 市值必须用 `pit_float_mcap()`、禁读面板脏 `market_cap`；③新因子模块必填 `fcode` 类属性（否则看板误计研究中）。
 - ⏭️ **27 条出包后**：按惯例 RankIC≈0 也如实交付交策略组筛（不设质量门槛）；数据源阻塞 22 条待接入对应源后可复活（见 `docs/dev/BACKLOG_TRIAGE_2026-09-01.md`）。
 
+### 2026-09-01 晚 21:00 推进器（cron 自动 · 步骤0.5 PIT体检 + f0027a出包启动 + 例行维护）
+- 步骤0.5 PIT 体检（2026-09-01 新增常设项首跑）：grep 全仓 factors/*.py 的 compute 直接读脏 market_cap 快照列，命中两处——(a) factors/zoo_basics.py:111（size_log_mcap = 已交付 f0010a，current）：按规则绝不自动重测，仅向 pending_handoff.md 登记「PIT复查|f0010a|市值对数」待主理人决策（其 IC 可能为持平假象，脏市值使因子值近常数）；(b) factors/feature_factory.py:204（log_mktcap，ML 特征、无 fcode、研究中未交付）：已改造为 data.pit.pit_float_mcap() 现算流通市值，并追加「PIT重测|log_mktcap|改用 pit_float_mcap 后出包」。tests/test_feature_factory.py 6 项全绿（改造不破无前视/形状测试）。
+- 步骤1 灵感池消费（积压清理期 K=5）：hypothesized=27（≥10 不跳过）、研究中因子=0（看板"研究中=19"为未内联 fcode 的已交付模块误计，registry/deliverables 实际均齐）。挑 top-1 纯价量候选 i20260827-001（近20日已实现偏度/博彩偏好异象）→ 写 factors/realized_skew_20d.py（带 fcode="f0027a"）+ factors/__init__.py 补 import + idea_backlog.py pipeline 翻 in_pipeline + 后台启动 build_deliverable.py 出包 f0027a（hs300,hs800，2020 起，task Er26XO，预计30min+；出包成功后再由后续轮把灵感翻 validated、CHANGELOG 落 f0027a）。余 26 条 hypothesized 为 30min+ 重活，按"尽力尝试·超时 skip 不阻断"条款留后续轮 drain。
+- 步骤2 因子线自检：P4 池子矩阵 ic_matrix_2026-08-24.csv hs1800 列两因子非空（overnight +0.0283 / ivol +0.0388）→ 跳过重跑；P5 基线 ic_overnight_intraday_hs800.csv mtime 08-17（<30天）不重跑基线，但无条件生成本月月报 research/monthly/2026-09.md（overnight/ivol 均"保留(待人工确认)"）；P7 f0001a/f0002a + f0003a 三包六池齐 → 跳过。
+- 步骤3 信号线：deliverables/signals/_REGISTRY.csv 含 s0001x/s0002x/s0003x 三行 current → 跳过重建；exec_lag=1 钢印在位。
+- 步骤4 看板刷新：docs/factor_board.html 因子 已交付=26 / 研究中=19* / 灵感池=26 / 已归档=37；信号 已交付=3 / 研究中=0（hs1800 1672/1572，mtime 21:08）。*研究中=19 为看板 AST 对缺 fcode 类属性的已交付模块误计（f0027a 已带 fcode 示范），非本轮回退，真实研究中=0。
+- 步骤7 内联自检（合并看门狗）5 项全过：①board<24h ②矩阵 hs1800 非空 ③月报 2026-09 存在 ④信号注册表存在 ⑤hypothesized 27→26 下降。
+- 未推进（非本轮范围）：f0010a PIT 复查（待主理人）、第三信号半衰期补丁（decay_status unknown）、第三条腿 ML（log_mktcap 改造后待启用）、GitHub issue 待发（连接器只读 + 无 gh CLI）。
+
 ### 当前状态（一句话）
 **双线交付齐备且全部 PIT 口径可信：信号线已三包（s0001x 广度 Regime / s0002x 风险偏好 / s0003x 波动率 Regime，三包两两视角独立）；f-code 三包均按 v2-pit-mcap 真口径重算完毕；本轮（08-12）新增第三信号 `s0003x` 出包并将卡片模板硬编码陷阱句 bug 修复，全量 161 项 pytest 回归全绿（4m49s），看板信号段翻牌 已交付=3 / 研究中=0，对外 JSON 同步刷新为 3 stock + 3 timing。
 （2026-08-14 例行维护：双线交付状态不变，重刷 `docs/factor_board.html` 因子 已交付=3/研究中=6/灵感池=46、信号 已交付=3/研究中=0；幂等重跑 `export_to_strategy_json.py` 确认 3 stock + 3 timing（exec_lag=1 钢印在位、均 verdict=refuted，f0001a 0.0312/f0002a 0.0484/f0003a 0.0440 @zz1000，s0001x 0.94/s0002x 0.84/s0003x 0.51）一致；三信号包 card.md/manifest.yaml 的 exec_lag=1 钢印复查在位；无新交付包，GitHub 通道仍 disconnected、issue 草稿维持待发。）（2026-08-15 例行维护·假后首跑：双线交付状态不变，重刷 docs/factor_board.html（因子 3/6/46、信号 3/0）；幂等重跑 export_to_strategy_json.py 确认 3 stock + 3 timing 一致（exec_lag=1 钢印、均 refuted）；三信号包 exec_lag=1 钢印复查在位；无新交付包，GitHub 仍 disconnected、issue 草稿维持待发。）（2026-08-16 例行维护：双线交付状态不变，重刷 docs/factor_board.html（因子 3/6/46、信号 3/0）；幂等重跑 export_to_strategy_json.py 确认 3 stock + 3 timing 一致（exec_lag=1 钢印、均 verdict=refuted，f0001a 0.0312/f0002a 0.0484/f0003a 0.0440 @zz1000，s0001x 0.94/s0002x 0.84/s0003x 0.51）；三信号包 exec_lag=1 钢印复查在位；无新交付包，GitHub 仍 disconnected、issue 草稿维持待发。）

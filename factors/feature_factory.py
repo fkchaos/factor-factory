@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 
 from factors.interface import slice_panel_to_date, winsorize_mad, zscore_cross_section
+from data.pit import pit_float_mcap  # PIT 流通市值现算（替代脏 market_cap 快照）
 
 
 # ---------- 特征注册表 ----------
@@ -201,9 +202,12 @@ def f_beta_60(sub, as_of):
 
 @register_feature("log_mktcap")
 def f_log_mktcap(sub, as_of):
-    p = _piv(sub, "market_cap")
-    s = _last(p, as_of)
-    return np.log(s.where(s > 0))
+    # 🔴 2026-09-01 PIT 体检：原读脏 market_cap 快照（nunique==1，今日市值回填全历史）
+    # 改为 PIT 流通市值现算（amount/(turnover/100)，取前一日近 5 日中位数）。
+    mcap = pit_float_mcap(sub, as_of)
+    if mcap is None or len(mcap) == 0:
+        return pd.Series(dtype=float)
+    return np.log(mcap.where(mcap > 0))
 
 
 # ---------- 矩阵装配 ----------
