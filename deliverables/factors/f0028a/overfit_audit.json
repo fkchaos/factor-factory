@@ -1,0 +1,20 @@
+{
+  "pool": "hs300",
+  "dsr": 1.8840511689257328e-25,
+  "pbo": null,
+  "verdict": "FAIL",
+  "n_trials": 8,
+  "n_splits": 12,
+  "by_pool": {
+    "hs300": {
+      "dsr": 1.8840511689257328e-25,
+      "pbo": null,
+      "verdict": "FAIL"
+    },
+    "hs800": {
+      "dsr": 0.9140014054129559,
+      "pbo": null,
+      "verdict": "WARN"
+    }
+  }
+}

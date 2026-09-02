@@ -23,6 +23,7 @@ from factors.interface import register_factor
 @register_factor
 class ChipCostDistanceFactor:
     name = "chip_cost_distance"
+    fcode = "f0004a"
     # 主场池声明（待 factor_universe_matrix 实测回填；锚定成本在大盘宽基更稳）
     universe_hint = "hs300"
 

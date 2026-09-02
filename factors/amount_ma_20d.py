@@ -15,6 +15,7 @@ WINDOW = 20
 @register_factor
 class AmountMa20dFactor:
     name = "amount_ma_20d"
+    fcode = "f0023a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

@@ -15,6 +15,7 @@ SPAN = 5
 @register_factor
 class Ema5dFactor:
     name = "ema_5d"
+    fcode = "f0018a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

@@ -16,6 +16,7 @@ WINDOW = 20
 @register_factor
 class MoneyFlowMa20dFactor:
     name = "money_flow_ma_20d"
+    fcode = "f0024a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

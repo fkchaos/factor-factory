@@ -15,6 +15,7 @@ WINDOW = 5
 @register_factor
 class Ma5dFactor:
     name = "ma_5d"
+    fcode = "f0022a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

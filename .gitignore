@@ -30,3 +30,6 @@ Thumbs.db
 
 # ---- 本地草稿（非交付物）----
 .cache/pending_*.md
+
+# ---- 本地运行时数据（自动化 memory / 个人数据，禁止入库）----
+.workbuddy/

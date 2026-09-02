@@ -17,6 +17,7 @@ K = 2.0
 @register_factor
 class BollingerUpper20dFactor:
     name = "bollinger_upper_20d"
+    fcode = "f0025a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

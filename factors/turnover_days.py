@@ -57,6 +57,7 @@ def _turnover_days(snap: dict, balance_field: str, flow_field: str) -> pd.Series
 @register_factor
 class InventoryTurnoverDaysFactor:
     name = "inventory_turnover_days"
+    fcode = "f0014a"
     universe_hint = "hs300"
     pit_fields = ["inventory", "cogs"]
 
@@ -74,6 +75,7 @@ class InventoryTurnoverDaysFactor:
 @register_factor
 class AccountReceivableTurnoverDaysFactor:
     name = "ar_turnover_days"
+    fcode = "f0015a"
     universe_hint = "hs300"
     pit_fields = ["accounts_receivable", "revenue"]
 

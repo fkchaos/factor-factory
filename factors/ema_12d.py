@@ -15,6 +15,7 @@ SPAN = 12
 @register_factor
 class Ema12dFactor:
     name = "ema_12d"
+    fcode = "f0020a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

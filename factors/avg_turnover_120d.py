@@ -31,6 +31,7 @@ WINDOW = 120
 @register_factor
 class AvgTurnover120dFactor:
     name = "avg_turnover_120d"
+    fcode = "f0011a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

@@ -30,6 +30,7 @@ WINDOW = 20
 @register_factor
 class AmountStd20dFactor:
     name = "amount_std_20d"
+    fcode = "f0016a"
     universe_hint = "hs300"
 
     def compute(self, panel: pd.DataFrame, as_of_date, ctx=None) -> pd.Series:

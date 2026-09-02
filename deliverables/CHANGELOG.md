@@ -40,7 +40,13 @@
 - `2026-08-24 | factor | f0014a | 存货周转天数（inventory_turnover_days） | deliverables/factors/f0014a/`（财报类·日频RankIC≈0(-0.0008)；迅投看板IC=0.83为同期相关口径非RankIC，不可比·高IC低超额陷阱实锤）
 - `2026-08-24 | factor | f0015a | 应收账款周转天数（ar_turnover_days） | deliverables/factors/f0015a/`（财报类·日频RankIC≈0(+0.0000)；同口径提示）
 - `2026-09-01 | factor | f0026a | 量能扩张速度（volume_expansion_speed） | deliverables/factors/f0026a/`（原研究中因子·离线cache hit出包验证·RankIC -0.0057）
-- `2026-09-01 | factor | f0027a | 近20日已实现偏度（realized_skew_20d） | deliverables/factors/f0027a/`（出包后台进行中·i20260827-001·博彩偏好异象·带 fcode 类属性）
+- `2026-09-01 | factor | f0027a | 近20日已实现偏度（realized_skew_20d） | deliverables/factors/f0027a/`（✅本轮(09-02)确认出包完成·i20260827-001 翻 validated·博彩偏好异象）
+
+### 因子（f0028a · 2026-09-02 drain 完成）
+- `2026-09-02 | factor | f0028a | 长下影线（lower_shadow） | deliverables/factors/f0028a/`（已确认出包成功·灵感 i20260806-010→validated·纯OHLC·RankIC=-0.0141 弱因子照常交付）
+
+### 仓库（口径修复 · 2026-09-02）
+- 回填 15 个已交付因子模块的 `fcode` 类属性（此前漏写，导致看板长期误计"研究中=17"）：amount_std_20d→f0016a、avg_turnover_10/120/240/5d→f0012/11/13/17a、ema_5/10/12/120d→f0018/19/20/21a、ma_5d→f0022a、amount_ma_20d→f0023a、money_flow_ma_20d→f0024a、bollinger_upper_20d→f0025a、chip_cost_distance→f0004a、turnover_days（Inventory/AR 两类）→f0014a/f0015a。看板"研究中"由 17 降至 1（剩 1 = ML 特征占位 `feature_factory.log_mktcap`，故意不出包、pending_handoff 已登记）。
 
 ## [0.1.0] - 2026-08-17
 
