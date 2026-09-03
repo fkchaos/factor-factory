@@ -26,6 +26,7 @@ import json
 import pickle
 import os
 import sys
+import hashlib
 from pathlib import Path
 from typing import Optional
 
@@ -151,7 +152,9 @@ def compute_factor_series(factor, provider, fields=FIELDS, use_cache: bool = Tru
     min_mcap = getattr(provider, "_min_mcap", 0)
     if pool is not None:
         start_tag = pd.Timestamp(start).strftime("%Y%m%d") if start else "na"
-        ftag = abs(hash(tuple(fields))) % 100000
+        # 🔴 修复：原 abs(hash(tuple(fields))) 受 PYTHONHASHSEED 加盐 → 跨进程不确定，
+        # 缓存永远 miss、每次出包重拼 19min。改用确定性 md5 摘要做指纹。
+        ftag = int(hashlib.md5("|".join(map(str, fields)).encode("utf-8")).hexdigest(), 16) % 100000
         baostock_dir = SERIES_CACHE_DIR.parent / "baostock"
         n_src = (len([f for f in os.listdir(baostock_dir) if f.endswith(".parquet")])
                  if baostock_dir.exists() else 0)

@@ -31,3 +31,9 @@ from . import bollinger_upper_20d  # noqa: F401
 from . import turnover_days  # noqa: F401  （f0014a 存货周转天数 / f0015a 应收账款周转天数）
 from . import realized_skew_20d  # noqa: F401  （f0027a 近20日已实现偏度）
 from . import lower_shadow  # noqa: F401  （f0028a 长下影线）
+from . import up_run_reversal  # noqa: F401  （f0029a 连涨占比短期反转）
+from . import volume_cv_20d  # noqa: F401  （f0030a 20日成交量变异系数）
+from . import amihud_illiquidity_20d  # noqa: F401  （f0031a 20日Amihud非流动性）
+from . import vol_expansion_speed  # noqa: F401  （f0032a 波动率扩张速度）
+from . import liquidity_improvement  # noqa: F401  （f0033a 流动性改善度）
+from . import bottom_rebound  # noqa: F401  （f0034a 触底反弹信号）
