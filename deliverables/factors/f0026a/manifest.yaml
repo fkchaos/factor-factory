@@ -6,12 +6,12 @@ doc_rev: 1
 status: current
 supersedes: null
 components: null
-generated: 2026-09-01
+generated: 2026-09-03
 contract_version: 1
 provider: baostock
 adj_policy: qfq
 universe: hs300
-pools: [hs300]
+pools: [hs300, hs800]
 corr_pool: hs300
 window_start: 2020-01-01
 neutralization: industry+mktcap(PIT: amount/turnover)

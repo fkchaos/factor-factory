@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import json
 import pickle
+import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -142,7 +143,32 @@ def compute_factor_series(factor, provider, fields=FIELDS, use_cache: bool = Tru
     (交易日数, 最后交易日, 中性化口径版本) 做指纹校验——数据或预处理口径一变，
     缓存自动失效，不会吃到陈旧值。
     """
-    panel = provider.get_panel(fields, None, None)
+    # ---- panel 磁盘缓存（跨进程复用，避免每次出包重拼 1672×全历史，单包省 ~19min）----
+    # 🔴 PIT 安全：缓存的是 get_panel 原始输出（已按披露日切片、未中性化）；
+    #    中性化/compute 在缓存读取之后进行，语义不变。指纹含 pool+start+min_mcap+fields+源文件数。
+    pool = getattr(provider, "_universe_mode", None) or getattr(provider, "universe", None)
+    start = getattr(provider, "_history_start", None) or getattr(provider, "history_start", "")
+    min_mcap = getattr(provider, "_min_mcap", 0)
+    if pool is not None:
+        start_tag = pd.Timestamp(start).strftime("%Y%m%d") if start else "na"
+        ftag = abs(hash(tuple(fields))) % 100000
+        baostock_dir = SERIES_CACHE_DIR.parent / "baostock"
+        n_src = (len([f for f in os.listdir(baostock_dir) if f.endswith(".parquet")])
+                 if baostock_dir.exists() else 0)
+        panel_cache_fp = (SERIES_CACHE_DIR /
+                          f"_panel__{pool}__{start_tag}__{min_mcap:.0f}__{ftag}__src{n_src}.parquet")
+        if panel_cache_fp.exists():
+            panel = pd.read_parquet(panel_cache_fp)
+            print(f"    [panel cache hit] @ {pool}", flush=True)
+        else:
+            panel = provider.get_panel(fields, None, None)
+            SERIES_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+            try:
+                panel.to_parquet(panel_cache_fp)
+            except Exception as e:
+                print(f"    [panel cache write failed] {e}", flush=True)
+    else:
+        panel = provider.get_panel(fields, None, None)
     dates = sorted(panel.index.get_level_values("date").unique())
     N = len(dates)
 
@@ -150,9 +176,6 @@ def compute_factor_series(factor, provider, fields=FIELDS, use_cache: bool = Tru
     # (_universe_mode/_history_start)，早期误用 provider.universe 拿到 "unknown"，
     # 会让 sz50 与 hs300 共用同一个缓存文件 —— 静默串池，比慢十倍严重得多。
     # 因此：识别不出池子就直接禁用缓存。
-    pool = getattr(provider, "_universe_mode", None) or getattr(provider, "universe", None)
-    start = getattr(provider, "_history_start", None) or getattr(provider, "history_start", "")
-    min_mcap = getattr(provider, "_min_mcap", 0)
     if pool is None:
         use_cache = False
         cache_fp = None

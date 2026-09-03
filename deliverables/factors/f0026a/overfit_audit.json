@@ -10,6 +10,11 @@
       "dsr": 1.0,
       "pbo": null,
       "verdict": "PASS"
+    },
+    "hs800": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
     }
   }
 }

@@ -63,6 +63,15 @@
 - 步骤4 看板刷新：因子 已交付=27 / 研究中=1 / 灵感池=25；信号 已交付=3 / 研究中=0（hs1800 1672/1572）。
 - 步骤7 内联自检 5 项全过：①board<24h ②矩阵 hs1800 非空 ③月报 2026-09 存在 ④信号注册表存在 ⑤hypothesized 26→25 下降。
 
+### 2026-09-03 下午 · 出包提速（B方案 · panel 磁盘缓存）
+
+- 🔴 **根因坐实**：手动计时重出 f0026a（数据全缓存、因子值全 `[cache hit]`）仍耗时 **19m24s**——慢不在计算，而在 `build_deliverable.compute_factor_series` 每次进程都重拼全历史 panel（1672 股票 × 4000+ 交易日 read_parquet + concat）。这正是"每晚只出 1 个"的真根因（出包 30min+ 重活靠后台异步回调延后，单轮只认 1 个）。
+- ✅ **加 panel 磁盘缓存（最小改动·PIT 安全）**：`scripts/build_deliverable.py` 在 `get_panel` 后加跨进程缓存层 `.cache/factor_series/_panel__{pool}__{start}__{min_mcap}__{fields_hash}__src{n}.parquet`。缓存的是 get_panel **原始已切片面板**（未中性化），中性化/compute 在读取后做，PIT 语义不变；指纹含 baostock 源文件数 `src{n}`，数据更新自动失效。实测：首次建缓存 ~19min，之后命中**秒级出包**。
+- ✅ **PIT 红线验证**：`tests/test_pit_mcap.py` + `tests/test_build_deliverable.py` 共 17 项全绿，中性化链未动。
+- ✅ **推进器提速（B方案·用户拍板"加速处理"）**：automation-1786017033599 prompt 改——①出包段去掉"10min 超时误判"旧 workaround，改"同步串行、直接等 EXIT=0"；②K 由 5→**6**（若后续步骤少升 8），产能>侦察兵供给(~3-4/天)，积压净消化；③注明 panel 缓存首次建 ~19min、其后秒级。cron 已更新（nextRunAt 今晚 21:00 立即生效）。
+- 📊 **当前看板（9-03）**：因子已交付=28 / 研究中=1 / 灵感池=37 / 已归档=37（37 = 9-01 归档 34 + 旧 3；37 hypothesized 含 9-03 周四侦察兵新喂 12 条 i20260903-001~012）。
+- ⏭️ **下一步**：今晚 21:00 推进器首跑即用新口径——首个出包触发 panel 缓存构建(~19min)，其后秒级，预计当晚 drain 3-6 个；明早看板"研究中/灵感池"应明显下降。22:00 自动同步推送。
+
 ### 2026-09-03 收尾（项目空间统一验证 + 积压净增实测 · 用户："顺手做彻底"）
 
 - ✅ **项目空间统一已验证（彻底闭环）**：`factor-factory` 是 `A股研究` 下 **git 子仓库**（代码/推送/记忆同一套），非分家；UI 上多出的 `factor-factory` 卡片根因 = 9-01 建自动同步时 cwds 错写成 `…\A股研究\factor-factory`，框架在 `factor-factory` 下生成了 `.workbuddy` → 第二个项目空间。用户拍板"统一 cwds 到 A股研究"：自动同步 `automation-1788263669961` cwds 改回 `D:\ai-workspace\WorkBuddy\A股研究` + prompt 补 `cd factor-factory`。**验证（实测非待验证）**：git log 9-01 起 `b3dec33`(9-01 22:00:49)+`c1d6ebf`(9-02 22:00:28) 两次 `auto-sync:` commit；`ls-remote origin main`=本地=`c1d6ebf` → 新 cwds 下自动同步正常 push。**续作者开会话认准 `A股研究` 项目空间即可（记忆连续）；`factor-factory` 卡片为 .workbuddy 残留、受系统保护不能删、无害可忽略。**
