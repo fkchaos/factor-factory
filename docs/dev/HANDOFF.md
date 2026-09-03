@@ -8,7 +8,7 @@
 ---
 
 ## 0. 元信息
-- 更新日期：2026-09-02（口径修复：回填15个已交付因子 fcode 类属性，看板研究中 17→1；确认 f0027a 出包+i20260827-001 validated；启动 f0028a 后台出包；PIT体检无新命中；相关测试30项通过）
+- 更新日期：2026-09-03（①项目空间统一已验证：factor-factory 非独立项目，是 A股研究 下 git 子仓库；自动同步 cwds 改回 A股研究 后 9-01/9-02 两次 auto-sync commit 正常 push，远端=本地=c1d6ebf；②积压净增实测：推进器出包产能~1-2/晚 << 侦察兵供给~12/次，9-03 周四喂 12 条 → hypothesized 25→37，需限流+提速决策）
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
 
@@ -62,6 +62,13 @@
 - 步骤2/3 自检均 skip：P4 矩阵 `ic_matrix_2026-08-24.csv` hs1800 非空(2因子)、P5 基线 mtime 08-17(<30天)仅刷当月月报 `research/monthly/2026-09.md`、P7/f0003a 三包齐、信号注册表 3 行 current。
 - 步骤4 看板刷新：因子 已交付=27 / 研究中=1 / 灵感池=25；信号 已交付=3 / 研究中=0（hs1800 1672/1572）。
 - 步骤7 内联自检 5 项全过：①board<24h ②矩阵 hs1800 非空 ③月报 2026-09 存在 ④信号注册表存在 ⑤hypothesized 26→25 下降。
+
+### 2026-09-03 收尾（项目空间统一验证 + 积压净增实测 · 用户："顺手做彻底"）
+
+- ✅ **项目空间统一已验证（彻底闭环）**：`factor-factory` 是 `A股研究` 下 **git 子仓库**（代码/推送/记忆同一套），非分家；UI 上多出的 `factor-factory` 卡片根因 = 9-01 建自动同步时 cwds 错写成 `…\A股研究\factor-factory`，框架在 `factor-factory` 下生成了 `.workbuddy` → 第二个项目空间。用户拍板"统一 cwds 到 A股研究"：自动同步 `automation-1788263669961` cwds 改回 `D:\ai-workspace\WorkBuddy\A股研究` + prompt 补 `cd factor-factory`。**验证（实测非待验证）**：git log 9-01 起 `b3dec33`(9-01 22:00:49)+`c1d6ebf`(9-02 22:00:28) 两次 `auto-sync:` commit；`ls-remote origin main`=本地=`c1d6ebf` → 新 cwds 下自动同步正常 push。**续作者开会话认准 `A股研究` 项目空间即可（记忆连续）；`factor-factory` 卡片为 .workbuddy 残留、受系统保护不能删、无害可忽略。**
+- ⚠️ **积压净增风险（结构性，待决策）**：推进器 9-01 出 f0027a、9-02 出 f0028a（validated 16→18、研究中回填 15 模块 17→1），但**出包产能仅 ~1-2/晚**（30min+ 重活，cron 主轮等不及、靠后台 task 异步回调确认）；侦察兵（周一/四 12:00）每次喂 ~10-12 条。**9-03 周四侦察兵喂 12 条（i20260903-001~012 全 hypothesized）→ hypothesized 25→37**。当前看板 `已交付=28/研究中=1/灵感池=37/已归档=37/信号=3`。出包产能 << 供给 → 不调整则"只进不出"会缓慢重现。
+- 📋 **下一步方案（待用户拍板，未擅自改设计）**：A=限流侦察兵（供给降到 ≤ 产能）；B=推进器并行出包+cache 优先提速；C=接受慢 drain 仅防爆（>80 预警）。推荐 **A+B 组合**根治。9-03 21:00 推进器仍按现 prompt 再 drain 1 个、22:00 自动同步再 push（自然发生）。
+- 🔴 **红线仍有效**：exec_lag≠0（信号线）；PIT 市值用 `pit_float_mcap()`、禁读脏 `market_cap`；新因子模块必填 `fcode` 类属性（防看板误计研究中）。committer=`WorkBuddy Agent`（仓库级、无主理人邮箱）。
 
 ### 当前状态（一句话）
 **双线交付齐备且全部 PIT 口径可信：信号线已三包（s0001x 广度 Regime / s0002x 风险偏好 / s0003x 波动率 Regime，三包两两视角独立）；f-code 三包均按 v2-pit-mcap 真口径重算完毕；本轮（08-12）新增第三信号 `s0003x` 出包并将卡片模板硬编码陷阱句 bug 修复，全量 161 项 pytest 回归全绿（4m49s），看板信号段翻牌 已交付=3 / 研究中=0，对外 JSON 同步刷新为 3 stock + 3 timing。
@@ -129,6 +136,8 @@
 - 🔵 **想法供给（侦察兵 2026-08-27 第 7 期，仅供给侧，与执行进度无关）**：灵感池 **72 → 现 80 条候选**（hypothesized 64 / validated 16，漏斗 64 可进、16 为终态 validated 非真卡住）。护栏实测 hypothesized=56 < 60 阈值，**正常供给**。本周新增 **8 条**（paper 1 / sell_side 5 / forum 1 / observation 1）。本期新维度：**个股彩票型偏度(lottery skewness，日频三阶矩→低收益，区别于池内偏度管理overlay)、融资融券折算率相对行业(机构认可度代理)、盈利增速因子的风格状态门控(成长占优期有效/价值期失效→需Gating)、研报文本 LLM+FinBERT 情绪(纯NLP，区别于数值预期修正)、波动率扩张速度(方正"勇攀高峰"日频降级=波动突变预警)、市场状态 MOE 动态合成(东吴四指数路由，区别于离散度择时)、机构筹码集中度(公募持仓/总市值)、机构主动加仓环比(剔除股价波动的QoQ增幅)**。融券类搜索结果为头条阴谋论、数字不可核，按纪律跳过未灌。各条 rationale 已标注与现有因子相关性检验 + 数据缺口（折算率/研报语料NLP/基金季报PIT滞后）。⚠️ 容量护栏临界：本期后 hypothesized=64 ≥ 60 阈值，下期(08-31)若仍 ≥60 将触发跳过供给（仅刷新看板），符合"让它 drain"设计。
 
 - 🔵 **想法供给（侦察兵 2026-08-31 第 8 期，仅供给侧，与执行进度无关）**：⚠️ **容量护栏触发，本周跳过供给**：`idea_backlog.py list` 实测 `hypothesized=64 ≥ 60` 阈值，按纪律不跑 WebSearch、不写新灵感，仅刷新看板 + 漏斗体检。灵感池维持 **现 80 条候选**（hypothesized 64 / validated 16，漏斗 64 可进、16 为终态 validated 非真卡住）。漏斗体检：可进 64 / 卡 16（均 validated 终态）。看板刷新：因子 已交付=25 / 研究中=18 / 灵感池=80；信号 已交付=3 / 研究中=0。待驱动器消费端（灵感池 draining）把 hypothesized 降到 <60 阈值后再恢复供给。
+
+- 🔵 **想法供给（侦察兵 2026-09-03 第 9 期，仅供给侧，与执行进度无关）**：✅ **护栏解除、恢复供给**：`idea_backlog.py list` 实测 `hypothesized=25 < 60` 阈值（消费端两周内把 hypothesized 从 64 压到 25，archived 37 / validated 18，第 8 期"让它 drain"的设计已被验证有效）。本周新增 **12 条**（paper 3 / sell_side 5 / zoo 2 / forum 1 / observation 1），灵感池 **80 → 现 92 条候选**（hypothesized 37 / archived 37 / validated 18；漏斗 74 可进、18 为终态 validated 非真卡住）。本期新维度：**A+H双重上市关注度溢价(JBF自然实验)、行业动量 exclude-self、MFCF依赖图分组合成层、方正「球队硬币」日频动量跟随度分解、日内多空博弈的振幅/实体比日频降级、市场"好做/难做"状态分域估权再合成、事件脉冲型动量、偿债能力(流动/速动比率)、研发调整B/M、价值因子的市值分域施用**。⚠️ 两条结构性缺口首次填补：**估值类**与**偿债能力类**此前池内完全空白。⚠️ 其中 `i20260903-012`（observation）是**横截面版 exec_lag 自审项**：arXiv STRATA 论文自承"改用首个可执行价度量后十分组价差与零无法区分"，同类风险须复核我方分层回测成交价假设（f0001a 隔夜类风险最高）。各条 rationale 均标注与现有因子相关性检验（>0.8 应合并）+ PIT/财务公告日滞后要求。
 
 ### 下一步待办（按优先级）
 1. ✅ **（已发送 2026-08-17 16:19）** `deliverables/strategy_collab_issue.md` 已成功建 issue 到 `fkchaos/a-share-quant-sim`：**[#1](https://github.com/fkchaos/a-share-quant-sim/issues/1)**。路径：本地 GCM 凭证中的 fkchaos PAT → GitHub REST API（`POST /repos/fkchaos/a-share-quant-sim/issues`），**绕开 WorkBuddy GitHub 连接器**（该连接器对仓库只读/已断开，写操作全 403）。注意：WorkBuddy 连接器仍不可用，后续若需再发 issue/PR，继续走本地 PAT/API 或用户在 Web 手动操作。
