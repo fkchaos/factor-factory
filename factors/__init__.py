@@ -37,3 +37,6 @@ from . import amihud_illiquidity_20d  # noqa: F401  （f0031a 20日Amihud非流�
 from . import vol_expansion_speed  # noqa: F401  （f0032a 波动率扩张速度）
 from . import liquidity_improvement  # noqa: F401  （f0033a 流动性改善度）
 from . import bottom_rebound  # noqa: F401  （f0034a 触底反弹信号）
+from . import momentum_12_1  # noqa: F401  （f0035a 12-1 动量）
+from . import upper_shadow  # noqa: F401  （f0036a 长上影线）
+from . import reverse_cross_60  # noqa: F401  （f0037a 收益反向交叉次数）

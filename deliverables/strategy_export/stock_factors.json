@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-18 20:59",
+  "generated": "2026-09-04 21:58",
   "source": "external",
   "producer": "factor-factory",
   "factors": [
@@ -997,6 +997,2076 @@
         "contract_version": "1",
         "package_path": "deliverables/factors/f0010a",
         "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor size_log_mcap --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0011a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "avg_turnover_120d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_120d --pool hs300",
+      "ic_mean": -0.012623240470792428,
+      "ir": -0.11826751673896066,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "120日平均换手率（f0011a）｜avg_turnover_120d",
+      "_factory_extra": {
+        "fcode": "f0011a",
+        "factor_impl": "avg_turnover_120d",
+        "display_name": "120日平均换手率（f0011a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.012623240470792428,
+            "ir": -0.11826751673896066,
+            "ic_win_rate": 0.45867208672086723,
+            "n_days": 1476,
+            "sharpe_net": 0.7699376970989383,
+            "max_dd_net": -0.39703765839720306,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0011a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_120d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0012a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "avg_turnover_10d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_10d --pool hs300",
+      "ic_mean": -0.016103252862464845,
+      "ir": -0.15084200486034147,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "10日平均换手率（f0012a）｜avg_turnover_10d",
+      "_factory_extra": {
+        "fcode": "f0012a",
+        "factor_impl": "avg_turnover_10d",
+        "display_name": "10日平均换手率（f0012a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.016103252862464845,
+            "ir": -0.15084200486034147,
+            "ic_win_rate": 0.43505674653215637,
+            "n_days": 1586,
+            "sharpe_net": 0.6364261366579663,
+            "max_dd_net": -0.38418362325371747,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0012a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_10d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0013a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "avg_turnover_240d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_240d --pool hs300",
+      "ic_mean": -0.010638053230704067,
+      "ir": -0.10292107311644344,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "240日平均换手率（f0013a）｜avg_turnover_240d",
+      "_factory_extra": {
+        "fcode": "f0013a",
+        "factor_impl": "avg_turnover_240d",
+        "display_name": "240日平均换手率（f0013a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.010638053230704067,
+            "ir": -0.10292107311644344,
+            "ic_win_rate": 0.47123893805309736,
+            "n_days": 1356,
+            "sharpe_net": 0.7763573663534505,
+            "max_dd_net": -0.3868654943809442,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0013a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_240d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0014a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "inventory_turnover_days | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor inventory_turnover_days --pool hs300",
+      "ic_mean": -0.0007930809807424048,
+      "ir": -0.009751211259067076,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "存货周转天数（f0014a）｜inventory_turnover_days",
+      "_factory_extra": {
+        "fcode": "f0014a",
+        "factor_impl": "inventory_turnover_days",
+        "display_name": "存货周转天数（f0014a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.0007930809807424048,
+            "ir": -0.009751211259067076,
+            "ic_win_rate": 0.496551724137931,
+            "n_days": 1595,
+            "sharpe_net": 0.782501278314192,
+            "max_dd_net": -0.3216163086545901,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0014a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor inventory_turnover_days --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0015a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ar_turnover_days | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ar_turnover_days --pool hs300",
+      "ic_mean": 4.2676498579478094e-05,
+      "ir": 0.0005832664105239245,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "应收账款周转天数（f0015a）｜ar_turnover_days",
+      "_factory_extra": {
+        "fcode": "f0015a",
+        "factor_impl": "ar_turnover_days",
+        "display_name": "应收账款周转天数（f0015a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 4.2676498579478094e-05,
+            "ir": 0.0005832664105239245,
+            "ic_win_rate": 0.503448275862069,
+            "n_days": 1595,
+            "sharpe_net": 0.8117423205869533,
+            "max_dd_net": -0.3651392749555149,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0015a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ar_turnover_days --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0016a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "amount_std_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor amount_std_20d --pool hs300",
+      "ic_mean": -0.00786607703970444,
+      "ir": -0.11092031829001973,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "20日成交金额标准差（f0016a）｜amount_std_20d",
+      "_factory_extra": {
+        "fcode": "f0016a",
+        "factor_impl": "amount_std_20d",
+        "display_name": "20日成交金额标准差（f0016a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.00786607703970444,
+            "ir": -0.11092031829001973,
+            "ic_win_rate": 0.4479695431472081,
+            "n_days": 1576,
+            "sharpe_net": 0.9105674426503347,
+            "max_dd_net": -0.3497517040693494,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0016a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor amount_std_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0017a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "avg_turnover_5d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_5d --pool hs300",
+      "ic_mean": -0.017559907130060136,
+      "ir": -0.1683077511781646,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "5日平均换手率（f0017a）｜avg_turnover_5d",
+      "_factory_extra": {
+        "fcode": "f0017a",
+        "factor_impl": "avg_turnover_5d",
+        "display_name": "5日平均换手率（f0017a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.017559907130060136,
+            "ir": -0.1683077511781646,
+            "ic_win_rate": 0.43117536140791957,
+            "n_days": 1591,
+            "sharpe_net": 0.5471544578882148,
+            "max_dd_net": -0.45541021218200983,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0017a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor avg_turnover_5d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0018a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ema_5d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ema_5d --pool hs300",
+      "ic_mean": -0.009169759267184404,
+      "ir": -0.09482090879302064,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "5日EMA（f0018a）｜ema_5d",
+      "_factory_extra": {
+        "fcode": "f0018a",
+        "factor_impl": "ema_5d",
+        "display_name": "5日EMA（f0018a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.009169759267184404,
+            "ir": -0.09482090879302064,
+            "ic_win_rate": 0.46394984326018807,
+            "n_days": 1595,
+            "sharpe_net": 0.6093468592935419,
+            "max_dd_net": -0.47606756720755994,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0018a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ema_5d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0019a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ema_10d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ema_10d --pool hs300",
+      "ic_mean": -0.009041935587231766,
+      "ir": -0.09339961299511737,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "10日EMA（f0019a）｜ema_10d",
+      "_factory_extra": {
+        "fcode": "f0019a",
+        "factor_impl": "ema_10d",
+        "display_name": "10日EMA（f0019a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.009041935587231766,
+            "ir": -0.09339961299511737,
+            "ic_win_rate": 0.464576802507837,
+            "n_days": 1595,
+            "sharpe_net": 0.5939279283978635,
+            "max_dd_net": -0.47043259590628705,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0019a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ema_10d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0020a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ema_12d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ema_12d --pool hs300",
+      "ic_mean": -0.008986510055927467,
+      "ir": -0.09281600780306189,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "12日EMA（f0020a）｜ema_12d",
+      "_factory_extra": {
+        "fcode": "f0020a",
+        "factor_impl": "ema_12d",
+        "display_name": "12日EMA（f0020a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.008986510055927467,
+            "ir": -0.09281600780306189,
+            "ic_win_rate": 0.4626959247648903,
+            "n_days": 1595,
+            "sharpe_net": 0.5698209110045552,
+            "max_dd_net": -0.4797009011634523,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0020a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ema_12d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0021a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ema_120d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ema_120d --pool hs300",
+      "ic_mean": -0.008956213151197349,
+      "ir": -0.09468272630570095,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "120日EMA（f0021a）｜ema_120d",
+      "_factory_extra": {
+        "fcode": "f0021a",
+        "factor_impl": "ema_120d",
+        "display_name": "120日EMA（f0021a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.008956213151197349,
+            "ir": -0.09468272630570095,
+            "ic_win_rate": 0.464576802507837,
+            "n_days": 1595,
+            "sharpe_net": 0.6516266517187277,
+            "max_dd_net": -0.43935186351046907,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0021a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ema_120d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0022a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ma_5d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ma_5d --pool hs300",
+      "ic_mean": -0.009226822772289308,
+      "ir": -0.09557369777776538,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "5日MA（f0022a）｜ma_5d",
+      "_factory_extra": {
+        "fcode": "f0022a",
+        "factor_impl": "ma_5d",
+        "display_name": "5日MA（f0022a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.009226822772289308,
+            "ir": -0.09557369777776538,
+            "ic_win_rate": 0.4663733500942803,
+            "n_days": 1591,
+            "sharpe_net": 0.5783422158594799,
+            "max_dd_net": -0.49551994117026543,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0022a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ma_5d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0023a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "amount_ma_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor amount_ma_20d --pool hs300",
+      "ic_mean": -0.013484523355140155,
+      "ir": -0.13409332444497782,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "20日成交金额MA（f0023a）｜amount_ma_20d",
+      "_factory_extra": {
+        "fcode": "f0023a",
+        "factor_impl": "amount_ma_20d",
+        "display_name": "20日成交金额MA（f0023a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.013484523355140155,
+            "ir": -0.13409332444497782,
+            "ic_win_rate": 0.43591370558375636,
+            "n_days": 1576,
+            "sharpe_net": 0.8604679988782648,
+            "max_dd_net": -0.3650225282599011,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0023a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor amount_ma_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0024a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "money_flow_ma_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor money_flow_ma_20d --pool hs300",
+      "ic_mean": -0.01472112972554909,
+      "ir": -0.14968685945500468,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "20日资金流量（f0024a）｜money_flow_ma_20d",
+      "_factory_extra": {
+        "fcode": "f0024a",
+        "factor_impl": "money_flow_ma_20d",
+        "display_name": "20日资金流量（f0024a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.01472112972554909,
+            "ir": -0.14968685945500468,
+            "ic_win_rate": 0.4346446700507614,
+            "n_days": 1576,
+            "sharpe_net": 0.6622834478014563,
+            "max_dd_net": -0.4097312313974134,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0024a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor money_flow_ma_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0025a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "bollinger_upper_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor bollinger_upper_20d --pool hs300",
+      "ic_mean": -0.011403960397948864,
+      "ir": -0.09361844633508183,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "布林上轨(20日)（f0025a）｜bollinger_upper_20d",
+      "_factory_extra": {
+        "fcode": "f0025a",
+        "factor_impl": "bollinger_upper_20d",
+        "display_name": "布林上轨(20日)（f0025a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.011403960397948864,
+            "ir": -0.09361844633508183,
+            "ic_win_rate": 0.4619289340101523,
+            "n_days": 1576,
+            "sharpe_net": 0.9412822680910391,
+            "max_dd_net": -0.45297012496132083,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0025a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor bollinger_upper_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0026a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "volume_expansion_speed | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor volume_expansion_speed --pool hs300",
+      "ic_mean": -0.012099125782990243,
+      "ir": -0.14968832444413407,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "量能扩张速度（f0026a）｜volume_expansion_speed",
+      "_factory_extra": {
+        "fcode": "f0026a",
+        "factor_impl": "volume_expansion_speed",
+        "display_name": "量能扩张速度（f0026a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.005734186334830513,
+            "ir": -0.0664673632969042,
+            "ic_win_rate": 0.48441734417344173,
+            "n_days": 1476,
+            "sharpe_net": 0.8523194968069607,
+            "max_dd_net": -0.25776459630072757,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.012099125782990243,
+            "ir": -0.14968832444413407,
+            "ic_win_rate": 0.4437669376693767,
+            "n_days": 1476,
+            "sharpe_net": 0.8626536534915779,
+            "max_dd_net": -0.2959425615547058,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0026a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor volume_expansion_speed --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0027a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "realized_skew_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor realized_skew_20d --pool hs300",
+      "ic_mean": -0.006208566734277229,
+      "ir": -0.1052001612956651,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "近20日已实现偏度（f0027a）｜realized_skew_20d",
+      "_factory_extra": {
+        "fcode": "f0027a",
+        "factor_impl": "realized_skew_20d",
+        "display_name": "近20日已实现偏度（f0027a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.004564488437308796,
+            "ir": -0.06597771197151395,
+            "ic_win_rate": 0.4742857142857143,
+            "n_days": 1575,
+            "sharpe_net": 0.8060037244816639,
+            "max_dd_net": -0.30856145470693197,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.006208566734277229,
+            "ir": -0.1052001612956651,
+            "ic_win_rate": 0.4558730158730159,
+            "n_days": 1575,
+            "sharpe_net": 1.0449722169206979,
+            "max_dd_net": -0.3850918898888449,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0027a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor realized_skew_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0028a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "lower_shadow | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lower_shadow --pool hs300",
+      "ic_mean": -0.014693390008814243,
+      "ir": -0.22649544177999698,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "长下影线（f0028a）｜lower_shadow",
+      "_factory_extra": {
+        "fcode": "f0028a",
+        "factor_impl": "lower_shadow",
+        "display_name": "长下影线（f0028a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.014055572340853433,
+            "ir": -0.18740485921118372,
+            "ic_win_rate": 0.4200626959247649,
+            "n_days": 1595,
+            "sharpe_net": -1.321140989297279,
+            "max_dd_net": -0.8870004197206145,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.014693390008814243,
+            "ir": -0.22649544177999698,
+            "ic_win_rate": 0.4006269592476489,
+            "n_days": 1595,
+            "sharpe_net": -0.9842991508956742,
+            "max_dd_net": -0.8464390747482411,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.8840511689257328e-25,
+          "pbo": null,
+          "verdict": "FAIL",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.8840511689257328e-25,
+              "pbo": null,
+              "verdict": "FAIL"
+            },
+            "hs800": {
+              "dsr": 0.9140014054129559,
+              "pbo": null,
+              "verdict": "WARN"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0028a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor lower_shadow --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0029a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "up_run_reversal | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor up_run_reversal --pool hs300",
+      "ic_mean": 0.017773494326799404,
+      "ir": 0.05546347517000168,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "连涨占比短期反转（f0029a）｜up_run_reversal",
+      "_factory_extra": {
+        "fcode": "f0029a",
+        "factor_impl": "up_run_reversal",
+        "display_name": "连涨占比短期反转（f0029a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.0146458427787131,
+            "ir": 0.03883270715892648,
+            "ic_win_rate": 0.5126162018592297,
+            "n_days": 753,
+            "sharpe_net": 0.42163142073917054,
+            "max_dd_net": -0.4020973312556876,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.017773494326799404,
+            "ir": 0.05546347517000168,
+            "ic_win_rate": 0.5286195286195287,
+            "n_days": 1188,
+            "sharpe_net": -0.05705389690176366,
+            "max_dd_net": -0.6370817735012839,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 0.9963932973490994,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0029a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor up_run_reversal --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0030a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "volume_cv_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor volume_cv_20d --pool hs300",
+      "ic_mean": -0.011308652760299737,
+      "ir": -0.1966947372072537,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "20日成交量变异系数（f0030a）｜volume_cv_20d",
+      "_factory_extra": {
+        "fcode": "f0030a",
+        "factor_impl": "volume_cv_20d",
+        "display_name": "20日成交量变异系数（f0030a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.007335510093969737,
+            "ir": -0.10435160195001615,
+            "ic_win_rate": 0.4460659898477157,
+            "n_days": 1576,
+            "sharpe_net": 0.732094614905427,
+            "max_dd_net": -0.32593087702654333,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.011308652760299737,
+            "ir": -0.1966947372072537,
+            "ic_win_rate": 0.4035532994923858,
+            "n_days": 1576,
+            "sharpe_net": 0.5892883622048805,
+            "max_dd_net": -0.3748952431204319,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0030a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor volume_cv_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0031a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "amihud_illiquidity_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor amihud_illiquidity_20d --pool hs300",
+      "ic_mean": 0.01278252553943061,
+      "ir": 0.16695651064377695,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "20日Amihud非流动性（f0031a）｜amihud_illiquidity_20d",
+      "_factory_extra": {
+        "fcode": "f0031a",
+        "factor_impl": "amihud_illiquidity_20d",
+        "display_name": "20日Amihud非流动性（f0031a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.009731635507323335,
+            "ir": 0.12781683454386478,
+            "ic_win_rate": 0.5580952380952381,
+            "n_days": 1575,
+            "sharpe_net": 1.191320662336263,
+            "max_dd_net": -0.2533446532353387,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.01278252553943061,
+            "ir": 0.16695651064377695,
+            "ic_win_rate": 0.5568253968253968,
+            "n_days": 1575,
+            "sharpe_net": 1.2228492541533156,
+            "max_dd_net": -0.3244744840568684,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0031a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor amihud_illiquidity_20d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0032a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "vol_expansion_speed | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor vol_expansion_speed --pool hs300",
+      "ic_mean": -0.0028538847866233182,
+      "ir": -0.04353427276506766,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "波动率扩张速度（f0032a）｜vol_expansion_speed",
+      "_factory_extra": {
+        "fcode": "f0032a",
+        "factor_impl": "vol_expansion_speed",
+        "display_name": "波动率扩张速度（f0032a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.0004090823981525137,
+            "ir": 0.0055175710586862535,
+            "ic_win_rate": 0.5047619047619047,
+            "n_days": 1575,
+            "sharpe_net": 0.6585980520619317,
+            "max_dd_net": -0.3855335374297725,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.0028538847866233182,
+            "ir": -0.04353427276506766,
+            "ic_win_rate": 0.48634920634920636,
+            "n_days": 1575,
+            "sharpe_net": 0.6093250262192275,
+            "max_dd_net": -0.4120755713093983,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0032a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor vol_expansion_speed --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0033a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "liquidity_improvement | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor liquidity_improvement --pool hs300",
+      "ic_mean": 0.007987724061665135,
+      "ir": 0.11447352981227686,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "流动性改善度（f0033a）｜liquidity_improvement",
+      "_factory_extra": {
+        "fcode": "f0033a",
+        "factor_impl": "liquidity_improvement",
+        "display_name": "流动性改善度（f0033a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.006042154140702429,
+            "ir": 0.0802055631376944,
+            "ic_win_rate": 0.5389067524115756,
+            "n_days": 1555,
+            "sharpe_net": 0.7579844136763699,
+            "max_dd_net": -0.32547492965540337,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.007987724061665135,
+            "ir": 0.11447352981227686,
+            "ic_win_rate": 0.5511254019292604,
+            "n_days": 1555,
+            "sharpe_net": 0.6977144384748151,
+            "max_dd_net": -0.3393308088643522,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0033a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor liquidity_improvement --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0034a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "bottom_rebound | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor bottom_rebound --pool hs300",
+      "ic_mean": -0.03331932128331273,
+      "ir": -0.10994579687878114,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "触底反弹信号（f0034a）｜bottom_rebound",
+      "_factory_extra": {
+        "fcode": "f0034a",
+        "factor_impl": "bottom_rebound",
+        "display_name": "触底反弹信号（f0034a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.03331932128331273,
+            "ir": -0.10994579687878114,
+            "ic_win_rate": 0.4467881112176414,
+            "n_days": 1043,
+            "sharpe_net": 0.45384934558786066,
+            "max_dd_net": -0.323991053041744,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.020098632171491798,
+            "ir": -0.0818548163218313,
+            "ic_win_rate": 0.47993705743509046,
+            "n_days": 1271,
+            "sharpe_net": 0.32420590384761405,
+            "max_dd_net": -0.3899211321474362,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0034a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor bottom_rebound --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0035a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "12-1 动量：close[t-21] / close[t-252] - 1。正值 = 过去约 11 个月上涨的票。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor momentum_12_1 --pool hs300",
+      "ic_mean": 0.007033448634491315,
+      "ir": 0.051013965067975196,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "12-1动量（f0035a）｜12-1 动量：close[t-21] / close[t-252] - 1。正值 = 过去约 11 个月上涨的票。",
+      "_factory_extra": {
+        "fcode": "f0035a",
+        "factor_impl": "momentum_12_1",
+        "display_name": "12-1动量（f0035a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.007033448634491315,
+            "ir": 0.051013965067975196,
+            "ic_win_rate": 0.5405807892777365,
+            "n_days": 1343,
+            "sharpe_net": 0.8792012683481932,
+            "max_dd_net": -0.37163755118212105,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.004470395607584762,
+            "ir": 0.033364526826332036,
+            "ic_win_rate": 0.5182427401340283,
+            "n_days": 1343,
+            "sharpe_net": 0.5387552305107665,
+            "max_dd_net": -0.5567552952706405,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0035a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor momentum_12_1 --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0036a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "upper_shadow | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor upper_shadow --pool hs300",
+      "ic_mean": 0.006330012736121718,
+      "ir": 0.08462724098698791,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "长上影线（f0036a）｜upper_shadow",
+      "_factory_extra": {
+        "fcode": "f0036a",
+        "factor_impl": "upper_shadow",
+        "display_name": "长上影线（f0036a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.006330012736121718,
+            "ir": 0.08462724098698791,
+            "ic_win_rate": 0.5297805642633229,
+            "n_days": 1595,
+            "sharpe_net": 0.4238078602032579,
+            "max_dd_net": -0.4067957510358512,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": 0.004295001562759172,
+            "ir": 0.06519429017197044,
+            "ic_win_rate": 0.5184952978056426,
+            "n_days": 1595,
+            "sharpe_net": 0.07136124850288068,
+            "max_dd_net": -0.5813570105738403,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0036a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor upper_shadow --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0037a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "reverse_cross_60 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor reverse_cross_60 --pool hs300",
+      "ic_mean": -0.00813147296314437,
+      "ir": -0.09837966448587532,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "收益反向交叉次数（f0037a）｜reverse_cross_60",
+      "_factory_extra": {
+        "fcode": "f0037a",
+        "factor_impl": "reverse_cross_60",
+        "display_name": "收益反向交叉次数（f0037a）",
+        "home_pool": "hs800",
+        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.0027597041767196983,
+            "ir": -0.03166897474437194,
+            "ic_win_rate": 0.4817470664928292,
+            "n_days": 1534,
+            "sharpe_net": 1.122307896775898,
+            "max_dd_net": -0.29124510311896834,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.00813147296314437,
+            "ir": -0.09837966448587532,
+            "ic_win_rate": 0.455019556714472,
+            "n_days": 1534,
+            "sharpe_net": 0.9575588060339231,
+            "max_dd_net": -0.3740477239490455,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0037a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor reverse_cross_60 --pool hs300",
         "todo": [
           "regime_dependency 待 P0『分 regime IC』补丁量化",
           "decay_status 待 P0『IC 衰减/半衰期』补丁量化"

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-18 20:59",
+  "generated": "2026-09-04 21:58",
   "source": "external",
   "producer": "factor-factory",
   "note": "风控参数（stop_loss / take_profit / hold_days_max / max_position / max_holdings）不在因子-信号工厂交付范围，属策略层集成职责。我们仅提供因子层面风险属性：最大回撤、成本敏感性、中性化状态，见 stock_factors.json 的 _factory_extra。",

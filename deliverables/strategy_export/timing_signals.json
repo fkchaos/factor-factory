@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-18 20:59",
+  "generated": "2026-09-04 21:58",
   "source": "external",
   "producer": "factor-factory",
   "exec_lag_notice": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",

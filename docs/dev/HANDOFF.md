@@ -12,7 +12,7 @@
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
 
-## 🆕 最新快照（2026-09-01 · 推进器机制瘫痪根治 + 离线出包验证 + 灵感池 draining 重启）
+## 🆕 最新快照（2026-09-04 · f0035a–f0037a 出包 + 灵感池清理翻牌 + 双线交付常态维护）
 
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
@@ -147,6 +147,22 @@
 - 🔵 **想法供给（侦察兵 2026-08-31 第 8 期，仅供给侧，与执行进度无关）**：⚠️ **容量护栏触发，本周跳过供给**：`idea_backlog.py list` 实测 `hypothesized=64 ≥ 60` 阈值，按纪律不跑 WebSearch、不写新灵感，仅刷新看板 + 漏斗体检。灵感池维持 **现 80 条候选**（hypothesized 64 / validated 16，漏斗 64 可进、16 为终态 validated 非真卡住）。漏斗体检：可进 64 / 卡 16（均 validated 终态）。看板刷新：因子 已交付=25 / 研究中=18 / 灵感池=80；信号 已交付=3 / 研究中=0。待驱动器消费端（灵感池 draining）把 hypothesized 降到 <60 阈值后再恢复供给。
 
 - 🔵 **想法供给（侦察兵 2026-09-03 第 9 期，仅供给侧，与执行进度无关）**：✅ **护栏解除、恢复供给**：`idea_backlog.py list` 实测 `hypothesized=25 < 60` 阈值（消费端两周内把 hypothesized 从 64 压到 25，archived 37 / validated 18，第 8 期"让它 drain"的设计已被验证有效）。本周新增 **12 条**（paper 3 / sell_side 5 / zoo 2 / forum 1 / observation 1），灵感池 **80 → 现 92 条候选**（hypothesized 37 / archived 37 / validated 18；漏斗 74 可进、18 为终态 validated 非真卡住）。本期新维度：**A+H双重上市关注度溢价(JBF自然实验)、行业动量 exclude-self、MFCF依赖图分组合成层、方正「球队硬币」日频动量跟随度分解、日内多空博弈的振幅/实体比日频降级、市场"好做/难做"状态分域估权再合成、事件脉冲型动量、偿债能力(流动/速动比率)、研发调整B/M、价值因子的市值分域施用**。⚠️ 两条结构性缺口首次填补：**估值类**与**偿债能力类**此前池内完全空白。⚠️ 其中 `i20260903-012`（observation）是**横截面版 exec_lag 自审项**：arXiv STRATA 论文自承"改用首个可执行价度量后十分组价差与零无法区分"，同类风险须复核我方分层回测成交价假设（f0001a 隔夜类风险最高）。各条 rationale 均标注与现有因子相关性检验（>0.8 应合并）+ PIT/财务公告日滞后要求。
+
+### 2026-09-04 晚 21:00 推进器（cron 自动 · f0035a–f0037a 出包 + 灵感池清理翻牌）
+- 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
+- 步骤0.5 PIT 体检：grep 全仓 `compute` 直接读脏 `market_cap`，仅 `f0010a`（zoo_basics.size_log_mcap，已交付 current）命中——按规则绝不自动重测，其 PIT 复查已于 09-01 登记 `pending_handoff.md`，本轮无新命中；`feature_factory.log_mktcap` 已于 09-01 改造为 `pit_float_mcap`，研究中因子无新 PIT 风险。
+- 步骤1 灵感池消费（本轮 K=3 + 历史翻牌清理）：
+  - 新出包 3 个纯价量因子（panel 磁盘缓存已建，三包串行 ~43min 全 EXIT=0）：
+    - `f0035a` 12-1动量（momentum_12_1，i20260820-039）→ RankIC +0.0070 / ICIR +0.05（hs300；A股12-1动量偏弱，如实交付，不设质量门槛）
+    - `f0036a` 长上影线（upper_shadow，i20260820-042，长下影线 f0028a 镜像）→ RankIC +0.0063 / ICIR +0.08
+    - `f0037a` 收益反向交叉次数（reverse_cross_60，i20260903-004；市场收益用截面等权均值代理，PIT 安全）→ RankIC -0.0028 / ICIR -0.03
+  - 灵感池 CSV 权威翻牌（直接改 `research/idea_backlog.csv`，CLI 无 validate 子命令）：将 09-03/09-04 早前出包但未翻牌的 6 条 `in_pipeline`（i20260806-005→f0030a、i20260806-006→f0031a、i20260820-031→f0033a、i20260827-005→f0032a、i20260806-009→f0029a、i20260903-007→f0034a）翻 `validated`+填 fcode；本轮新 3 条 hypothesized（i20260820-039/042、i20260903-004）出包后翻 `validated`+fcode。
+  - **清理结果**：hypothesized 31→27、validated 18→27、in_pipeline 剩 1（i20260903-005 日内博弈激烈度，无对应模块，正确保留）、已归档=37。
+- 步骤2/3 自检 skip：P4 矩阵 `ic_matrix_2026-08-24.csv` hs1800 列两因子非空 → 跳过；P5 月报 `research/monthly/2026-09.md` 已生成（基线 mtime 08-17<30天不重跑基线）；P7/f0003a 三包齐、信号注册表 3 行 current → 跳过。
+- 步骤4 看板刷新：`docs/factor_board.html` 因子 已交付=**37** / 研究中=**2** / 灵感池=27 / 已归档=37；信号 已交付=3 / 研究中=0（hs1800 1672/1572）。研究中=2 = ①`feature_factory.log_mktcap` ML 占位（故意不出包，pending_handoff 已登记）+ ②`i20260903-005` in_pipeline（无模块），均合理非 bug。
+- 步骤6c CHANGELOG：补录 f0029a–f0037a 共 9 条（f0029a–f0034a 为 09-03/09-04 早前出包补录，f0035a–f0037a 本轮；全部 DSR/PBO 审计通过、不设质量门槛）。
+- 步骤7 内联自检 5 项全过：①board<24h ②矩阵 hs1800 非空 ③月报 2026-09 存在 ④信号注册表存在 ⑤hypothesized 31→27 下降。
+- ⏭️ 剩余 hypothesized 27 条多为需新数据源硬骨头（A+H/财报/分析师预期/行业分类/市场状态 meta），纯价量可离线 drain 的已近耗尽；后续轮次需对数据源阻塞类做归档或接入对应源后复活（见 `docs/dev/BACKLOG_TRIAGE_2026-09-01.md`）。GitHub 通道仍 disconnected、issue 草稿维持待发。
 
 ### 下一步待办（按优先级）
 1. ✅ **（已发送 2026-08-17 16:19）** `deliverables/strategy_collab_issue.md` 已成功建 issue 到 `fkchaos/a-share-quant-sim`：**[#1](https://github.com/fkchaos/a-share-quant-sim/issues/1)**。路径：本地 GCM 凭证中的 fkchaos PAT → GitHub REST API（`POST /repos/fkchaos/a-share-quant-sim/issues`），**绕开 WorkBuddy GitHub 连接器**（该连接器对仓库只读/已断开，写操作全 403）。注意：WorkBuddy 连接器仍不可用，后续若需再发 issue/PR，继续走本地 PAT/API 或用户在 Web 手动操作。

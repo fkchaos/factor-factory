@@ -48,6 +48,19 @@
 ### 仓库（口径修复 · 2026-09-02）
 - 回填 15 个已交付因子模块的 `fcode` 类属性（此前漏写，导致看板长期误计"研究中=17"）：amount_std_20d→f0016a、avg_turnover_10/120/240/5d→f0012/11/13/17a、ema_5/10/12/120d→f0018/19/20/21a、ma_5d→f0022a、amount_ma_20d→f0023a、money_flow_ma_20d→f0024a、bollinger_upper_20d→f0025a、chip_cost_distance→f0004a、turnover_days（Inventory/AR 两类）→f0014a/f0015a。看板"研究中"由 17 降至 1（剩 1 = ML 特征占位 `feature_factory.log_mktcap`，故意不出包、pending_handoff 已登记）。
 
+### 因子（f0029a–f0037a 批量 drain · 2026-09-03 ~ 2026-09-04）
+- `2026-09-03 | factor | f0029a | 连涨占比短期反转（up_run_reversal） | deliverables/factors/f0029a/`（RankIC +0.0146；n=753）
+- `2026-09-03 | factor | f0030a | 20日成交量变异系数（volume_cv_20d） | deliverables/factors/f0030a/`（RankIC -0.0073；ICIR -0.104）
+- `2026-09-03 | factor | f0031a | 20日Amihud非流动性（amihud_illiquidity_20d） | deliverables/factors/f0031a/`（RankIC +0.0097；ICIR +0.128）
+- `2026-09-04 | factor | f0032a | 波动率扩张速度（vol_expansion_speed） | deliverables/factors/f0032a/`（RankIC +0.0004；近 0）
+- `2026-09-04 | factor | f0033a | 流动性改善度（liquidity_improvement） | deliverables/factors/f0033a/`（RankIC +0.0060；ICIR +0.080）
+- `2026-09-04 | factor | f0034a | 触底反弹信号（bottom_rebound） | deliverables/factors/f0034a/`（RankIC -0.0333；ICIR -0.110）
+- `2026-09-04 | factor | f0035a | 12-1动量（momentum_12_1） | deliverables/factors/f0035a/`（RankIC +0.0070；ICIR +0.05；灵感 i20260820-039→validated）
+- `2026-09-04 | factor | f0036a | 长上影线（upper_shadow） | deliverables/factors/f0036a/`（RankIC +0.0063；ICIR +0.08；灵感 i20260820-042→validated）
+- `2026-09-04 | factor | f0037a | 收益反向交叉次数（reverse_cross_60） | deliverables/factors/f0037a/`（RankIC -0.0028；ICIR -0.03；灵感 i20260903-004→validated）
+
+> 注：f0029a–f0034a 为 09-03/09-04 早前推进器出包，本轮（09-04 晚）补录 CHANGELOG 以保证权威；f0035a–f0037a 为本轮 drain。全部因子均经 DSR/PBO 审计 + 前视防护，不设质量门槛，强弱交策略组筛选。
+
 ## [0.1.0] - 2026-08-17
 
 初始交付批次（研究/模拟盘，非实盘）。

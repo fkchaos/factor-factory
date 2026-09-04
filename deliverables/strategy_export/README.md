@@ -1,13 +1,13 @@
 # 策略组阶段 0 输入包（factor-factory → a-share-quant-sim）
 
-> 生成时间：2026-08-18 20:59｜生成脚本：`scripts/export_to_strategy_json.py`（幂等，可反复重跑）
+> 生成时间：2026-09-04 21:58｜生成脚本：`scripts/export_to_strategy_json.py`（幂等，可反复重跑）
 > 对齐依据：`docs/REQUIREMENTS_ALIGNMENT-2026-08-07.md` v2 §3 / §5.1 / §5.2 / §6
 
 ## 文件
 
 | 文件 | 内容 | 条目数 |
 |---|---|---|
-| `stock_factors.json` | 横截面选股因子（f-code） | 10 |
+| `stock_factors.json` | 横截面选股因子（f-code） | 37 |
 | `timing_signals.json` | 市场级择时信号（s-code） | 3 |
 | `risk_params.json` | **占位**：风控参数不在我们交付范围 | 0 |
 
