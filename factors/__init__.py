@@ -40,3 +40,9 @@ from . import bottom_rebound  # noqa: F401  （f0034a 触底反弹信号）
 from . import momentum_12_1  # noqa: F401  （f0035a 12-1 动量）
 from . import upper_shadow  # noqa: F401  （f0036a 长上影线）
 from . import reverse_cross_60  # noqa: F401  （f0037a 收益反向交叉次数）
+from . import trend_smoothness_r2  # noqa: F401  （f0038a 趋势平滑度R²）
+from . import max5_return  # noqa: F401  （f0039a 最大5日涨幅）
+from . import min3_return  # noqa: F401  （f0040a 最低3日收益）
+from . import lowprice_volume_spike  # noqa: F401  （f0041a 低位放量事件）
+from . import dispersion_agent  # noqa: F401  （f0042a 分歧度代理）
+from . import idiosyncratic_share  # noqa: F401  （f0043a 特异度占比）
