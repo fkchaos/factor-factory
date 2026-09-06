@@ -46,3 +46,9 @@ from . import min3_return  # noqa: F401  （f0040a 最低3日收益）
 from . import lowprice_volume_spike  # noqa: F401  （f0041a 低位放量事件）
 from . import dispersion_agent  # noqa: F401  （f0042a 分歧度代理）
 from . import idiosyncratic_share  # noqa: F401  （f0043a 特异度占比）
+from . import overnight_ratio_60d  # noqa: F401  （f0044a 隔夜收益占比）
+from . import overnight_intraday_decomp  # noqa: F401  （f0045a 隔夜-日内分解）
+from . import idio_vol_ratio  # noqa: F401  （f0046a 特质波动率比率）
+from . import return_deviation_mkt  # noqa: F401  （f0047a 相对市场收益偏离）
+from . import overnight_gap_volexp_spread  # noqa: F401  （f0048a 隔夜跳空-波动扩张价差）
+from . import reversal_60d  # noqa: F401  （f0049a 60日反转）

@@ -199,18 +199,42 @@ def compute_factor_series(factor, provider, fields=FIELDS, use_cache: bool = Tru
 
     factor_series: dict = {}
     fwd_ret_1: dict = {}
-    for idx, t in enumerate(dates):
-        from factors.interface import slice_panel_to_date
-        sub = slice_panel_to_date(panel, t)
-        fv = factor.compute(sub, t).dropna()
-        fv = winsorize_mad(fv)
-        fv = _neutralize_cross_section(fv, panel, t, provider)
-        fv = zscore_cross_section(fv)
-        factor_series[t] = fv
-        close_t = panel.xs(t, level="date")["close"]
-        if idx + 1 < N:
-            close_t1 = panel.xs(dates[idx + 1], level="date")["close"]
-            fwd_ret_1[t] = close_t1 / close_t - 1.0
+
+    # 🔴 快路径（2026-09-06）：因子支持 compute_panel 时，一次性向量化算出全序列
+    # （O(N)），取代逐日对增长中面板反复整段 groupby 的 O(N²) 慢路径（单因子曾达 10+ 分钟）。
+    # 现有 37 个已交付因子若无 compute_panel 仍走下方慢路径，行为不变。
+    bulk = getattr(factor, "compute_panel", None)
+    if bulk is not None:
+        full = bulk(panel)  # DataFrame: index=date, columns=asset
+        for idx, t in enumerate(dates):
+            try:
+                fv = full.loc[t].dropna()
+            except KeyError:
+                fv = pd.Series(dtype=float)
+            if len(fv) == 0:
+                fv = pd.Series(dtype=float)
+            else:
+                fv = winsorize_mad(fv)
+                fv = _neutralize_cross_section(fv, panel, t, provider)
+                fv = zscore_cross_section(fv)
+                factor_series[t] = fv
+            close_t = panel.xs(t, level="date")["close"]
+            if idx + 1 < N:
+                close_t1 = panel.xs(dates[idx + 1], level="date")["close"]
+                fwd_ret_1[t] = close_t1 / close_t - 1.0
+    else:
+        for idx, t in enumerate(dates):
+            from factors.interface import slice_panel_to_date
+            sub = slice_panel_to_date(panel, t)
+            fv = factor.compute(sub, t).dropna()
+            fv = winsorize_mad(fv)
+            fv = _neutralize_cross_section(fv, panel, t, provider)
+            fv = zscore_cross_section(fv)
+            factor_series[t] = fv
+            close_t = panel.xs(t, level="date")["close"]
+            if idx + 1 < N:
+                close_t1 = panel.xs(dates[idx + 1], level="date")["close"]
+                fwd_ret_1[t] = close_t1 / close_t - 1.0
 
     if use_cache and cache_fp is not None:
         try:

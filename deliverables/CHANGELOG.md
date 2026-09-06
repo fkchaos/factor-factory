@@ -61,6 +61,16 @@
 
 > 注：f0029a–f0034a 为 09-03/09-04 早前推进器出包，本轮（09-04 晚）补录 CHANGELOG 以保证权威；f0035a–f0037a 为本轮 drain。全部因子均经 DSR/PBO 审计 + 前视防护，不设质量门槛，强弱交策略组筛选。
 
+### 因子（f0038a–f0043a 批量 drain · 2026-09-05）
+- `2026-09-05 | factor | f0038a | 趋势平滑度R²（trend_smoothness_r2） | deliverables/factors/f0038a/`（RankIC +0.0026；ICIR +0.032；灵感 i20260805-008→validated）
+- `2026-09-05 | factor | f0039a | 最大5日涨幅（max5_return） | deliverables/factors/f0039a/`（RankIC -0.0023；ICIR -0.034；灵感 i20260805-009→validated）
+- `2026-09-05 | factor | f0040a | 最低3日收益（min3_return） | deliverables/factors/f0040a/`（RankIC -0.0020；ICIR -0.031；灵感 i20260806-001→validated）
+- `2026-09-05 | factor | f0041a | 低位放量事件（lowprice_volume_spike） | deliverables/factors/f0041a/`（RankIC -0.0131；ICIR -0.085；灵感 i20260820-036→validated）
+- `2026-09-05 | factor | f0042a | 分歧度代理（dispersion_agent） | deliverables/factors/f0042a/`（RankIC -0.0003；ICIR -0.005；灵感 i20260805-006→validated）
+- `2026-09-05 | factor | f0043a | 特异度占比（idiosyncratic_share） | deliverables/factors/f0043a/`（RankIC +0.0004；ICIR +0.007；灵感 i20260820-037→validated）
+
+> 注：本批 6 个纯价量因子经 pkl 缓存预填加速出包（绕过原 O(T²) harness 瓶颈）；全部 DSR/PBO 审计 + 前视防护通过，IC 普遍偏弱但真实，强弱交策略组筛选。灵感池 27→21。
+
 ## [0.1.0] - 2026-08-17
 
 初始交付批次（研究/模拟盘，非实盘）。
