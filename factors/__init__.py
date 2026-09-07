@@ -52,3 +52,9 @@ from . import idio_vol_ratio  # noqa: F401  （f0046a 特质波动率比率）
 from . import return_deviation_mkt  # noqa: F401  （f0047a 相对市场收益偏离）
 from . import overnight_gap_volexp_spread  # noqa: F401  （f0048a 隔夜跳空-波动扩张价差）
 from . import reversal_60d  # noqa: F401  （f0049a 60日反转）
+from . import asymmetric_5d_reversal  # noqa: F401  （f0050a 非对称5日反转）
+from . import idio_tail_beta  # noqa: F401  （f0051a 特质收益下尾beta）
+from . import dual_filter_momentum  # noqa: F401  （f0052a 双过滤动量）
+from . import rejoicing_regret  # noqa: F401  （f0053a rejoicing-regret度）
+from . import excess_return_ir  # noqa: F401  （f0054a 超额收益信息比率）
+from . import price_volume_divergence  # noqa: F401  （f0055a 量价背离）

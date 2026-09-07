@@ -9,6 +9,14 @@
 
 ## [Unreleased]
 
+### 因子（f0050a–f0055a 批量交付 · 纯价量 drain）
+- `2026-09-07 | factor | f0050a | 非对称5日反转（asymmetric_5d_reversal） | deliverables/factors/f0050a/`（hs300 RankIC +0.0170 / hs800 +0.0193）
+- `2026-09-07 | factor | f0051a | 特质收益下尾beta（idio_tail_beta） | deliverables/factors/f0051a/`（hs300 +0.0020 / hs800 -0.0005）
+- `2026-09-07 | factor | f0052a | 双过滤动量（dual_filter_momentum） | deliverables/factors/f0052a/`（hs300 -0.0057 / hs800 -0.0094）
+- `2026-09-07 | factor | f0053a | rejoicing-regret度（rejoicing_regret） | deliverables/factors/f0053a/`（hs300 +0.0115 / hs800 +0.0172）
+- `2026-09-07 | factor | f0054a | 超额收益信息比率（excess_return_ir） | deliverables/factors/f0054a/`（hs300 -0.0083 / hs800 -0.0135）
+- `2026-09-07 | factor | f0055a | 量价背离（price_volume_divergence） | deliverables/factors/f0055a/`（hs300 +0.0019 / hs800 +0.0003）
+
 ### 文档（开源就绪）
 - 新增 `docs/DELIVERABLES.md`：**交付物查阅地图**——面向外部用户/下游策略组，逐一给出因子/信号/矩阵/导出 JSON/CHANGELOG 的精确路径、内容、消费方式，弥补 README/ARCHITECTURE 仅类别级说明的空白
 - README 文档导航新增 `DELIVERABLES` 行；`生产线 vs 交付物` 注释与 USER_GUIDE §4 交叉引用该地图
@@ -70,6 +78,16 @@
 - `2026-09-05 | factor | f0043a | 特异度占比（idiosyncratic_share） | deliverables/factors/f0043a/`（RankIC +0.0004；ICIR +0.007；灵感 i20260820-037→validated）
 
 > 注：本批 6 个纯价量因子经 pkl 缓存预填加速出包（绕过原 O(T²) harness 瓶颈）；全部 DSR/PBO 审计 + 前视防护通过，IC 普遍偏弱但真实，强弱交策略组筛选。灵感池 27→21。
+
+### 因子（f0044a–f0049a 批量 drain · 2026-09-06）
+- `2026-09-06 | factor | f0044a | 隔夜收益占比（overnight_ratio_60d） | deliverables/factors/f0044a/`（RankIC +0.0032 / +0.0035；60日隔夜累计/总累计；灵感 i20260805-004→validated）
+- `2026-09-06 | factor | f0045a | 隔夜-日内分解（overnight_intraday_decomp） | deliverables/factors/f0045a/`（RankIC +0.0134 / +0.0193；20日隔夜累计−日内累计；灵感 i20260805-003→validated）
+- `2026-09-06 | factor | f0046a | 特质波动率比率（idio_vol_ratio） | deliverables/factors/f0046a/`（RankIC -0.0053 / -0.0097；20日特质波动/120日特质波动；灵感 i20260820-038→validated）
+- `2026-09-06 | factor | f0047a | 相对市场收益偏离（return_deviation_mkt） | deliverables/factors/f0047a/`（RankIC -0.0172 / -0.0196；5日累计(r_i−r_mkt)；灵感 i20260824-002→validated）
+- `2026-09-06 | factor | f0048a | 隔夜跳空-波动扩张价差（overnight_gap_volexp_spread） | deliverables/factors/f0048a/`（RankIC +0.0068 / +0.0097；跳空z−振幅扩张z；灵感 i20260820-035→validated）
+- `2026-09-06 | factor | f0049a | 60日反转（reversal_60d） | deliverables/factors/f0049a/`（RankIC +0.0055 / +0.0099；−(close[t]/close[t-60]−1)；灵感 i20260806-008→validated）
+
+> 注：本批 6 个纯价量因子经 panel 磁盘缓存 + `compute_panel` 快路径（O(N) 向量化，单包 ~4min，原逐日 O(T²) 瓶颈已根治）出包；全部 DSR/PBO 审计 + 前视防护通过，IC 普遍偏弱但真实，强弱交策略组筛选。灵感池 21→15。
 
 ## [0.1.0] - 2026-08-17
 
