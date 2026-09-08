@@ -39,7 +39,7 @@
   - 🔴 **比审核更严重的发现**：驱动器此前**未查重即出包**，已交付因子里就有多个完全共线版本——`f0018a↔f0019a↔f0020a↔f0022a ρ=1.00`、`f0005a↔f0026a ρ=1.00`、`f0011a↔f0013a↔f0017a↔f0023a↔f0024a 簇 ρ=0.70–0.97`。这佐证审核"OHLCV 同源"论断，且暴露出"同信号正反/近重复"本就在交付物里。
   - 注：`correlation.csv`（旧）是"因子 vs 5 个动物园基准"单池结论，非全局互相关——本脚本是补这个缺口。
 - ✅ **④ 推进器冗余前置闸门（治本，从源头挡近重复）**：`automation-1786017033599` 步骤1「出包成功后冗余检测（2026-09-08 新增）」——每出新因子刷新全局矩阵，读 `redundant_pairs_<今天>.csv`，若新 fcode 出现在任一 |ρ|≥0.7 配对：标「冗余twin」、灵感 status 改 `deferred`、不翻 `validated`（不污染有效计数）、仍生成 card 供参考、HANDOFF 追加告警；否则正常翻 `validated`。
-- ⏭️ **roadmap ⑤（讨论过未启动）**：解锁非 OHLCV 数据源（PIT财报/分析师预期/龙虎榜/两融/基金持仓/研报文本/iVIX/概念板块）——优先级待排期，阻力在 `BACKLOG_TRIAGE_2026-09-01.md` C 桶 22 条"数据源阻塞"灵感，需接入对应源才能复活。本次未动。
+- ⏭️ **roadmap ⑤（已排期 → `docs/dev/ROADMAP_DIVERSITY.md`）**：解锁非 OHLCV 数据源（PIT财报/分析师预期/龙虎榜/两融/基金持仓/研报文本/iVIX/概念板块），分 6 phase。🔴 **关键纠正（核实后）**：PIT 财报基建 `data/pit_fundamentals.py` 的 `PitFinancialsService` + f0014a/f0015a 两财报因子**已存在并交付**；真正瓶颈是 AkShare `_PIT_FIELD_MAP` 仅暴露 4 字段（revenue/cogs/inventory/accounts_receivable）→ 只能算周转天数。故 Phase 0 不是从零建基建，而是**扩字段 + 写模板**即可，比审核假定快得多。harness 未集中注入 `pit_service`（因子走 `default_store()` 兜底）为已知集成缺口，列入 Phase 0 加固项。
 - ⚠️ **待主理人**：PBO 真实现（因子端过拟合审计补 PBO 计算，现恒 null 属诚实缺口）；roadmap ⑤ 排期；27 对冗余对已交付物是否要回退/合并（策略组筛时已知，暂不影响交付计数）。
 
 ### 2026-09-07 晚 21:00 推进器（cron 自动 · f0050a–f0055a 六包 drain + 步骤0.5 PIT体检 + 双线例行维护）
