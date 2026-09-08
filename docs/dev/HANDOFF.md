@@ -40,7 +40,18 @@
   - 注：`correlation.csv`（旧）是"因子 vs 5 个动物园基准"单池结论，非全局互相关——本脚本是补这个缺口。
 - ✅ **④ 推进器冗余前置闸门（治本，从源头挡近重复）**：`automation-1786017033599` 步骤1「出包成功后冗余检测（2026-09-08 新增）」——每出新因子刷新全局矩阵，读 `redundant_pairs_<今天>.csv`，若新 fcode 出现在任一 |ρ|≥0.7 配对：标「冗余twin」、灵感 status 改 `deferred`、不翻 `validated`（不污染有效计数）、仍生成 card 供参考、HANDOFF 追加告警；否则正常翻 `validated`。
 - ⏭️ **roadmap ⑤（已排期 → `docs/dev/ROADMAP_DIVERSITY.md`）**：解锁非 OHLCV 数据源（PIT财报/分析师预期/龙虎榜/两融/基金持仓/研报文本/iVIX/概念板块），分 6 phase。🔴 **关键纠正（核实后）**：PIT 财报基建 `data/pit_fundamentals.py` 的 `PitFinancialsService` + f0014a/f0015a 两财报因子**已存在并交付**；真正瓶颈是 AkShare `_PIT_FIELD_MAP` 仅暴露 4 字段（revenue/cogs/inventory/accounts_receivable）→ 只能算周转天数。故 Phase 0 不是从零建基建，而是**扩字段 + 写模板**即可，比审核假定快得多。harness 未集中注入 `pit_service`（因子走 `default_store()` 兜底）为已知集成缺口，列入 Phase 0 加固项。
-- ⚠️ **待主理人**：PBO 真实现（因子端过拟合审计补 PBO 计算，现恒 null 属诚实缺口）；roadmap ⑤ 排期；27 对冗余对已交付物是否要回退/合并（策略组筛时已知，暂不影响交付计数）。
+- ⚠️ **待主理人**：PBO 真实现（因子端过拟合审计补 PBO 计算，现恒 null 属诚实缺口）；27 对冗余对已交付物是否要回退/合并（策略组筛时已知，暂不影响交付计数）。
+
+### 2026-09-08（续）Phase 0 财报扩面落地（用户"按推荐往下搞"授权）
+> roadmap ⑤ 第一优先 phase。核实后 PIT 基建已就绪，只需扩字段 + 写模板。本轮已落地代码 + 单测 + 真实 smoke 验证。
+
+- ✅ **AkShare `_PIT_FIELD_MAP` 扩字段**：新增 operate_profit/total_profit/net_profit/net_profit_parent/deduct_net_profit/eps/operate_income_yoy/net_profit_parent_yoy/total_assets/total_equity/parent_equity/ocf 共 12 个规范名映射。
+- ✅ **`_fetch_financial_history` 加第三流（现金流量表）**：`stock_cash_flow_sheet_by_report_em` 取 `NETCASH_OPERATE`；三流独立清洗去重后纵向拼接。🔴 加**缓存列指纹校验**：旧 2 字段缓存缺新列会静默 NaN，现读取时校验列全集、缺列即失效重拉（真实 smoke 已验证 `600519.SH` 旧缓存正确失效重拉）。
+- ✅ **`default_store` 兜底服务改全字段单例**：始终用 `_DEFAULT_PIT_FIELDS` 全集构建（忽略调用方传入的少量 fields），避免首个调用方（如 f0014a 的 [inventory,cogs]）把单例钉死 → 新因子取不到扩展字段静默 NaN。
+- ✅ **新建 `factors/fundamentals.py`：13 个财报扩面因子 f0060a–f0072a**（roe/roa/gross_margin/net_margin/asset_turnover/operate_profit_margin/financial_leverage/cash_coverage/accrual/deduct_ratio/ep/revenue_yoy/netprofit_yoy）。流量项按 statDate 月份年度化（同源 f0014a/f0015a）；EP 调 `pit_float_mcap` 算 PIT 流通市值（不用脏面板 market_cap）；YOY 直接取东财 `*_YOY` 列不做跨期。
+- ✅ **单测 `tests/test_fundamental_factors.py`**：15 断言全过（13 因子数值对照 + PIT 红线 as_of<公告日不可见 + 注册检查）。🔴 真实 smoke 联网验证 12 新字段在茅台 2026-06-30 中报全部取到真实值，列名拼写 100% 正确。
+- ⏭️ **未做（留给后续/驱动器）**：①build_deliverable 注入 ctx["pit_service"] 集成加固（default_store 兜底已能出包，非阻塞）；②真实全量出包（hs300 全市场拉三表，慢）→ 交给推进器 cron 或单独跑 `prewarm_financials.py` + 出包；③季度报告期混合口径偏差（年报/季报量纲不同）需跨股票对齐时再处理。
+- 任务 #83 推进中（Phase 0 代码落地完成，待出包验收）。
 
 ### 2026-09-07 晚 21:00 推进器（cron 自动 · f0050a–f0055a 六包 drain + 步骤0.5 PIT体检 + 双线例行维护）
 - 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。

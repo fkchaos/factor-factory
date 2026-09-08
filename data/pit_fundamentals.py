@@ -88,18 +88,29 @@ class PitFinancialsService:
 # 模块级单例：因子在 ctx 缺失时兜底自建（测试 / 独立调用路径）。
 _DEFAULT_STORE: "PitFinancialsService | None" = None
 
+# Phase 0 财报扩面（2026-09-08）：共享服务默认加载全集字段，
+# 任何因子（含新增财报因子）都能从单例取到所需字段，不必各自重建。
+_DEFAULT_PIT_FIELDS = [
+    "revenue", "cogs", "inventory", "accounts_receivable",
+    "operate_profit", "total_profit", "net_profit", "net_profit_parent",
+    "deduct_net_profit", "eps", "operate_income_yoy", "net_profit_parent_yoy",
+    "total_assets", "total_equity", "parent_equity", "ocf",
+]
+
 
 def default_store(assets=None, fields=None):
     """返回进程内共享的 PitFinancialsService（懒加载 AkShareProvider）。
 
     因子 compute 若未从 ctx 拿到注入的 pit_service，走此兜底。第一调用构建并缓存，
     后续复用（披露历史是静态的，不随 as_of 变化，安全）。
+
+    🔴 始终用 ``_DEFAULT_PIT_FIELDS`` 全集构建单例（忽略传入的 ``fields`` 参数）：
+    避免首个调用方若只带少量字段（如 f0014a 的 [inventory,cogs]）就把单例钉死，
+    导致后续新增财报因子取不到扩展字段 → 静默 NaN。
     """
     global _DEFAULT_STORE
     if _DEFAULT_STORE is None:
         from data.providers import AkShareProvider
         ak = AkShareProvider()
-        _DEFAULT_STORE = PitFinancialsService(
-            ak, assets or [], fields or ["cogs", "inventory", "accounts_receivable", "revenue"]
-        )
+        _DEFAULT_STORE = PitFinancialsService(ak, assets or [], _DEFAULT_PIT_FIELDS)
     return _DEFAULT_STORE

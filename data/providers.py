@@ -501,6 +501,19 @@ class AkShareProvider:
         "cogs": "OPERATE_COST",
         "inventory": "INVENTORY",
         "accounts_receivable": "ACCOUNTS_RECE",
+        # --- Phase 0 财报扩面（2026-09-08）：新增价值/质量/成长类字段映射 ---
+        "operate_profit": "OPERATE_PROFIT",
+        "total_profit": "TOTAL_PROFIT",
+        "net_profit": "NETPROFIT",
+        "net_profit_parent": "PARENT_NETPROFIT",
+        "deduct_net_profit": "DEDUCT_PARENT_NETPROFIT",
+        "eps": "BASIC_EPS",
+        "operate_income_yoy": "OPERATE_INCOME_YOY",
+        "net_profit_parent_yoy": "PARENT_NETPROFIT_YOY",
+        "total_assets": "TOTAL_ASSETS",
+        "total_equity": "TOTAL_EQUITY",
+        "parent_equity": "TOTAL_PARENT_EQUITY",
+        "ocf": "NETCASH_OPERATE",
     }
     # AkShare 东财明细表缺失、只能返回 NaN 的字段（明确登记，防误用/防伪造）
     _PIT_FIELD_UNAVAILABLE = frozenset()
@@ -522,58 +535,101 @@ class AkShareProvider:
         except (ValueError, TypeError):
             return np.nan
 
-    def _fetch_financial_history(self, code: str) -> pd.DataFrame:
-        """拉取单票利润表+资产负债表全部披露历史，返回长表（缓存 .cache/akshare/financial/{code}.parquet）。
+    # Phase 0 财报扩面（2026-09-08）：落地到 .parquet 缓存的列全集（规范名经
+    # _PIT_FIELD_MAP 映射到下列东财列）。新增字段后旧缓存缺列 → 静默 NaN，故
+    # _fetch_financial_history 读取时按此全集做列指纹校验。
+    _PIT_CACHE_COLS = [
+        "statDate", "pubDate",
+        "OPERATE_INCOME", "OPERATE_COST", "OPERATE_PROFIT", "TOTAL_PROFIT",
+        "NETPROFIT", "PARENT_NETPROFIT", "DEDUCT_PARENT_NETPROFIT", "BASIC_EPS",
+        "OPERATE_INCOME_YOY", "PARENT_NETPROFIT_YOY",
+        "INVENTORY", "ACCOUNTS_RECE",
+        "TOTAL_ASSETS", "TOTAL_EQUITY", "TOTAL_PARENT_EQUITY",
+        "NETCASH_OPERATE",
+    ]
 
-        列：statDate(报告期,仅元数据) / pubDate(公告日 NOTICE_DATE，PIT 对齐唯一依据) /
-            OPERATE_INCOME / OPERATE_COST / INVENTORY / ACCOUNTS_RECE。
-        两条独立披露流（利润表/资产负债表）各自仅带部分字段，按 (statDate,pubDate) 各自去重后
-        纵向拼接 → 交给 _pit_select_snapshot 做字段独立取数（修复整行取最新覆盖缺失字段的坑）。
+    def _fetch_financial_history(self, code: str) -> pd.DataFrame:
+        """拉取单票利润表+资产负债表+现金流量表全部披露历史，返回长表
+        （缓存 .cache/akshare/financial/{code}.parquet，列见 ``_PIT_CACHE_COLS``）。
+
+        三条独立披露流（利润表/资产负债表/现金流量表）各自仅带部分字段，按
+        (statDate,pubDate) 各自去重后纵向拼接 → 交给 _pit_select_snapshot 做字段独立取数
+        （修复整行取最新覆盖缺失字段的坑）。
+
+        🔴 缓存列指纹（2026-09-08）：新增字段后旧缓存缺新列会静默返回 NaN（与
+        PIT 市值缓存同款坑）。读取时校验列全集，缺列则视为失效、重拉。
         """
         key = self._cache / "financial" / f"{code}.parquet"
         if key.exists():
-            return pd.read_parquet(key)
+            try:
+                cached = pd.read_parquet(key)
+                if all(c in cached.columns for c in self._PIT_CACHE_COLS):
+                    return cached
+                print(f"[info] 财报缓存列不全，失效重拉 {code}", flush=True)
+            except Exception:
+                pass
         ak = self._ak
         sym = self._to_em_symbol(code)
-        cols = ["statDate", "pubDate", "OPERATE_INCOME", "OPERATE_COST",
-                "INVENTORY", "ACCOUNTS_RECE"]
-        profit_recs, balance_recs = [], []
-        # 利润表流：营业收入 / 营业成本
+        cols = self._PIT_CACHE_COLS
+
+        def blank():
+            return {c: np.nan for c in cols}
+
+        profit_recs, balance_recs, cash_recs = [], [], []
+        # 利润表流：营收/成本/利润/归母净利/扣非/同比
         try:
             ps = ak.stock_profit_sheet_by_report_em(symbol=sym)
             for r in ps.itertuples(index=False):
-                profit_recs.append({
-                    "statDate": getattr(r, "REPORT_DATE", np.nan),
-                    "pubDate": getattr(r, "NOTICE_DATE", np.nan),
-                    "OPERATE_INCOME": self._ak_float(getattr(r, "OPERATE_INCOME", np.nan)),
-                    "OPERATE_COST": self._ak_float(getattr(r, "OPERATE_COST", np.nan)),
-                    "INVENTORY": np.nan,
-                    "ACCOUNTS_RECE": np.nan,
-                })
+                rec = blank()
+                rec["statDate"] = getattr(r, "REPORT_DATE", np.nan)
+                rec["pubDate"] = getattr(r, "NOTICE_DATE", np.nan)
+                rec["OPERATE_INCOME"] = self._ak_float(getattr(r, "OPERATE_INCOME", np.nan))
+                rec["OPERATE_COST"] = self._ak_float(getattr(r, "OPERATE_COST", np.nan))
+                rec["OPERATE_PROFIT"] = self._ak_float(getattr(r, "OPERATE_PROFIT", np.nan))
+                rec["TOTAL_PROFIT"] = self._ak_float(getattr(r, "TOTAL_PROFIT", np.nan))
+                rec["NETPROFIT"] = self._ak_float(getattr(r, "NETPROFIT", np.nan))
+                rec["PARENT_NETPROFIT"] = self._ak_float(getattr(r, "PARENT_NETPROFIT", np.nan))
+                rec["DEDUCT_PARENT_NETPROFIT"] = self._ak_float(getattr(r, "DEDUCT_PARENT_NETPROFIT", np.nan))
+                rec["BASIC_EPS"] = self._ak_float(getattr(r, "BASIC_EPS", np.nan))
+                rec["OPERATE_INCOME_YOY"] = self._ak_float(getattr(r, "OPERATE_INCOME_YOY", np.nan))
+                rec["PARENT_NETPROFIT_YOY"] = self._ak_float(getattr(r, "PARENT_NETPROFIT_YOY", np.nan))
+                profit_recs.append(rec)
         except Exception as e:
             print(f"[warn] AkShare 利润表拉取失败 {code}: {e}", flush=True)
-        # 资产负债表流：存货 / 应收账款
+        # 资产负债表流：存货/应收/总资产/净资产/归母净资产
         try:
             bs = ak.stock_balance_sheet_by_report_em(symbol=sym)
             for r in bs.itertuples(index=False):
-                balance_recs.append({
-                    "statDate": getattr(r, "REPORT_DATE", np.nan),
-                    "pubDate": getattr(r, "NOTICE_DATE", np.nan),
-                    "OPERATE_INCOME": np.nan,
-                    "OPERATE_COST": np.nan,
-                    "INVENTORY": self._ak_float(getattr(r, "INVENTORY", np.nan)),
-                    "ACCOUNTS_RECE": self._ak_float(getattr(r, "ACCOUNTS_RECE", np.nan)),
-                })
+                rec = blank()
+                rec["statDate"] = getattr(r, "REPORT_DATE", np.nan)
+                rec["pubDate"] = getattr(r, "NOTICE_DATE", np.nan)
+                rec["INVENTORY"] = self._ak_float(getattr(r, "INVENTORY", np.nan))
+                rec["ACCOUNTS_RECE"] = self._ak_float(getattr(r, "ACCOUNTS_RECE", np.nan))
+                rec["TOTAL_ASSETS"] = self._ak_float(getattr(r, "TOTAL_ASSETS", np.nan))
+                rec["TOTAL_EQUITY"] = self._ak_float(getattr(r, "TOTAL_EQUITY", np.nan))
+                rec["TOTAL_PARENT_EQUITY"] = self._ak_float(getattr(r, "TOTAL_PARENT_EQUITY", np.nan))
+                balance_recs.append(rec)
         except Exception as e:
             print(f"[warn] AkShare 资产负债表拉取失败 {code}: {e}", flush=True)
+        # 现金流量表流：经营活动现金流量净额
+        try:
+            cf = ak.stock_cash_flow_sheet_by_report_em(symbol=sym)
+            for r in cf.itertuples(index=False):
+                rec = blank()
+                rec["statDate"] = getattr(r, "REPORT_DATE", np.nan)
+                rec["pubDate"] = getattr(r, "NOTICE_DATE", np.nan)
+                rec["NETCASH_OPERATE"] = self._ak_float(getattr(r, "NETCASH_OPERATE", np.nan))
+                cash_recs.append(rec)
+        except Exception as e:
+            print(f"[warn] AkShare 现金流量表拉取失败 {code}: {e}", flush=True)
         # 🔴 各披露流【独立】去重（按 statDate,pubDate 保留末次=重述修正版），再纵向拼接。
-        #   不得先拼接再按 (statDate,pubDate) 全局去重——同报告期利润表与资产负债表
-        #   常共享同一 NOTICE_DATE，全局去重会丢其中一条流的全部字段。
         df_p = pd.DataFrame(profit_recs, columns=cols)
         df_b = pd.DataFrame(balance_recs, columns=cols)
+        df_c = pd.DataFrame(cash_recs, columns=cols)
         df_p = _clean_fin_stream(df_p, cols)
         df_b = _clean_fin_stream(df_b, cols)
-        df = pd.concat([df_p, df_b], ignore_index=True)
+        df_c = _clean_fin_stream(df_c, cols)
+        df = pd.concat([df_p, df_b, df_c], ignore_index=True)
         key.parent.mkdir(parents=True, exist_ok=True)
         df.to_parquet(key)
         return df
