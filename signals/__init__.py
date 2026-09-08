@@ -15,3 +15,4 @@ from . import interface  # noqa: F401  （必须最先，其余模块依赖它�
 from . import breadth_regime  # noqa: F401
 from . import risk_appetite  # noqa: F401
 from . import volatility_regime  # noqa: F401
+from . import difficulty_regime  # noqa: F401

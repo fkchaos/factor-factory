@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-07 21:46",
+  "generated": "2026-09-08 21:36",
   "source": "external",
   "producer": "factor-factory",
   "exec_lag_notice": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",
@@ -306,6 +306,109 @@
         "pit_certified": true,
         "package_path": "deliverables/signals/s0003x",
         "reproduce": "FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal volatility_regime --scode s0003x --pool hs800",
+        "todo": [
+          "regime_dependency 待量化（强/弱市依赖）",
+          "decay_status 待 P0『信号半衰期』补丁量化",
+          "category 枚举已覆盖 regime / sentiment / volatility；trend 类待新建信号"
+        ]
+      }
+    },
+    {
+      "name": "s0004x",
+      "type": "timing",
+      "category": "regime",
+      "trigger_logic": "raw = −[ z(截面收益离散度) + z(|等权市场日收益|) − z(截面收益排名日间相关) ] / 3，z 为滚动 250 日标准化（E[·]=0 → 阈值免拟合）；状态 = raw_MA20 > 0 → risk_on(easy 好做，可放开因子暴露)，否则 risk_off(hard 难做)（池=hs800，MA20 > 0.0 → state=1）",
+      "position_logic": "state.shift(1) 后叠加：risk_on 允许因子多头暴露/持仓，risk_off 减仓或空仓。T 日信号最早 T+1 日建仓。",
+      "thresholds": {
+        "high": 0.0,
+        "low": 0.0
+      },
+      "backtest_sharpe": 0.049987055732547116,
+      "win_rate": 0.5082417582417582,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "description": "难做指数Regime（s0004x）｜市场级状态判断（每天一个标量），不是选股因子，勿并入横截面组合。",
+      "exec_lag": 1,
+      "exec_lag_warning": "exec_lag=1（T 日收盘后才算得出 T 日状态，最早 T+1 建仓）。⚠️ 禁止用同期收益 ret[T] 评估本信号，必须 state.shift(1)；同期口径对广度类信号近似同义反复，实测可把 Sharpe 从真值撑高一大截。",
+      "_factory_extra": {
+        "scode": "s0004x",
+        "signal_impl": "difficulty_regime",
+        "display_name": "难做指数Regime（s0004x）",
+        "universe": "hs800",
+        "window_start": "2020-01-01",
+        "state_window": "20",
+        "state_threshold": 0.0,
+        "n_days": 1345,
+        "switch_rate": 0.034970238095238096,
+        "hit_spread": -0.0372127872127872,
+        "state_fwd_corr": -0.04880441812784255,
+        "states": {
+          "state_1": {
+            "count": 728,
+            "mean_ret_contemp": -0.0001371630385315708,
+            "sharpe_contemp": -0.21338711549285883,
+            "win_rate_contemp": 0.5068681318681318,
+            "fwd_ret_1d": 4.660520136589876e-05,
+            "fwd_win_1d": 0.5082417582417582,
+            "fwd_ret_5d": 0.0005125714817297728,
+            "fwd_win_5d": 0.5206043956043956,
+            "fwd_ret_20d": 0.0008855237514568381,
+            "fwd_win_20d": 0.5315934065934066
+          },
+          "state_0": {
+            "count": 617,
+            "mean_ret_contemp": 0.0014774869068813197,
+            "sharpe_contemp": 1.6083166243017522,
+            "win_rate_contemp": 0.546191247974068,
+            "fwd_ret_1d": 0.001263867407959633,
+            "fwd_win_1d": 0.5454545454545454,
+            "fwd_ret_5d": 0.0006707702581679098,
+            "fwd_win_5d": 0.5294117647058824,
+            "fwd_ret_20d": 0.00023662960139214463,
+            "fwd_win_20d": 0.5175879396984925
+          }
+        },
+        "transition": {
+          "from_0": {
+            "to_0": 593,
+            "to_1": 23
+          },
+          "from_1": {
+            "to_0": 23,
+            "to_1": 705
+          }
+        },
+        "overlay": {
+          "baseline_sharpe": 0.7709375764407042,
+          "baseline_max_dd": -0.27085021658814046,
+          "baseline_ann_ret": 0.1520908489462359,
+          "overlay_sharpe": 0.049987055732547116,
+          "overlay_max_dd": -0.3535629460682399,
+          "overlay_ann_ret": 0.006356880164893902,
+          "sharpe_improve": -0.720950520708157,
+          "dd_improve": -0.08271272948009945,
+          "long_days_ratio": 0.5412639405204461,
+          "note": "overlay 用 state.shift(1)，T日信号T+1日建仓，无前视",
+          "dsr": 0.8602813685559202,
+          "_contemp_sharpe_ref": -0.15703327691497107
+        },
+        "gate_7_2_verdict": "refuted",
+        "gate_7_2_rule": {
+          "valid": "sharpe>1.5",
+          "refuted": "sharpe<1.0"
+        },
+        "overfit_audit": {
+          "dsr": 0.8603253787588667,
+          "pbo": null,
+          "verdict": "FAIL",
+          "n_trials": 4,
+          "n_splits": 12
+        },
+        "pit_certified": true,
+        "package_path": "deliverables/signals/s0004x",
+        "reproduce": "FF_PROVIDER=baostock python scripts/build_signal_deliverable.py --signal difficulty_regime --scode s0004x --pool hs800",
         "todo": [
           "regime_dependency 待量化（强/弱市依赖）",
           "decay_status 待 P0『信号半衰期』补丁量化",

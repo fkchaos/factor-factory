@@ -223,6 +223,11 @@ def build_stock_factor(pkg_dir: Path) -> Optional[dict]:
         "calc_logic": calc_logic,
         "ic_mean": ic_mean,
         "ir": ir,
+        # ---- 审计字段提顶层（2026-09-08 应外部审核：消掉"JSON缺DSR/PBO/IC胜率"字面抱怨）----
+        "dsr": audit.get("dsr"),
+        "pbo": audit.get("pbo"),  # 因子端未实现 PBO 计算 → 恒为 null（诚实标注，不伪造）
+        "pbo_computed": audit.get("pbo") is not None,
+        "ic_win_rate": (home_m.get("ic") or {}).get("ic_win_rate"),
         "regime_dependency": "unknown",
         "decay_status": "unknown",
         "expiry_date": None,

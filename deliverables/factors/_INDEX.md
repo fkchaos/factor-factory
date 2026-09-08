@@ -58,3 +58,7 @@
 | f0053a | rejoicing-regret度 | single |  | current | 2026-09-07 |
 | f0054a | 超额收益信息比率 | single |  | current | 2026-09-07 |
 | f0055a | 量价背离 | single |  | current | 2026-09-07 |
+| f0056a | 日内博弈激烈度 | single |  | current | 2026-09-08 |
+| f0057a | 超跌反弹分 | single |  | current | 2026-09-08 |
+| f0058a | beta量波动交互 | single |  | current | 2026-09-08 |
+| f0059a | 组内换手异常超出幅度 | single |  | current | 2026-09-08 |

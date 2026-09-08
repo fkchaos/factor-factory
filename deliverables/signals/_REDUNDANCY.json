@@ -22,6 +22,17 @@
     "verdict": "✅ 视角独立"
   },
   {
+    "pair": "s0001x vs s0004x",
+    "n_days": 1597,
+    "state_agreement": 0.4352,
+    "random_baseline": 0.5148,
+    "excess_agreement": -0.0797,
+    "raw_correlation": -0.2116,
+    "s0001x_on_ratio": 0.3319,
+    "s0004x_on_ratio": 0.4559,
+    "verdict": "✅ 视角独立"
+  },
+  {
     "pair": "s0002x vs s0003x",
     "n_days": 2816,
     "state_agreement": 0.5419,
@@ -30,6 +41,28 @@
     "raw_correlation": -0.0504,
     "s0002x_on_ratio": 0.6786,
     "s0003x_on_ratio": 0.5394,
+    "verdict": "✅ 视角独立"
+  },
+  {
+    "pair": "s0002x vs s0004x",
+    "n_days": 1597,
+    "state_agreement": 0.489,
+    "random_baseline": 0.4802,
+    "excess_agreement": 0.0088,
+    "raw_correlation": -0.1077,
+    "s0002x_on_ratio": 0.7239,
+    "s0004x_on_ratio": 0.4559,
+    "verdict": "✅ 视角独立"
+  },
+  {
+    "pair": "s0003x vs s0004x",
+    "n_days": 1597,
+    "state_agreement": 0.608,
+    "random_baseline": 0.4986,
+    "excess_agreement": 0.1094,
+    "raw_correlation": 0.2048,
+    "s0003x_on_ratio": 0.516,
+    "s0004x_on_ratio": 0.4559,
     "verdict": "✅ 视角独立"
   }
 ]

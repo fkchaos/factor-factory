@@ -58,3 +58,7 @@ from . import dual_filter_momentum  # noqa: F401  （f0052a 双过滤动量）
 from . import rejoicing_regret  # noqa: F401  （f0053a rejoicing-regret度）
 from . import excess_return_ir  # noqa: F401  （f0054a 超额收益信息比率）
 from . import price_volume_divergence  # noqa: F401  （f0055a 量价背离）
+from . import intraday_battle_intensity  # noqa: F401  （f0056a 日内博弈激烈度）
+from . import oversold_rebound_score  # noqa: F401  （f0057a 超跌反弹分）
+from . import beta_qvol_interact  # noqa: F401  （f0058a beta×量波动交互）
+from . import turnover_excess_group  # noqa: F401  （f0059a 组内换手异常超出幅度）

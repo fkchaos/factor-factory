@@ -9,6 +9,17 @@
 
 ## [Unreleased]
 
+### 信号（s0004x · 信号线自 08-12 后首个新包，第四个正交视角）
+- `2026-09-08 | signal | s0004x | 难做指数Regime（difficulty_regime） | deliverables/signals/s0004x/`
+  （hs800 / 2020 起 1597 日；exec_lag=1 钢印；叠加 Sharpe 0.77→0.05 **改善 −0.721**、最大回撤 −27.09%→−35.36% **恶化 8.27pct**、命中率价差 −3.7% → 按策略组 §7.2 判 **refuted**，且是四信号中唯一"收益与回撤两项都变差"的；与 s0001x/s0002x/s0003x 状态一致率 43.5% / 48.9% / 60.8% 均 <85%，视角独立）
+  ⚠️ 消费提示：本信号量的是**因子可提取性**（该不该放开因子暴露），不是市场涨跌；实测结果恰好证明把它当择时器用会亏——这正是卡片 caveat ③ 事前预警的误用方式。
+
+### 因子（f0056a–f0059a 批量交付 · 纯价量 drain 第二批）
+- `2026-09-08 | factor | f0056a | 日内博弈激烈度（intraday_battle_intensity） | deliverables/factors/f0056a/`（hs300 RankIC −0.0004 / hs800 −0.0023；方向与假设"负相关"一致但近乎无效）
+- `2026-09-08 | factor | f0057a | 超跌反弹分（oversold_rebound_score） | deliverables/factors/f0057a/`（hs300 −0.0006 / hs800 +0.0021；z×z 双负象限混合为构造固有缺陷，如实保留未私改）
+- `2026-09-08 | factor | f0058a | beta量波动交互（beta_qvol_interact） | deliverables/factors/f0058a/`（hs300 −0.0093 / hs800 −0.0115；与假设方向**相反**，该 arXiv 模型在 A 股日频口径下被证伪，刻意不反转符号）
+- `2026-09-08 | factor | f0059a | 组内换手异常超出幅度（turnover_excess_group） | deliverables/factors/f0059a/`（hs300 −0.0103 / hs800 −0.0154；与假设方向**相反**，反支持 A 股"高换手→低收益"经典事实。⚠️ 行业维度降级：面板无行业列，仅按 PIT 流通市值三分组，补行业列后应作 f0059b 重出而非原地改口径）
+
 ### 因子（f0050a–f0055a 批量交付 · 纯价量 drain）
 - `2026-09-07 | factor | f0050a | 非对称5日反转（asymmetric_5d_reversal） | deliverables/factors/f0050a/`（hs300 RankIC +0.0170 / hs800 +0.0193）
 - `2026-09-07 | factor | f0051a | 特质收益下尾beta（idio_tail_beta） | deliverables/factors/f0051a/`（hs300 +0.0020 / hs800 -0.0005）
