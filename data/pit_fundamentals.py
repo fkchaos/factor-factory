@@ -102,6 +102,36 @@ class PitFinancialsService:
         return pd.DatetimeIndex(sorted(pubs))
 
 
+    def disclosure_events(self, asset, field: str = "net_profit_parent") -> pd.DataFrame:
+        """该票某字段的**全部披露事件**时间序列（按 pubDate 升序）。
+
+        与 snapshot() 的区别：snapshot 只给 as_of 时点的最新一期，而 SUE 这类
+        需要**跨期历史**（同比、波动率）的因子必须拿到整个报告期序列。
+
+        Returns:
+            DataFrame[pubDate, statDate, value]，value 为报表**原始累计口径**
+            （如净利为年初至今累计），未做任何年度化/单季拆分。
+
+        🔴 PIT 语义：同一报告期可能被多次披露（业绩更正/重述），这里**保留全部事件**，
+        消费方按 pubDate 升序遍历、后者覆盖前者，即得到"当时可见的最新版"——
+        绝不能先按 statDate 去重取最大 pubDate，否则等于用未来的更正版本算历史。
+        """
+        a = normalize_code(asset)
+        self._ensure_history(a)
+        disc = self._hist.get(a)
+        col = (self.field_map or {}).get(field)
+        if disc is None or len(disc) == 0 or not col or col not in disc.columns:
+            return pd.DataFrame(columns=["pubDate", "statDate", "value"])
+        d = disc[["pubDate", "statDate", col]].copy()
+        d["pubDate"] = pd.to_datetime(d["pubDate"], errors="coerce")
+        d["statDate"] = pd.to_datetime(d["statDate"], errors="coerce")
+        d = d.rename(columns={col: "value"})
+        d["value"] = pd.to_numeric(d["value"], errors="coerce")
+        d = d.dropna(subset=["pubDate", "statDate"]).dropna(subset=["value"])
+        d = d.sort_values(["pubDate", "statDate"])
+        return d.reset_index(drop=True)
+
+
 # 模块级单例：因子在 ctx 缺失时兜底自建（测试 / 独立调用路径）。
 _DEFAULT_STORE: "PitFinancialsService | None" = None
 
