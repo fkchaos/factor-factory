@@ -42,14 +42,27 @@ def main():
     print(f"[prewarm] 池 {args.pool} 共 {len(codes)} 只，开始预热 AkShare 财报缓存", flush=True)
 
     ak = AkShareProvider()
-    ok = err = skip = 0
+    ok = err = skip = stale = 0
     t0 = time.time()
     for i, code in enumerate(codes, 1):
         key = ak._cache / "financial" / f"{code}.parquet"
         if key.exists():
-            skip += 1
-            print(f"[{i}/{len(codes)}] skip {code} (cached)", flush=True)
-            continue
+            # 🔴 缓存列指纹（2026-09-08 与 _fetch_financial_history 对齐）：旧字段版
+            # 缓存缺新列会静默 NaN——文件在≠有效。读列全集校验，缺列视为失效重拉。
+            # （此前纯 exists() 判断：改字段后 prewarm 全 skip，build 侧才被动重拉，
+            #   网络密集工作被塞进出包阶段且不可断点。）
+            try:
+                import pandas as pd
+                cached_cols = list(pd.read_parquet(key).columns)
+                if all(c in cached_cols for c in ak._PIT_CACHE_COLS):
+                    skip += 1
+                    print(f"[{i}/{len(codes)}] skip {code} (cached)", flush=True)
+                    continue
+                stale += 1
+                print(f"[{i}/{len(codes)}] stale {code} (列不全，失效重拉)", flush=True)
+            except Exception:
+                stale += 1
+                print(f"[{i}/{len(codes)}] stale {code} (缓存损坏，重拉)", flush=True)
         t1 = time.time()
         try:
             df = ak._fetch_financial_history(code)
@@ -58,7 +71,7 @@ def main():
         except Exception as e:
             err += 1
             print(f"[{i}/{len(codes)}] ERR  {code}: {e!r} {time.time()-t1:.1f}s", flush=True)
-    print(f"[prewarm] 完成：ok={ok} skip={skip} err={err} 耗时={time.time()-t0:.0f}s", flush=True)
+    print(f"[prewarm] 完成：ok={ok} stale={stale} skip={skip} err={err} 耗时={time.time()-t0:.0f}s", flush=True)
 
 
 if __name__ == "__main__":

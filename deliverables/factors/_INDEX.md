@@ -62,3 +62,16 @@
 | f0057a | 超跌反弹分 | single |  | current | 2026-09-08 |
 | f0058a | beta量波动交互 | single |  | current | 2026-09-08 |
 | f0059a | 组内换手异常超出幅度 | single |  | current | 2026-09-08 |
+| f0060a | ROE | single |  | current | 2026-09-09 |
+| f0061a | ROA | single |  | current | 2026-09-09 |
+| f0062a | 毛利率 | single |  | current | 2026-09-09 |
+| f0063a | 净利率 | single |  | current | 2026-09-09 |
+| f0064a | 资产周转率 | single |  | current | 2026-09-09 |
+| f0065a | 营业利润率 | single |  | current | 2026-09-09 |
+| f0066a | 财务杠杆 | single |  | current | 2026-09-09 |
+| f0067a | 盈利现金保障 | single |  | current | 2026-09-09 |
+| f0068a | 应计 | single |  | current | 2026-09-09 |
+| f0069a | 扣非净利占比 | single |  | current | 2026-09-09 |
+| f0070a | EP盈利市值比 | single |  | current | 2026-09-09 |
+| f0071a | 营收同比 | single |  | current | 2026-09-09 |
+| f0072a | 净利同比 | single |  | current | 2026-09-09 |

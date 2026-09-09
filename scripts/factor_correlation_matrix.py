@@ -6,7 +6,9 @@
 - 本脚本补上这张全局矩阵，并自动标 |ρ|≥0.7 的高冗余配对，供策略组/驱动器看正交性。
 
 数据口径（与 build_deliverable.correlation.csv 一致）：
-- 直接吃 .cache/factor_series/{module}__{pool}__{start}__{min_mcap}.pkl（**中性化后**因子值，
+- 直接吃 .cache/factor_series/{注册名}__{pool}__{start}__{min_mcap}.pkl（**中性化后**因子值，
+  注意前缀是因子的**注册名**（build 的 --factor，写进 manifest 的 factor 字段），不是 Python 模块名。
+  一个模块可含多个因子（如 fundamentals.py 含 13 个），各自注册名不同 → 各自独立 pkl，不会混淆。
   去市值/行业暴露，看净 alpha 相关性才有意义；与 PIT 红线不冲突——pkl 已是中性化后产物）。
 - 逐日截面 z-score（消规模偏差）后求 Pearson ρ，按交易日时间平均 → N×N 矩阵。
   等价于 build_deliverable.compute_correlation 的口径，但覆盖全 55 因子而非 vs 基准。
@@ -115,8 +117,12 @@ def global_factor_corr(all_series: dict[str, dict], names: list[str]) -> pd.Data
             diag = True
             print(f"[diag] 首日 {t}: df={df.shape} 对角={np.diag(corr.to_numpy())[:3]} "
                   f"非NaN比={corr.notna().to_numpy().mean():.2f}")
-        acc = acc.add(corr.fillna(0.0))
-        cnt = cnt.add(corr.notna().astype(int))
+        # 🔴 fill_value=0 不可省：corr 只含【当天有值的因子】，缺勤因子的标签在外连接时
+        #    被填 NaN，而 add 默认 fill_value=None → 0+NaN=NaN，该因子整行被【永久污染】
+        #    （后续每天 NaN+x 仍是 NaN），最终整行全 NaN —— 表现为"起始日较晚的因子
+        #    在矩阵里凭空消失"（2026-09-09 发现：72 因子中 33 个因此全 NaN，含 20 个老因子）。
+        acc = acc.add(corr.fillna(0.0), fill_value=0.0)
+        cnt = cnt.add(corr.notna().astype(int), fill_value=0)
     mat = (acc / cnt.replace(0, np.nan))  # 缺观测对 → NaN
     mat.index.name = "fcode"
     return mat
@@ -160,8 +166,29 @@ def main() -> None:
         print("ERROR: 无 factor_series pkl 缓存匹配已交付因子，先跑 build_deliverable 建缓存")
         return
     names = sorted(all_series)
-    print(f"载入 {len(names)} 个因子 series（pool={args.pool}）")
+    print(f"载入 {len(names)} 个因子 series（优先 pool={args.pool}）")
     mat = global_factor_corr(all_series, names)
+    # 自检：对角线 NaN = 该因子与【任何】因子都没算出过相关（静默残缺，必须报警而非留空）
+    dead = [f for f in names if pd.isna(mat.loc[f, f])]
+    if dead:
+        print(f"⚠️  {len(dead)} 个因子无任何有效配对（矩阵残缺）：{dead[:10]}"
+              f"{' ...' if len(dead) > 10 else ''}")
+    else:
+        print("    ✓ 全部因子均有有效配对（矩阵完整）")
+
+    # 🔴 混池警告：本脚本对每个 fcode 独立挑池（优先 args.pool，无则 fallback 任意已有池）。
+    #    若各因子可用池不一致（如财报因子只跑过 hs300、价量因子有 hs800），矩阵是「混池」的：
+    #    逐对相关由 pandas pairwise 在两因子共同非 NaN 的资产上计算 → 实际落在较小池的交集上。
+    #    结论仍可用（交集样本足够），但读矩阵时必须知道口径，否则会把跨池差异误读成因子差异。
+    pool_dist: dict[str, list[str]] = {}
+    for fc, pl in pool_of.items():
+        pool_dist.setdefault(pl, []).append(fc)
+    if len(pool_dist) > 1:
+        print("⚠️  混池矩阵（各因子所用池不一致，相关落在较小池交集上）：")
+        for pl, fcs in sorted(pool_dist.items(), key=lambda x: -len(x[1])):
+            print(f"    pool={pl}: {len(fcs)} 个" + (f"  例：{', '.join(sorted(fcs)[:5])}" if len(fcs) <= 20 else ""))
+    else:
+        print(f"    全部因子同池：{next(iter(pool_dist))}")
 
     today = pd.Timestamp.now().strftime("%Y%m%d")
     mat_path = out_dir / f"factor_correlation_matrix_{today}.csv"

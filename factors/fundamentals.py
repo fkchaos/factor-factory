@@ -36,7 +36,7 @@ import pandas as pd
 
 from factors.interface import register_factor, slice_panel_to_date
 from data.pit_fundamentals import default_store
-from data.pit import pit_float_mcap
+from data.pit import pit_float_mcap, MIN_TURNOVER_PCT
 
 
 # ---------- 取值 / 年度化辅助（同源 turnover_days._ann_factor）----------
@@ -63,6 +63,24 @@ def _ann(val, sd) -> float:
     return val * k if pd.notna(k) else np.nan
 
 
+def _mcap_grid(panel: pd.DataFrame, lookback: int = 5) -> pd.DataFrame:
+    """PIT 流通市值网格 (date × asset)，向量化版，与 data.pit.pit_float_mcap **同口径**。
+
+    口径（勿擅自改动，属 PIT 红线）：截至 as_of（含）最后 lookback 个交易日内
+    amount/(turnover/100) 取**中位数**，过滤 turnover>=MIN_TURNOVER_PCT 且 amount>0 且
+    mcap>0；窗口内全无效（停牌）→ NaN。逐日版见 data/pit.py，tests 有同口径对照断言。
+    """
+    if not {"amount", "turnover"}.issubset(panel.columns):
+        return pd.DataFrame()
+    amt = panel["amount"].astype("float64")
+    turn = panel["turnover"].astype("float64")
+    mcap = amt / (turn / 100.0)
+    valid = (turn >= MIN_TURNOVER_PCT) & (amt > 0) & np.isfinite(mcap) & (mcap > 0)
+    grid = mcap.where(valid).unstack("asset")  # date × asset
+    # 按每票自身最近 lookback 个交易日取中位数；窗口内全 NaN（停牌）→ NaN，与逐日版一致
+    return grid.rolling(lookback, min_periods=1).median()
+
+
 class FundamentalFactorBase:
     """财报因子基类：统一取 PIT 快照 + 派发到子类 _calc。"""
 
@@ -80,6 +98,42 @@ class FundamentalFactorBase:
 
     def _calc(self, snap, sub, t) -> pd.Series:  # pragma: no cover
         raise NotImplementedError
+
+    # ---------- 快路径（build_deliverable.compute_factor_series 契约）----------
+    # 财报值在两个披露日之间恒定 → 按**公告日**算一次再阶梯 ffill，复杂度
+    # O(披露次数)（每票几十次）。逐日慢路径是 O(交易日×资产)=45 万次，实测单因子 >1 小时。
+    def _step_panel(self, panel, value_fn, ctx=None) -> pd.DataFrame:
+        """事件驱动算出 date × asset 阶梯面板；value_fn(snap, asset, pubDate) -> float。"""
+        dates = pd.DatetimeIndex(sorted(panel.index.get_level_values("date").unique()))
+        assets = list(dict.fromkeys(panel.index.get_level_values("asset")))
+        svc = (ctx or {}).get("pit_service") or default_store(assets, self.pit_fields)
+        cols = {}
+        for a in assets:
+            pubs = svc.disclosure_dates(a)
+            if len(pubs) == 0:
+                continue
+            pubs = pubs[(pubs >= dates[0]) & (pubs <= dates[-1])]
+            if len(pubs) == 0:
+                continue
+            vals, idx = [], []
+            for pub in pubs:
+                snap = svc.snapshot([a], pub, with_dates=True)
+                v = value_fn(snap, a, pub)
+                if v is not None and pd.notna(v):
+                    vals.append(float(v))
+                    idx.append(pub)
+            if not vals:
+                continue
+            ser = pd.Series(vals, index=pd.DatetimeIndex(idx))
+            # 公告当日即生效（PIT 快照口径 pubDate <= as_of），之后 ffill 到每个交易日
+            cols[a] = ser.reindex(dates.union(ser.index)).ffill().reindex(dates)
+        return pd.DataFrame(cols, index=dates) if cols else pd.DataFrame(index=dates)
+
+    def compute_panel(self, panel, ctx=None) -> pd.DataFrame:
+        """一次性算出全序列（index=date, columns=asset），供 harness 统一中性化。"""
+        return self._step_panel(
+            panel, lambda snap, a, t: self._calc(snap, None, t).get(a, np.nan), ctx
+        )
 
 
 # ---------------- 盈利/质量比率因子 ----------------
@@ -244,6 +298,19 @@ class EPFactor(FundamentalFactorBase):
             if pd.notna(v) and pd.notna(m) and m > 0:
                 out[a] = _ann(v, sd) / m
         return pd.Series(out, dtype=float)
+
+    def compute_panel(self, panel, ctx=None) -> pd.DataFrame:
+        """EP 分母是**逐日**市值（非阶梯）→ 分子走阶梯、分母走向量化市值网格。
+
+        🔴 分母必须与 pit_float_mcap 同口径（PIT 红线）：见 _mcap_grid 与单测对照。
+        """
+        num = self._step_panel(
+            panel, lambda snap, a, t: _ann(*_val_sd(snap, a, "net_profit_parent")), ctx
+        )
+        den = _mcap_grid(panel).reindex(index=num.index, columns=num.columns)
+        if den.empty:
+            return pd.DataFrame(index=num.index)
+        return num / den.where(den > 0)
 
 
 class RevenueYoyFactor(FundamentalFactorBase):

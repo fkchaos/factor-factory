@@ -85,6 +85,23 @@ class PitFinancialsService:
         return df[[c for c in self.fields if c in df.columns]]
 
 
+    def disclosure_dates(self, asset) -> pd.DatetimeIndex:
+        """该票全部财报公告日（升序去重）—— 供财报因子快路径做**事件驱动**取数。
+
+        为什么需要：财报因子值在两个披露日之间恒定（PIT 快照 = 截至 as_of 最新已披露），
+        所以只需在每个公告日算一次、再阶梯 ffill 到交易日轴，复杂度 O(披露次数)
+        （每票几十次）而非 O(交易日 × 资产)（hs300×1500 日 = 45 万次）。
+        逐日调用 snapshot 走后者，单因子出包实测 >1 小时；事件驱动可降到分钟级。
+        """
+        a = normalize_code(asset)
+        self._ensure_history(a)
+        disc = self._hist.get(a)
+        if disc is None or len(disc) == 0 or "pubDate" not in getattr(disc, "columns", []):
+            return pd.DatetimeIndex([])
+        pubs = pd.to_datetime(disc["pubDate"], errors="coerce").dropna().unique()
+        return pd.DatetimeIndex(sorted(pubs))
+
+
 # 模块级单例：因子在 ctx 缺失时兜底自建（测试 / 独立调用路径）。
 _DEFAULT_STORE: "PitFinancialsService | None" = None
 
