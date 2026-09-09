@@ -72,9 +72,10 @@
 | f0067a | 盈利现金保障 | single |  | current | 2026-09-09 |
 | f0068a | 应计 | single |  | current | 2026-09-09 |
 | f0069a | 扣非净利占比 | single |  | current | 2026-09-09 |
-| f0070a | EP盈利市值比 | single |  | current | 2026-09-09 |
+| f0070a | EP | single |  | current | 2026-09-09 |
 | f0071a | 营收同比 | single |  | current | 2026-09-09 |
 | f0072a | 净利同比 | single |  | current | 2026-09-09 |
 | f0073a | 预告净利同比 | single |  | current | 2026-09-09 |
 | f0074a | 预告类型分档 | single |  | current | 2026-09-09 |
 | f0075a | 前瞻EP | single |  | current | 2026-09-09 |
+| f0076a | SUE标准化未预期盈余 | single |  | current | 2026-09-09 |

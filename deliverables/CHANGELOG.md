@@ -9,6 +9,29 @@
 
 ## [Unreleased]
 
+### 因子（f0076a · Phase 1 第二小批 · 盈余惊喜）
+- `2026-09-09 | factor | f0076a | SUE标准化未预期盈余（sue） | deliverables/factors/f0076a/`（hs300 RankIC +0.0055 / hs800 **+0.0082** ICIR 0.11 胜率 56.0%；财报线迄今**强度第二 + 独立性最好**的因子。季节性随机游走预期（Q_t 预期=Q_{t−4}），无需卖方一致预期 → 覆盖率 98%，绕开业绩预告仅 28–36% 的死穴。与 f0072a 净利同比 ρ=**0.50** <0.7 冗余门槛 → 标准化确带来增量，非重复品；全局矩阵中未出现在任何 |ρ|≥0.7 配对，通过冗余前置闸门）
+
+### 因子（f0060a–f0075a 批量交付 · Phase 0 财报扩面 + Phase 1 第一小批 · 双池 hs300/hs800）
+> 本批全部为**非 OHLCV 新数据源**（PIT 财报 + 东财业绩预告），用于破解外部审核"全 OHLCV 同质"批评。
+> 强度如实偏弱（IC 中位 ~0.0035），**价值在正交性**（财报 vs 价量中位 |ρ|=0.016，价量内部基线 0.053），勿当高 alpha 用。
+- `2026-09-09 | factor | f0060a | ROE净资产收益率（roe） | deliverables/factors/f0060a/`（hs300 +0.0039 / hs800 +0.0044）
+- `2026-09-09 | factor | f0061a | ROA总资产收益率（roa） | deliverables/factors/f0061a/`（hs300 +0.0050 / hs800 +0.0054；与 f0060a ρ=0.86 高冗余）
+- `2026-09-09 | factor | f0062a | 毛利率（gross_margin） | deliverables/factors/f0062a/`（hs300 +0.0035 / hs800 **−0.0013**，双池符号翻转但幅度均 <0.005 属噪声，不构成方向性结论）
+- `2026-09-09 | factor | f0063a | 净利率（net_margin） | deliverables/factors/f0063a/`（hs300 +0.0043 / hs800 +0.0036；与 f0065a ρ=0.98 近重复）
+- `2026-09-09 | factor | f0064a | 资产周转率（asset_turnover） | deliverables/factors/f0064a/`（hs300 +0.0043 / hs800 +0.0052）
+- `2026-09-09 | factor | f0065a | 营业利润率（operate_profit_margin） | deliverables/factors/f0065a/`（hs300 +0.0036 / hs800 +0.0031）
+- `2026-09-09 | factor | f0066a | 财务杠杆（financial_leverage） | deliverables/factors/f0066a/`（hs300 −0.0029 / hs800 −0.0013）
+- `2026-09-09 | factor | f0067a | 盈利现金保障（cash_coverage） | deliverables/factors/f0067a/`（hs300 +0.0049 / hs800 +0.0018；全局最独立因子之一 mean|ρ|=0.042）
+- `2026-09-09 | factor | f0068a | 应计（accrual） | deliverables/factors/f0068a/`（hs300 −0.0062 / hs800 −0.0026；方向与"高应计→低收益"经典事实一致）
+- `2026-09-09 | factor | f0069a | 扣非净利占比（deduct_ratio） | deliverables/factors/f0069a/`（hs300 −0.0009 / hs800 −0.0029；全局最独立因子之一 mean|ρ|=0.037）
+- `2026-09-09 | factor | f0070a | EP盈利收益率（ep） | deliverables/factors/f0070a/`（hs300 +0.0083 / hs800 **+0.0139** ICIR 0.12；本批最强，大池优于小池）
+- `2026-09-09 | factor | f0071a | 营收同比（revenue_yoy） | deliverables/factors/f0071a/`（hs300 −0.0010 / hs800 +0.0029，双池符号翻转、幅度均噪声级）
+- `2026-09-09 | factor | f0072a | 净利同比（netprofit_yoy） | deliverables/factors/f0072a/`（hs300 +0.0049 / hs800 +0.0066；未标准化版本，f0076a 为其标准化升级）
+- `2026-09-09 | factor | f0073a | 预告净利同比（forecast_yoy） | deliverables/factors/f0073a/`（hs300 +0.0004 / hs800 +0.0028；覆盖率 28–36% 约束；与 f0074a ρ=0.75 冗余）
+- `2026-09-09 | factor | f0074a | 预告类型分档（forecast_kind） | deliverables/factors/f0074a/`（hs300 +0.0027 / hs800 +0.0028；预增+3…预减−3 手工分档，无统计依据）
+- `2026-09-09 | factor | f0075a | 前瞻EP（forecast_ep） | deliverables/factors/f0075a/`（hs300 +0.0039 / hs800 +0.0070；⚠️ 与 f0070a 历史EP ρ=**0.81** 高冗余，增量有限）
+
 ### 信号（s0004x · 信号线自 08-12 后首个新包，第四个正交视角）
 - `2026-09-08 | signal | s0004x | 难做指数Regime（difficulty_regime） | deliverables/signals/s0004x/`
   （hs800 / 2020 起 1597 日；exec_lag=1 钢印；叠加 Sharpe 0.77→0.05 **改善 −0.721**、最大回撤 −27.09%→−35.36% **恶化 8.27pct**、命中率价差 −3.7% → 按策略组 §7.2 判 **refuted**，且是四信号中唯一"收益与回撤两项都变差"的；与 s0001x/s0002x/s0003x 状态一致率 43.5% / 48.9% / 60.8% 均 <85%，视角独立）
