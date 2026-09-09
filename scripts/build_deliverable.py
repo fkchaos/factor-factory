@@ -570,7 +570,8 @@ def _render_card(args, factor, audit_records: dict, pool_list: list,
 ## 框架一致性字段
 - 中性化状态：industry+mktcap(PIT: amount/turnover 现算流通市值)
 - PIT 认证：true
-- 主场池：{pool_list[0]}（详见 factor_universe_matrix；分池 IC 见上表）
+- 基准池：{pool_list[0]}（**口径锚点，非最优池**——只是 manifest 声明的第一个池，用于统一顶层字段口径）
+- ⚠️ 本厂不指定「主场池」：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测；配池请看上方分池 IC 表自行判断。
 
 ## 消费指引
 - 因子值已中性化，可直接 load 进选股模型。

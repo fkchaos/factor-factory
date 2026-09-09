@@ -100,6 +100,8 @@
 2. **想读懂某个因子的假设与边界** → 读 `deliverables/factors/<fcode>/card.md`。
 3. **想看某因子在某池的回测** → `backtest_<pool>.csv` + `metrics_<pool>.json`。
 4. **想看某信号能不能改善回撤** → `deliverables/signals/<scode>/card.md` 的"叠加 Sharpe·DD 改善"段。
-5. **本厂不设质量门槛**：DSR/PBO 通过即出包，因子强弱由下游在 JSON 层筛选——我们给多池原始 IC 表，主场池选择权交给你。
+5. **本厂不设质量门槛**：DSR/PBO 通过即出包，因子强弱由下游在 JSON 层筛选——我们给多池原始 IC 表，**配池权交给你**。
+   ⚠️ 我们**不提供"主场池"推荐**（2026-09-09 口径修正）：按全样本表现挑最强池是**后视选池**，照它配池回测会虚高。
+   卡片/JSON 里的"基准池"只是 manifest 声明的第一个池，用于统一顶层字段口径，**不代表该因子在此池最强**。
 
 > ⚠️ `deliverables/` 是生产线的**纯输出**，可整体复制给下游而不带任何代码；它与 `data/…monitor/scripts/` 只在看板聚合、互不耦合（详见 `docs/ARCHITECTURE.md` §8）。

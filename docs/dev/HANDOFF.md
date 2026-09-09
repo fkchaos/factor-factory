@@ -205,6 +205,29 @@
 - 胜率 56.0%（hs800）是本批最高——多空两端方向稳定性好于纯强度。
 - 交付视图已刷新：`strategy_export` 76 因子 4 信号；看板 已交付=76；CHANGELOG 补 17 条（f0060a–f0076a）；全局矩阵 `factor_correlation_matrix_20260909.csv` 76×76、对角线 NaN=0（完整无残缺）。
 
+**⑥ 🔴 口径修正：「主场池」废弃 → 改「基准池」（2026-09-09，主理人批准）**
+
+**发现的病**：`build_deliverable.py` 的"主场池"= `pools[0]`，而 `export_to_strategy_json.py` 的"主场池"= **全样本 |ICIR| 最大的池**，且顶层 `ic_mean`/`ir` 取该池值。两处打架是小事，**后者是后视选池**——与当年 `market_cap` 后视选股同类（只是发生在池子维度），照它配池回测会系统性虚高。
+
+**实测影响（顶层 IC 普遍下修）**：
+
+| fcode | 旧（后视挑最强池） | 新（基准池，可复现） |
+|---|---|---|
+| f0001a | 0.0312 @zz1000 | **0.0095 @sz50** |
+| f0070a | 0.0139 @hs800 | 0.0083 @hs300 |
+| f0076a | 0.0082 @hs800 | 0.0055 @hs300 |
+
+之前给策略组的顶层 IC **含最高约 3 倍的后视美化**，排序结论会变，务必以本次后的数值为准。
+
+**改了什么**
+1. `scripts/export_to_strategy_json.py`：`pick_home_pool` → `pick_reference_pool`（取 manifest 声明的第一个池，确定性、非后视）；新增 `POOL_SELECTION_WARNING` 常量；JSON 增 `reference_pool` / `pool_selection_warning` / `gate_7_2_at_reference_pool`，**旧字段 `home_pool` 保留同名**以防破坏已对接解析（值已同步）。
+2. `scripts/build_deliverable.py` 卡片模板：「主场池」→「基准池（口径锚点，非最优池）」+ 后视选池警告行。
+3. **76 张 card.md 全部回填**（`.cache/backfill_pool_wording.py`，幂等，纯文案不改数值）。
+4. 文档同步：`deliverables/strategy_export/README.md`、`docs/DELIVERABLES.md`、`research/templates/factor_card_template.md`、`docs/USER_GUIDE.md`（`universe_hint` 改称"预期适配池"）。
+5. CHANGELOG 加「⚠️ 口径变更」置顶段，明确告知下游这是破坏性语义变更。
+
+🔴 **纪律沉淀：任何"按全样本表现挑 X"的字段都是后视**——挑池、挑参数、挑样本期、挑因子，一律只标观测值不做推荐，或干脆只给全量明细让消费方自己选。`factor_universe_matrix.py` 的 home pool 列同理属观测值。
+
 **🔴 待主理人拍板（勿自行决断）**
 1. **37 对冗余**（含 f0047a↔f0050a ρ=−1.00、f0063a↔f0065a ρ=0.98、f0018a–f0022a 一串 ρ=0.99）是否回退/合并？现状是"不设质量门槛、如实交付"，冗余仅标注不处理。若策略组要的是可直接入模的集合，需另做正交化筛选层。
 2. **Phase 1 收口 → 是否转 Phase 2（资金面另类：龙虎榜/大单/分单/两融）？** 本轮经验：财报线 IC 天花板就在 0.005–0.01，继续在财报里挖边际递减；资金面是 A 股特有的高信息含量域，但需新增数据源（东财/聚宽），成本高于本轮。

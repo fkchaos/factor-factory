@@ -28,7 +28,7 @@
    class MyFactor(Factor):
        fcode = "f0006a"          # 下一个可用编号
        name = "我的因子"
-       universe_hint = "zz1000"  # 实测主场池（可选）
+       universe_hint = "zz1000"  # 预期适配池（可选，仅作提示，不构成"最优池"声明）
 
        def compute(self, panel, as_of_date, ctx=None):
            # panel 已保证只含 as_of_date 及之前的数据（接口层防前视）

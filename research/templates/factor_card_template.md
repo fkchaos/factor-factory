@@ -41,7 +41,10 @@
 - **中性化状态**：raw / industry / industry+mktcap / custom:<desc>
   —— 策略研究员据此决定是否再中性化（防 double-neutralization 静默抹信号）。
 - **PIT 认证**：true（附 assert_no_lookahead 审计日期）/ false 须红字警告。
-- **主场池**：来自 `factor_universe_matrix.py`，标注 home pool + 次优池 + 换池反转预警。
+- **基准池**（2026-09-09 起取代「主场池」）：= manifest 声明的第一个池，**仅作口径锚点**。
+  ⚠️ 本厂**不再标注"主场池"**——按全样本 IC/ICIR 挑最强池属**后视选池**（与用未来市值选股同类），
+  照它配池回测会系统性虚高。卡片只给**分池 IC 表**，配池判断交给策略组。
+  （`factor_universe_matrix.py` 的 home pool 列同理属**观测值**，非推荐。）
 - 若为组合（manifest.components 非空）：combination_method（等权/ICIR加权/正交化）、成分 f-code、组合是否降低与已知因子的相关性。
 
 ### 消费指引（交付必填 · 写给下游选股策略研究员）

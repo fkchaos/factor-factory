@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-09 17:23",
+  "generated": "2026-09-09 17:40",
   "source": "external",
   "producer": "factor-factory",
   "factors": [
@@ -10,12 +10,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "overnight_intraday | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_intraday --pool sz50",
-      "ic_mean": 0.03122590107025099,
-      "ir": 0.35489613864305913,
+      "ic_mean": 0.009530404905007707,
+      "ir": 0.06835582650644001,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.6493099121706399,
+      "ic_win_rate": 0.5244667503136763,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -25,8 +25,10 @@
         "fcode": "f0001a",
         "factor_impl": "overnight_intraday",
         "display_name": "隔夜-日内反转（f0001a）",
-        "home_pool": "zz1000",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "sz50",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "sz50",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs1800",
@@ -89,7 +91,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "valid",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -159,12 +162,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "ivol | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ivol --pool sz50",
-      "ic_mean": 0.048378924535313186,
-      "ir": 0.5090678515566756,
+      "ic_mean": 0.009900246593844761,
+      "ir": 0.06659111095913374,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.6967963386727689,
+      "ic_win_rate": 0.5405405405405406,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -174,8 +177,10 @@
         "fcode": "f0002a",
         "factor_impl": "ivol",
         "display_name": "特质波动率(低波溢价)（f0002a）",
-        "home_pool": "zz1000",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "sz50",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "sz50",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs1800",
@@ -238,7 +243,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "valid",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -308,12 +314,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "等权组合因子：成分 z-score 后按方向系数等权平均。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor combo_equal_v1 --pool sz50 | 组合成分：f0001a,f0002a（等权 z-score）",
-      "ic_mean": 0.04401403510682762,
-      "ir": 0.5217585713635028,
+      "ic_mean": 0.010259524975668635,
+      "ir": 0.07400161450138003,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.7120451693851945,
+      "ic_win_rate": 0.5351317440401505,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -323,8 +329,10 @@
         "fcode": "f0003a",
         "factor_impl": "combo_equal_v1",
         "display_name": "等权组合(隔夜反转+低波)（f0003a）",
-        "home_pool": "zz1000",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "sz50",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "sz50",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs1800",
@@ -387,7 +395,8 @@
             "gate_7_2_verdict": "valid"
           }
         ],
-        "gate_7_2_at_home_pool": "valid",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -473,7 +482,9 @@
         "factor_impl": "chip_cost_distance",
         "display_name": "筹码成本偏离（f0004a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -486,6 +497,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -547,7 +559,9 @@
         "factor_impl": "volume_expansion_speed",
         "display_name": "量能扩张速度（f0005a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -560,6 +574,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -605,12 +620,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "20 交易日动量（跳过最近 1 日，规避 1 日微观结构污染）。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor momentum_20 --pool hs300",
-      "ic_mean": -0.012916423807200457,
-      "ir": -0.10664056062038119,
+      "ic_mean": -0.007650125826855947,
+      "ir": -0.06056815348637303,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.45235069885641677,
+      "ic_win_rate": 0.4815756035578145,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -620,8 +635,10 @@
         "fcode": "f0006a",
         "factor_impl": "momentum_20",
         "display_name": "动量20日（f0006a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -644,7 +661,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -694,12 +712,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "5 交易日短期反转（做空近期赢家）。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor reversal_5 --pool hs300",
-      "ic_mean": 0.013226743673431029,
-      "ir": 0.12190148057841481,
+      "ic_mean": 0.010548566529911594,
+      "ir": 0.09607343241670023,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5481434864694776,
+      "ic_win_rate": 0.5399622404027691,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -709,8 +727,10 @@
         "fcode": "f0007a",
         "factor_impl": "reversal_5",
         "display_name": "反转5日（f0007a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -733,7 +753,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -783,12 +804,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "隔夜跳空因子：open / 前收 - 1。正值=隔夜跳空高开。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_gap --pool hs300",
-      "ic_mean": 0.007528885923714122,
-      "ir": 0.10610791984007475,
+      "ic_mean": 0.006650574081308298,
+      "ir": 0.08171981782215891,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5401505646173149,
+      "ic_win_rate": 0.5175658720200753,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -798,8 +819,10 @@
         "fcode": "f0008a",
         "factor_impl": "overnight_gap",
         "display_name": "隔夜跳空缺口（f0008a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -822,6 +845,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -888,7 +912,9 @@
         "factor_impl": "limit_up_seal",
         "display_name": "涨停封板强度（f0009a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -911,6 +937,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -961,12 +988,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "规模因子：log(总市值)。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor size_log_mcap --pool hs300",
-      "ic_mean": 0.016397696642289128,
-      "ir": 0.2461967337908107,
+      "ic_mean": 0.01592821891724266,
+      "ir": 0.21934113982021933,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5811912225705329,
+      "ic_win_rate": 0.5843260188087774,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -976,8 +1003,10 @@
         "fcode": "f0010a",
         "factor_impl": "size_log_mcap",
         "display_name": "市值对数（f0010a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1000,6 +1029,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -1066,7 +1096,9 @@
         "factor_impl": "avg_turnover_120d",
         "display_name": "120日平均换手率（f0011a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1079,6 +1111,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -1140,7 +1173,9 @@
         "factor_impl": "avg_turnover_10d",
         "display_name": "10日平均换手率（f0012a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1153,6 +1188,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -1214,7 +1250,9 @@
         "factor_impl": "avg_turnover_240d",
         "display_name": "240日平均换手率（f0013a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1227,6 +1265,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -1288,7 +1327,9 @@
         "factor_impl": "inventory_turnover_days",
         "display_name": "存货周转天数（f0014a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1301,6 +1342,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1362,7 +1404,9 @@
         "factor_impl": "ar_turnover_days",
         "display_name": "应收账款周转天数（f0015a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1375,6 +1419,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1436,7 +1481,9 @@
         "factor_impl": "amount_std_20d",
         "display_name": "20日成交金额标准差（f0016a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1449,6 +1496,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1510,7 +1558,9 @@
         "factor_impl": "avg_turnover_5d",
         "display_name": "5日平均换手率（f0017a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1523,6 +1573,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -1584,7 +1635,9 @@
         "factor_impl": "ema_5d",
         "display_name": "5日EMA（f0018a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1597,6 +1650,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1658,7 +1712,9 @@
         "factor_impl": "ema_10d",
         "display_name": "10日EMA（f0019a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1671,6 +1727,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1732,7 +1789,9 @@
         "factor_impl": "ema_12d",
         "display_name": "12日EMA（f0020a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1745,6 +1804,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1806,7 +1866,9 @@
         "factor_impl": "ema_120d",
         "display_name": "120日EMA（f0021a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1819,6 +1881,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1880,7 +1943,9 @@
         "factor_impl": "ma_5d",
         "display_name": "5日MA（f0022a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1893,6 +1958,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -1954,7 +2020,9 @@
         "factor_impl": "amount_ma_20d",
         "display_name": "20日成交金额MA（f0023a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -1967,6 +2035,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -2028,7 +2097,9 @@
         "factor_impl": "money_flow_ma_20d",
         "display_name": "20日资金流量（f0024a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2041,6 +2112,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -2102,7 +2174,9 @@
         "factor_impl": "bollinger_upper_20d",
         "display_name": "布林上轨(20日)（f0025a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2115,6 +2189,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -2160,12 +2235,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "volume_expansion_speed | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor volume_expansion_speed --pool hs300",
-      "ic_mean": -0.012099125782990243,
-      "ir": -0.14968832444413407,
+      "ic_mean": -0.005734186334830513,
+      "ir": -0.0664673632969042,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4437669376693767,
+      "ic_win_rate": 0.48441734417344173,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2175,8 +2250,10 @@
         "fcode": "f0026a",
         "factor_impl": "volume_expansion_speed",
         "display_name": "量能扩张速度（f0026a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2199,7 +2276,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -2249,12 +2327,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "realized_skew_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor realized_skew_20d --pool hs300",
-      "ic_mean": -0.006208566734277229,
-      "ir": -0.1052001612956651,
+      "ic_mean": -0.004564488437308796,
+      "ir": -0.06597771197151395,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4558730158730159,
+      "ic_win_rate": 0.4742857142857143,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2264,8 +2342,10 @@
         "fcode": "f0027a",
         "factor_impl": "realized_skew_20d",
         "display_name": "近20日已实现偏度（f0027a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2288,6 +2368,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -2338,12 +2419,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "lower_shadow | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lower_shadow --pool hs300",
-      "ic_mean": -0.014693390008814243,
-      "ir": -0.22649544177999698,
+      "ic_mean": -0.014055572340853433,
+      "ir": -0.18740485921118372,
       "dsr": 1.8840511689257328e-25,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4006269592476489,
+      "ic_win_rate": 0.4200626959247649,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2353,8 +2434,10 @@
         "fcode": "f0028a",
         "factor_impl": "lower_shadow",
         "display_name": "长下影线（f0028a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2377,6 +2460,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -2427,12 +2511,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "up_run_reversal | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor up_run_reversal --pool hs300",
-      "ic_mean": 0.017773494326799404,
-      "ir": 0.05546347517000168,
+      "ic_mean": 0.0146458427787131,
+      "ir": 0.03883270715892648,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5286195286195287,
+      "ic_win_rate": 0.5126162018592297,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2442,8 +2526,10 @@
         "fcode": "f0029a",
         "factor_impl": "up_run_reversal",
         "display_name": "连涨占比短期反转（f0029a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2466,6 +2552,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -2516,12 +2603,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "volume_cv_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor volume_cv_20d --pool hs300",
-      "ic_mean": -0.011308652760299737,
-      "ir": -0.1966947372072537,
+      "ic_mean": -0.007335510093969737,
+      "ir": -0.10435160195001615,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4035532994923858,
+      "ic_win_rate": 0.4460659898477157,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2531,8 +2618,10 @@
         "fcode": "f0030a",
         "factor_impl": "volume_cv_20d",
         "display_name": "20日成交量变异系数（f0030a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2555,7 +2644,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -2605,12 +2695,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "amihud_illiquidity_20d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor amihud_illiquidity_20d --pool hs300",
-      "ic_mean": 0.01278252553943061,
-      "ir": 0.16695651064377695,
+      "ic_mean": 0.009731635507323335,
+      "ir": 0.12781683454386478,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5568253968253968,
+      "ic_win_rate": 0.5580952380952381,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2620,8 +2710,10 @@
         "fcode": "f0031a",
         "factor_impl": "amihud_illiquidity_20d",
         "display_name": "20日Amihud非流动性（f0031a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2644,7 +2736,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -2694,12 +2787,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "vol_expansion_speed | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor vol_expansion_speed --pool hs300",
-      "ic_mean": -0.0028538847866233182,
-      "ir": -0.04353427276506766,
+      "ic_mean": 0.0004090823981525137,
+      "ir": 0.0055175710586862535,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.48634920634920636,
+      "ic_win_rate": 0.5047619047619047,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2709,8 +2802,10 @@
         "fcode": "f0032a",
         "factor_impl": "vol_expansion_speed",
         "display_name": "波动率扩张速度（f0032a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2733,6 +2828,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -2783,12 +2879,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "liquidity_improvement | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor liquidity_improvement --pool hs300",
-      "ic_mean": 0.007987724061665135,
-      "ir": 0.11447352981227686,
+      "ic_mean": 0.006042154140702429,
+      "ir": 0.0802055631376944,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5511254019292604,
+      "ic_win_rate": 0.5389067524115756,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -2798,8 +2894,10 @@
         "fcode": "f0033a",
         "factor_impl": "liquidity_improvement",
         "display_name": "流动性改善度（f0033a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2822,6 +2920,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -2888,7 +2987,9 @@
         "factor_impl": "bottom_rebound",
         "display_name": "触底反弹信号（f0034a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -2911,6 +3012,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -2977,7 +3079,9 @@
         "factor_impl": "momentum_12_1",
         "display_name": "12-1动量（f0035a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3000,6 +3104,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3066,7 +3171,9 @@
         "factor_impl": "upper_shadow",
         "display_name": "长上影线（f0036a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3089,6 +3196,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3139,12 +3247,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "reverse_cross_60 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor reverse_cross_60 --pool hs300",
-      "ic_mean": -0.00813147296314437,
-      "ir": -0.09837966448587532,
+      "ic_mean": -0.0027597041767196983,
+      "ir": -0.03166897474437194,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.455019556714472,
+      "ic_win_rate": 0.4817470664928292,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3154,8 +3262,10 @@
         "fcode": "f0037a",
         "factor_impl": "reverse_cross_60",
         "display_name": "收益反向交叉次数（f0037a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3178,6 +3288,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3244,7 +3355,9 @@
         "factor_impl": "trend_smoothness_r2",
         "display_name": "趋势平滑度R²（f0038a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3267,6 +3380,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3317,12 +3431,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "max5_return | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor max5_return --pool hs300",
-      "ic_mean": -0.004396449343779929,
-      "ir": -0.08262340588159953,
+      "ic_mean": -0.0024420338908015767,
+      "ir": -0.035998725930085615,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4755865567533291,
+      "ic_win_rate": 0.49111675126903553,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3332,8 +3446,10 @@
         "fcode": "f0039a",
         "factor_impl": "max5_return",
         "display_name": "最大5日涨幅（f0039a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3356,6 +3472,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3406,12 +3523,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "min3_return | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor min3_return --pool hs300",
-      "ic_mean": -0.0037760224788134034,
-      "ir": -0.07267977429065187,
+      "ic_mean": -0.002039176848004912,
+      "ir": -0.030521971835853673,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4784263959390863,
+      "ic_win_rate": 0.48984771573604063,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3421,8 +3538,10 @@
         "fcode": "f0040a",
         "factor_impl": "min3_return",
         "display_name": "最低3日收益（f0040a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3445,6 +3564,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3511,7 +3631,9 @@
         "factor_impl": "lowprice_volume_spike",
         "display_name": "低位放量事件（f0041a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3534,6 +3656,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3584,12 +3707,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "dispersion_agent | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor dispersion_agent --pool hs300",
-      "ic_mean": -0.0012732833412763568,
-      "ir": -0.02923077473401219,
+      "ic_mean": -0.0002886210291661572,
+      "ir": -0.005114350559553373,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4986824769433465,
+      "ic_win_rate": 0.5059288537549407,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3599,8 +3722,10 @@
         "fcode": "f0042a",
         "factor_impl": "dispersion_agent",
         "display_name": "分歧度代理（f0042a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3623,6 +3748,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3673,12 +3799,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "idiosyncratic_share | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor idiosyncratic_share --pool hs300",
-      "ic_mean": -0.0008008024816824377,
-      "ir": -0.021314008224140178,
+      "ic_mean": 0.0003752343896912239,
+      "ir": 0.0071439369068994375,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.48991541964866625,
+      "ic_win_rate": 0.4951203643461288,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3688,8 +3814,10 @@
         "fcode": "f0043a",
         "factor_impl": "idiosyncratic_share",
         "display_name": "特异度占比（f0043a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3712,6 +3840,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3762,12 +3891,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "隔夜收益占比：60 日隔夜累计 / 60 日总累计。正值 = 收益靠隔夜跳空。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_ratio_60d --pool hs300",
-      "ic_mean": 0.003450161136918258,
-      "ir": 0.07595336913523433,
+      "ic_mean": 0.0031916325502307896,
+      "ir": 0.054187077772789125,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5348534201954397,
+      "ic_win_rate": 0.5185667752442997,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3777,8 +3906,10 @@
         "fcode": "f0044a",
         "factor_impl": "overnight_ratio_60d",
         "display_name": "隔夜收益占比（f0044a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3801,6 +3932,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -3851,12 +3983,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "隔夜-日内分解：20 日隔夜累计 − 20 日日内累计。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_intraday_decomp --pool hs300",
-      "ic_mean": 0.01931645819367645,
-      "ir": 0.21124133175581908,
+      "ic_mean": 0.013382673761619366,
+      "ir": 0.1398087157423422,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5803174603174603,
+      "ic_win_rate": 0.5517460317460318,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3866,8 +3998,10 @@
         "fcode": "f0045a",
         "factor_impl": "overnight_intraday_decomp",
         "display_name": "隔夜-日内分解（f0045a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3890,6 +4024,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -3940,12 +4075,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "特质波动率比率：20 日特质波动 / 120 日特质波动。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor idio_vol_ratio --pool hs300",
-      "ic_mean": -0.009718297499728273,
-      "ir": -0.12884092379479606,
+      "ic_mean": -0.005261067737747529,
+      "ir": -0.06257079654043841,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.44610169491525425,
+      "ic_win_rate": 0.4793220338983051,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -3955,8 +4090,10 @@
         "fcode": "f0046a",
         "factor_impl": "idio_vol_ratio",
         "display_name": "特质波动率比率（f0046a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -3979,6 +4116,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4029,12 +4167,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "相对市场收益偏离：5 日累计(r_i − r_mkt)。正值 = 持续跑赢。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor return_deviation_mkt --pool hs300",
-      "ic_mean": -0.019576320138476072,
-      "ir": -0.17423322268223299,
+      "ic_mean": -0.017223647487627242,
+      "ir": -0.1536306666715373,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4207547169811321,
+      "ic_win_rate": 0.4427672955974843,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4044,8 +4182,10 @@
         "fcode": "f0047a",
         "factor_impl": "return_deviation_mkt",
         "display_name": "相对市场收益偏离（f0047a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4068,6 +4208,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -4118,12 +4259,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "隔夜跳空-波动扩张价差：z(60日隔夜均值) − z(波动扩张)。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor overnight_gap_volexp_spread --pool hs300",
-      "ic_mean": 0.009705460959915823,
-      "ir": 0.1704067972036166,
+      "ic_mean": 0.006803161605986717,
+      "ir": 0.09711509873071951,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5755627009646302,
+      "ic_win_rate": 0.5228295819935691,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4133,8 +4274,10 @@
         "fcode": "f0048a",
         "factor_impl": "overnight_gap_volexp_spread",
         "display_name": "隔夜跳空-波动扩张价差（f0048a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4157,6 +4300,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4207,12 +4351,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "60 日价格反转：−(close[t]/close[t-60] − 1)。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor reversal_60d --pool hs300",
-      "ic_mean": 0.009865057757558185,
-      "ir": 0.07479687582794511,
+      "ic_mean": 0.005506002867783812,
+      "ir": 0.04064104429199032,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5263843648208469,
+      "ic_win_rate": 0.5179153094462541,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4222,8 +4366,10 @@
         "fcode": "f0049a",
         "factor_impl": "reversal_60d",
         "display_name": "60日反转（f0049a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4246,6 +4392,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4296,12 +4443,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "非对称 5 日价格反转：−(close[t]/close[t-5] − 1)。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor asymmetric_5d_reversal --pool hs300",
-      "ic_mean": 0.019325291699821685,
-      "ir": 0.17094856952019552,
+      "ic_mean": 0.01698855883721211,
+      "ir": 0.15094328746336988,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5779874213836478,
+      "ic_win_rate": 0.5540880503144654,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4311,8 +4458,10 @@
         "fcode": "f0050a",
         "factor_impl": "asymmetric_5d_reversal",
         "display_name": "非对称5日反转（f0050a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4335,6 +4484,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -4401,7 +4551,9 @@
         "factor_impl": "idio_tail_beta",
         "display_name": "特质收益下尾beta（f0051a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4424,6 +4576,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4474,12 +4627,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "双过滤动量：12-1 相对动量，叠加 12 月绝对收益方向门控。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor dual_filter_momentum --pool hs300",
-      "ic_mean": -0.009407684844072903,
-      "ir": -0.09733533153726015,
+      "ic_mean": -0.0056558683226279735,
+      "ir": -0.05512988885767483,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4564408041697692,
+      "ic_win_rate": 0.48845867460908415,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4489,8 +4642,10 @@
         "fcode": "f0052a",
         "factor_impl": "dual_filter_momentum",
         "display_name": "双过滤动量（f0052a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4513,6 +4668,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4563,12 +4719,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "rejoicing-regret 度：上涨日 rejoicing 减下跌日 regret，取负号。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor rejoicing_regret --pool hs300",
-      "ic_mean": 0.017220885344930374,
-      "ir": 0.1450622143284697,
+      "ic_mean": 0.011525034985916317,
+      "ir": 0.09386589639229956,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.56,
+      "ic_win_rate": 0.5371428571428571,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4578,8 +4734,10 @@
         "fcode": "f0053a",
         "factor_impl": "rejoicing_regret",
         "display_name": "rejoicing-regret度（f0053a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4602,7 +4760,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -4652,12 +4811,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "超额收益信息比率：市场中性超额收益 60 日均值/标准差。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor excess_return_ir --pool hs300",
-      "ic_mean": -0.013475113441654162,
-      "ir": -0.10004917614411649,
+      "ic_mean": -0.008254322171722369,
+      "ir": -0.06105134164354532,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4677524429967427,
+      "ic_win_rate": 0.4827361563517915,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4667,8 +4826,10 @@
         "fcode": "f0054a",
         "factor_impl": "excess_return_ir",
         "display_name": "超额收益信息比率（f0054a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4691,7 +4852,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -4757,7 +4919,9 @@
         "factor_impl": "price_volume_divergence",
         "display_name": "量价背离（f0055a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4780,6 +4944,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4830,12 +4995,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "日内博弈激烈度：近 20 日 (振幅 / 实体) 均值。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor intraday_battle_intensity --pool hs300",
-      "ic_mean": -0.0022562223889260485,
-      "ir": -0.04870312641144758,
+      "ic_mean": -0.00036871393047239505,
+      "ir": -0.0058566312205867435,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4697351828499369,
+      "ic_win_rate": 0.4943253467843632,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4845,8 +5010,10 @@
         "fcode": "f0056a",
         "factor_impl": "intraday_battle_intensity",
         "display_name": "日内博弈激烈度（f0056a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4869,6 +5036,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -4919,12 +5087,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "超跌反弹分：z(60日最大回撤深度) × z(5日反弹幅度)。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor oversold_rebound_score --pool hs300",
-      "ic_mean": 0.00211889970577218,
-      "ir": 0.03731923428815175,
+      "ic_mean": -0.0005510770497569821,
+      "ir": -0.00798600468659533,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5057471264367817,
+      "ic_win_rate": 0.4731800766283525,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -4934,8 +5102,10 @@
         "fcode": "f0057a",
         "factor_impl": "oversold_rebound_score",
         "display_name": "超跌反弹分（f0057a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -4958,6 +5128,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5008,12 +5179,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "beta×q 交互项：60 日市场 beta × 20 日换手率变异系数。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor beta_qvol_interact --pool hs300",
-      "ic_mean": -0.011509519763058612,
-      "ir": -0.11426334497752168,
+      "ic_mean": -0.009306770243154381,
+      "ir": -0.09016769419256207,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.4351437699680511,
+      "ic_win_rate": 0.45111821086261983,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -5023,8 +5194,10 @@
         "fcode": "f0058a",
         "factor_impl": "beta_qvol_interact",
         "display_name": "beta量波动交互（f0058a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5047,7 +5220,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -5097,12 +5271,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "组内换手异常超出幅度：max(turnover − 组内80%分位, 0) 的 21 日均值。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor turnover_excess_group --pool hs300",
-      "ic_mean": -0.015361663301430269,
-      "ir": -0.1802705046990771,
+      "ic_mean": -0.01034852472882637,
+      "ir": -0.11173702107574948,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.42992424242424243,
+      "ic_win_rate": 0.4412878787878788,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -5112,8 +5286,10 @@
         "fcode": "f0059a",
         "factor_impl": "turnover_excess_group",
         "display_name": "组内换手异常超出幅度（f0059a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5136,6 +5312,7 @@
             "gate_7_2_verdict": "gray"
           }
         ],
+        "gate_7_2_at_reference_pool": "gray",
         "gate_7_2_at_home_pool": "gray",
         "gate_7_2_rule": {
           "valid": [
@@ -5186,12 +5363,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "roe | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor roe --pool hs300",
-      "ic_mean": 0.004416020266642883,
-      "ir": 0.05023519295113236,
+      "ic_mean": 0.003936608319062999,
+      "ir": 0.04331632822567073,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5193650793650794,
+      "ic_win_rate": 0.5137029955385596,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -5201,8 +5378,10 @@
         "fcode": "f0060a",
         "factor_impl": "roe",
         "display_name": "ROE（f0060a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5225,6 +5404,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5275,12 +5455,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "roa | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor roa --pool hs300",
-      "ic_mean": 0.0053910822750748546,
-      "ir": 0.060825305777409654,
+      "ic_mean": 0.005045128482567999,
+      "ir": 0.056383774105200575,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5238095238095238,
+      "ic_win_rate": 0.5219885277246654,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -5290,8 +5470,10 @@
         "fcode": "f0061a",
         "factor_impl": "roa",
         "display_name": "ROA（f0061a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5314,6 +5496,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5380,7 +5563,9 @@
         "factor_impl": "gross_margin",
         "display_name": "毛利率（f0062a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5403,6 +5588,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5469,7 +5655,9 @@
         "factor_impl": "net_margin",
         "display_name": "净利率（f0063a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5492,6 +5680,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5542,12 +5731,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "asset_turnover | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor asset_turnover --pool hs300",
-      "ic_mean": 0.005165446442381473,
-      "ir": 0.05888787290951809,
+      "ic_mean": 0.004310158367807313,
+      "ir": 0.04783191343745253,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5263492063492063,
+      "ic_win_rate": 0.5245379222434672,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -5557,8 +5746,10 @@
         "fcode": "f0064a",
         "factor_impl": "asset_turnover",
         "display_name": "资产周转率（f0064a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5581,6 +5772,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5647,7 +5839,9 @@
         "factor_impl": "operate_profit_margin",
         "display_name": "营业利润率（f0065a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5670,6 +5864,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5736,7 +5931,9 @@
         "factor_impl": "financial_leverage",
         "display_name": "财务杠杆（f0066a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5759,6 +5956,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5825,7 +6023,9 @@
         "factor_impl": "cash_coverage",
         "display_name": "盈利现金保障（f0067a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5848,6 +6048,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5914,7 +6115,9 @@
         "factor_impl": "accrual",
         "display_name": "应计（f0068a）",
         "home_pool": "hs300",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -5937,6 +6140,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -5987,12 +6191,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "deduct_ratio | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor deduct_ratio --pool hs300",
-      "ic_mean": -0.002938819173204257,
-      "ir": -0.05172175214233733,
+      "ic_mean": -0.0009421606075374163,
+      "ir": -0.013056476278193053,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.48253968253968255,
+      "ic_win_rate": 0.4958572339069471,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6002,8 +6206,10 @@
         "fcode": "f0069a",
         "factor_impl": "deduct_ratio",
         "display_name": "扣非净利占比（f0069a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6026,6 +6232,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -6076,12 +6283,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "ep | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ep --pool hs300",
-      "ic_mean": 0.013896587506626644,
-      "ir": 0.12412989335067762,
+      "ic_mean": 0.008265614212468901,
+      "ir": 0.07322124519481714,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5361216730038023,
+      "ic_win_rate": 0.5178343949044586,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6091,8 +6298,10 @@
         "fcode": "f0070a",
         "factor_impl": "ep",
         "display_name": "EP（f0070a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6115,7 +6324,8 @@
             "gate_7_2_verdict": "gray"
           }
         ],
-        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
             "|IC|>0.03",
@@ -6165,12 +6375,12 @@
       "direction": "unknown",
       "data_source": "baostock/qfq",
       "calc_logic": "revenue_yoy | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor revenue_yoy --pool hs300",
-      "ic_mean": 0.002870019423314525,
-      "ir": 0.035022719781440545,
+      "ic_mean": -0.0009816121666215267,
+      "ir": -0.010881191802746229,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5206611570247934,
+      "ic_win_rate": 0.4945825366475462,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6180,8 +6390,10 @@
         "fcode": "f0071a",
         "factor_impl": "revenue_yoy",
         "display_name": "营收同比（f0071a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6204,6 +6416,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -6254,12 +6467,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "netprofit_yoy | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor netprofit_yoy --pool hs300",
-      "ic_mean": 0.0066133298333614305,
-      "ir": 0.07554801613186671,
+      "ic_mean": 0.004903351989888017,
+      "ir": 0.05371963987405786,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5314285714285715,
+      "ic_win_rate": 0.5175270873167622,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6269,8 +6482,10 @@
         "fcode": "f0072a",
         "factor_impl": "netprofit_yoy",
         "display_name": "净利同比（f0072a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6293,6 +6508,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -6343,12 +6559,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "forecast_yoy | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_yoy --pool hs300",
-      "ic_mean": 0.002836073079018329,
-      "ir": 0.038326253451996896,
+      "ic_mean": 0.0003620783203403516,
+      "ir": 0.004459516335491985,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5190199871050934,
+      "ic_win_rate": 0.494148244473342,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6358,8 +6574,10 @@
         "fcode": "f0073a",
         "factor_impl": "forecast_yoy",
         "display_name": "预告净利同比（f0073a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6382,6 +6600,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -6432,12 +6651,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "forecast_kind | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_kind --pool hs300",
-      "ic_mean": 0.0028263051274556162,
-      "ir": 0.03715751384598027,
+      "ic_mean": 0.002733507340243899,
+      "ir": 0.031745684329099105,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5267569310122502,
+      "ic_win_rate": 0.5208062418725617,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6447,8 +6666,10 @@
         "fcode": "f0074a",
         "factor_impl": "forecast_kind",
         "display_name": "预告类型分档（f0074a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6471,6 +6692,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -6521,12 +6743,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "前瞻 EP：分子（年化预告净利）阶梯、分母（市值）逐日。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_ep --pool hs300",
-      "ic_mean": 0.007028733465292328,
-      "ir": 0.07047623360112035,
+      "ic_mean": 0.003906999079341171,
+      "ir": 0.03493654688847788,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5267569310122502,
+      "ic_win_rate": 0.5195058517555267,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6536,8 +6758,10 @@
         "fcode": "f0075a",
         "factor_impl": "forecast_ep",
         "display_name": "前瞻EP（f0075a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6560,6 +6784,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [
@@ -6610,12 +6835,12 @@
       "direction": "positive",
       "data_source": "baostock/qfq",
       "calc_logic": "SUE = (当季净利 − 去年同季净利) / 过去 8 季该惊喜的标准差。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor sue --pool hs300",
-      "ic_mean": 0.00816506720084577,
-      "ir": 0.11194696453250622,
+      "ic_mean": 0.005502260264551542,
+      "ir": 0.06765784340870636,
       "dsr": 1.0,
       "pbo": null,
       "pbo_computed": false,
-      "ic_win_rate": 0.5598746081504702,
+      "ic_win_rate": 0.5322884012539185,
       "regime_dependency": "unknown",
       "decay_status": "unknown",
       "expiry_date": null,
@@ -6625,8 +6850,10 @@
         "fcode": "f0076a",
         "factor_impl": "sue",
         "display_name": "SUE标准化未预期盈余（f0076a）",
-        "home_pool": "hs800",
-        "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
         "metrics_by_pool": [
           {
             "pool": "hs300",
@@ -6649,6 +6876,7 @@
             "gate_7_2_verdict": "refuted"
           }
         ],
+        "gate_7_2_at_reference_pool": "refuted",
         "gate_7_2_at_home_pool": "refuted",
         "gate_7_2_rule": {
           "valid": [

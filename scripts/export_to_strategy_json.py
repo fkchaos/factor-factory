@@ -132,17 +132,30 @@ def gate_timing_verdict(sharpe: Optional[float]) -> str:
     return "gray"
 
 
-def pick_home_pool(pool_metrics: dict) -> Optional[str]:
-    """主场池 = |ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）。"""
-    best, best_v = None, None
-    for pool, m in pool_metrics.items():
-        icir = (m.get("ic") or {}).get("icir")
-        if icir is None:
-            continue
-        v = abs(float(icir))
-        if best_v is None or v > best_v:
-            best, best_v = pool, v
-    return best
+POOL_SELECTION_WARNING = (
+    "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），"
+    "会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），"
+    "不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。"
+)
+
+
+def pick_reference_pool(pool_metrics: dict, manifest: Optional[dict] = None) -> Optional[str]:
+    """基准池 = manifest 声明的第一个池（可复现、非后视选池）。
+
+    历史坑（2026-09-09 修正）：此处原为「|ICIR| 最大的池 = 主场池」，
+    ——用全样本表现挑池 = 事后诸葛亮，且与 card.md 的「pools[0]」口径打架。
+    现统一为基准池语义：**只做口径锚点，不做最优性声明**。
+    """
+    declared = manifest.get("pools") if manifest else None
+    if not declared:
+        u = (manifest or {}).get("universe")
+        declared = [u] if u else None
+    if declared:
+        for p in declared:
+            if p in pool_metrics:
+                return p
+    # 兜底：manifest 未声明或无对应 metrics → 取池名字典序第一个（仍是确定性、非后视）
+    return sorted(pool_metrics)[0] if pool_metrics else None
 
 
 # ---------------------------------------------------------------------------
@@ -164,7 +177,7 @@ def build_stock_factor(pkg_dir: Path) -> Optional[dict]:
         except Exception:
             continue
 
-    home = pick_home_pool(pool_metrics)
+    home = pick_reference_pool(pool_metrics, manifest)
     home_m = pool_metrics.get(home, {}) if home else {}
     ic_mean = (home_m.get("ic") or {}).get("rank_ic")
     ir = (home_m.get("ic") or {}).get("icir")
@@ -238,10 +251,15 @@ def build_stock_factor(pkg_dir: Path) -> Optional[dict]:
             "fcode": fcode,
             "factor_impl": factor,
             "display_name": title,
+            # 2026-09-09 语义修正：home_pool → 基准池（不再宣称"主场"）。
+            # 旧字段 home_pool/home_pool_rule 保留同名以防破坏已对接的解析，但语义已变。
             "home_pool": home,
-            "home_pool_rule": "|ICIR| 最大的池（判决随池翻转，见对齐文档 §5.3）",
+            "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+            "reference_pool": home,
+            "pool_selection_warning": POOL_SELECTION_WARNING,
             "metrics_by_pool": per_pool,
-            "gate_7_2_at_home_pool": gate_stock_verdict(ic_mean, ir),
+            "gate_7_2_at_reference_pool": gate_stock_verdict(ic_mean, ir),
+            "gate_7_2_at_home_pool": gate_stock_verdict(ic_mean, ir),  # 兼容旧解析，值同上
             "gate_7_2_rule": GATE_STOCK,
             "overfit_audit": audit,
             "neutralization": manifest.get("neutralization"),

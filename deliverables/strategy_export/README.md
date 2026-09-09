@@ -1,6 +1,6 @@
 # 策略组阶段 0 输入包（factor-factory → a-share-quant-sim）
 
-> 生成时间：2026-09-09 17:23｜生成脚本：`scripts/export_to_strategy_json.py`（幂等，可反复重跑）
+> 生成时间：2026-09-09 17:40｜生成脚本：`scripts/export_to_strategy_json.py`（幂等，可反复重跑）
 > 对齐依据：`docs/REQUIREMENTS_ALIGNMENT-2026-08-07.md` v2 §3 / §5.1 / §5.2 / §6
 
 ## 文件
