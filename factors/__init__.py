@@ -63,3 +63,4 @@ from . import oversold_rebound_score  # noqa: F401  （f0057a 超跌反弹分）
 from . import beta_qvol_interact  # noqa: F401  （f0058a beta×量波动交互）
 from . import turnover_excess_group  # noqa: F401  （f0059a 组内换手异常超出幅度）
 from . import fundamentals  # noqa: F401  （f0060a-f0072a 财报扩面 13 因子，Phase 0）
+from . import forecast  # noqa: F401  （f0073a-f0075a 业绩预告因子，Phase 1）
