@@ -42,6 +42,12 @@
 - `2026-09-09 | factor | f0074a | 预告类型分档（forecast_kind） | deliverables/factors/f0074a/`（hs300 +0.0027 / hs800 +0.0028；预增+3…预减−3 手工分档，无统计依据）
 - `2026-09-09 | factor | f0075a | 前瞻EP（forecast_ep） | deliverables/factors/f0075a/`（hs300 +0.0039 / hs800 +0.0070；⚠️ 与 f0070a 历史EP ρ=**0.81** 高冗余，增量有限）
 
+### 因子（f0077a–f0079a 批量 drain · 2026-09-09 每日推进器）
+> 本轮 drain 3 条 hypothesized（纯价量 DRIF + 财报线 价值B/M + ΔROE）；f0077a DRIF 触发冗余前置闸门（ρ=−0.81↔f0002a），标冗余twin，不计入有效独立计数。
+- `2026-09-09 | factor | f0077a | DRIF收益分布形态（drif） | deliverables/factors/f0077a/`（hs300 RankIC −0.0163 / hs800 −0.0229 ICIR −0.13/−0.18 胜率 43.2%/41.2%；⚠️ 全局矩阵 ρ=**−0.81**↔f0002a(特质波动率) → **冗余twin**，灵感 i20260810-001 改 deferred，card 留作参考，不计入独立有效计数）
+- `2026-09-09 | factor | f0078a | 价值B/M账面市值比（value_bm） | deliverables/factors/f0078a/`（hs300 +0.0074 / hs800 +0.0118 ICIR +0.10 胜率 53.5%；分母 PIT 流通市值与 pit_float_mcap 同口径，补齐池内估值类空白）
+- `2026-09-09 | factor | f0079a | ΔROE盈利加速（delta_roe） | deliverables/factors/f0079a/`（hs800 +0.0118 ICIR +0.11 胜率 54.1%；相邻披露期 ROE 环比，全局最独立因子 mean|ρ|=0.021，质量边际改善增量显著）
+
 ### 信号（s0004x · 信号线自 08-12 后首个新包，第四个正交视角）
 - `2026-09-08 | signal | s0004x | 难做指数Regime（difficulty_regime） | deliverables/signals/s0004x/`
   （hs800 / 2020 起 1597 日；exec_lag=1 钢印；叠加 Sharpe 0.77→0.05 **改善 −0.721**、最大回撤 −27.09%→−35.36% **恶化 8.27pct**、命中率价差 −3.7% → 按策略组 §7.2 判 **refuted**，且是四信号中唯一"收益与回撤两项都变差"的；与 s0001x/s0002x/s0003x 状态一致率 43.5% / 48.9% / 60.8% 均 <85%，视角独立）

@@ -68,3 +68,6 @@ from . import sue  # noqa: F401  （f0076a SUE 标准化未预期盈余，Phase 
 from . import drif  # noqa: F401  （f0077a DRIF 收益分布形态因子）
 from . import value_bm  # noqa: F401  （f0078a 价值 B/M 账面市值比）
 from . import delta_roe  # noqa: F401  （f0079a ΔROE 盈利质量边际改善）
+from . import amount_rank_ma_breakout  # noqa: F401  （f0080a 成交额前分位+均线突破）
+from . import momentum_volume_shrink_pullback  # noqa: F401  （f0081a 动量向上+缩量回调）
+from . import growth_convexity  # noqa: F401  （f0082a 双重增长凸性 营收同比×净利同比）
