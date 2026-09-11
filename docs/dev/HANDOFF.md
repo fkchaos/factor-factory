@@ -8,7 +8,7 @@
 ---
 
 ## 0. 元信息
-- 更新日期：**2026-09-09**（①**Phase 0 财报扩面 13 因子 f0060a–f0072a 全部出包成功**（hs300，IC 0.003–0.008 如实偏弱，EP +0.0083 最优）；②🔴 **修复全局矩阵 `fill_value` 缺陷**——此前 1/3 因子（含 20 个老因子）整行被 NaN 静默吞掉，09-08 那张"59×59/27 对"实为残阵，修正后 72 因子全有效、冗余 **27→37 对**，f0047a↔f0050a 实测 **ρ=−1.00**；③正交性验收通过：财报 vs 价量中位 |ρ|=**0.016**（价量内部基线 0.053）；④财报因子加事件驱动 `compute_panel` 快路径，单因子 **3m44s**（原 >1h）；⑤prewarm 加 stale 列指纹检测；⑥**Phase 1 第一小批：业绩预告 3 因子 f0073a–f0075a 出包**（hs300，IC 0.0004–0.0039 弱；正交性达标中位 |ρ|=0.034，但 f0075a 前瞻EP↔f0070a 历史EP ρ=0.78 冗余）；⑦hs800 财报 prewarm 后台启动中；⑧**hs800 prewarm 完成（ok=500/skip=300/err=0，2h54m）+ 16 因子双池重出包进行中**；⑨**Phase 1 第二小批 SUE f0076a 代码+9 项单测交付（commit 5d2592b），待出包**）
+- 更新日期：**2026-09-11**（①**Phase 0 财报扩面 13 因子 f0060a–f0072a 全部出包成功**（hs300，IC 0.003–0.008 如实偏弱，EP +0.0083 最优）；②🔴 **修复全局矩阵 `fill_value` 缺陷**——此前 1/3 因子（含 20 个老因子）整行被 NaN 静默吞掉，09-08 那张"59×59/27 对"实为残阵，修正后 72 因子全有效、冗余 **27→37 对**，f0047a↔f0050a 实测 **ρ=−1.00**；③正交性验收通过：财报 vs 价量中位 |ρ|=**0.016**（价量内部基线 0.053）；④财报因子加事件驱动 `compute_panel` 快路径，单因子 **3m44s**（原 >1h）；⑤prewarm 加 stale 列指纹检测；⑥**Phase 1 第一小批：业绩预告 3 因子 f0073a–f0075a 出包**（hs300，IC 0.0004–0.0039 弱；正交性达标中位 |ρ|=0.034，但 f0075a 前瞻EP↔f0070a 历史EP ρ=0.78 冗余）；⑦hs800 财报 prewarm 后台启动中；⑧**hs800 prewarm 完成（ok=500/skip=300/err=0，2h54m）+ 16 因子双池重出包进行中**；⑨**Phase 1 第二小批 SUE f0076a 代码+9 项单测交付（commit 5d2592b），待出包**）
 - 上一轮（09-08）：f0056a–f0059a 四包 + s0004x 出包；外部审核三项回应落地（JSON 审计字段提顶层 / 全局相关矩阵 / 推进器冗余闸门）
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
@@ -17,6 +17,20 @@
 
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
+
+### 2026-09-11 晚 21:00 推进器（cron 自动 · f0082a 双重增长凸性出包 + f0083a 市场beta 冗余twin + 双线例行维护）
+
+- 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
+- 步骤0.5 PIT 体检：grep 全仓 factors/*.py & signals/*.py 的 compute 直接读脏 `market_cap` 无新命中。已知 `f0010a`(市值对数) 已是**已交付**因子仍读脏列 → 按规程**不自动重测**，仅确认 `pending_handoff.md` 已于 09-01 登记该 PIT 复查项（无重复登记）；`feature_factory.py:204` 早已改用 `pit_float_mcap`；`growth_convexity`/`beta_market_60d` 均声明"绝不读 market_cap 快照列"。研究中=0（growth_convexity 本轮出包，无残留未交付研究因子含脏读取）。
+- 步骤1 灵感池消费（K=6，实际 drain 2）：09-10 新增 8 条空 note hypothesized 先 triage——其中 1 条可落地（i20260910-003 市场beta/BAB，纯 close 可离线）、其余 7 条诚实标 data_blocked/meta/duplicate（L2 tick / 行业PPI / 分钟级 / autoencoder ML第三腿 / 毛利率与已交付 f0062a 重复）排除出 data-ready 计数；另 1 个研究中因子 `growth_convexity`(f0082a) 出包：
+  - **f0082a 双重增长凸性**（growth_convexity，FundamentalFactorBase：operate_income_yoy × net_profit_parent_yoy，纯 PIT 财报比率乘积，无市值口径问题）→ hs300 RankIC −0.0040 / hs800 −0.0007，信号弱；全局矩阵(83因子)中**未出现在任何 |ρ|≥0.7 配对**，正交性达标，计为独立有效新增。
+  - **f0083a 市场beta/BAB**（beta_market_60d，纯 close 60日市场beta 取负号对齐 BAB 方向）→ hs300 +0.0078 / hs800 +0.0075 ICIR +0.05 胜率 53%；
+  - 2 条灵感(i20260910-002→f0082a / i20260910-003→f0083a)翻 in_pipeline→validated+fcode（f0083a 因冗余回退见下）；hypothesized **19→17**（09-10 新增 8 条后回到 17，含 7 条新标阻塞）。2 包串行（growth_convexity 10m26s 含 PIT 财报拉取 / beta 3m44s panel 缓存命中）全 EXIT=0。
+- **冗余前置闸门命中（本轮关键）**：刷新全局矩阵 `factor_correlation_matrix_20260911.csv`(83×83) + `redundant_pairs_20260911.csv`（含新因子）。f0083a 市场beta ↔ **f0058a beta×量波动交互 ρ=−0.716**（|ρ|≥0.7）→ 标**冗余twin**、灵感 i20260910-003 改 `deferred`、card 保留作参考、**不翻 validated、不计入独立有效计数**。f0082a 最独立，未出现在任何冗余配对。
+- 步骤2/3 自检 skip：P4 矩阵 `ic_matrix_2026-08-24.csv` hs1800 列 2/2 非空跳过；P5 基线 08-17<30天+月报 2026-09 存在跳过（但仍跑 `monthly_review.py report --month 2026-09` EXIT=0 刷新）；P7/f0003a 三包齐跳过；信号注册表 s0001x–s0004x 4 行 current 跳过。
+- 步骤4 看板刷新：因子 已交付=83 / 研究中=3(fcode-less 模块如 feature_factory.py，非待出包) / 灵感池=20(=hypothesized 17+deferred 3) / 已归档=37 / 已拒绝=0；信号 已交付=4（hs1800 1672/1572）。CHANGELOG 补 f0082a(有效)/f0083a(twin)；战略导出 JSON 刷新 83 stock + 4 timing。
+- 步骤7 内联自检 5 项全过：board<24h / 矩阵 hs1800 非空 / 月报 2026-09 存在 / 信号注册表存在 / hypothesized 19→17 下降。
+  - 仍待主理人（勿自行拍板）：f0010a PIT 复查（已交付因子读脏列，按规程不自动改，交人工）、f0083a 市场beta 冗余twin 是否合并/保留作参考、剩余 17 条 hypothesized 数据阻塞项是否接入新源或归档、历史冗余对是否回退/合并、PBO 仍恒 null（真缺口）。
 
 ### 2026-09-09 晚 21:00 推进器（cron 自动 · f0077a–f0079a 三因子 drain + DRIF 冗余twin 闸门命中 + 双线例行维护）
 

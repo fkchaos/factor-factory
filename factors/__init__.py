@@ -71,3 +71,4 @@ from . import delta_roe  # noqa: F401  （f0079a ΔROE 盈利质量边际改善�
 from . import amount_rank_ma_breakout  # noqa: F401  （f0080a 成交额前分位+均线突破）
 from . import momentum_volume_shrink_pullback  # noqa: F401  （f0081a 动量向上+缩量回调）
 from . import growth_convexity  # noqa: F401  （f0082a 双重增长凸性 营收同比×净利同比）
+from . import beta_market_60d  # noqa: F401  （f0083a 市场 beta / BAB 异象）

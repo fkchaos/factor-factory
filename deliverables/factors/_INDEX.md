@@ -79,6 +79,10 @@
 | f0074a | 预告类型分档 | single |  | current | 2026-09-09 |
 | f0075a | 前瞻EP | single |  | current | 2026-09-09 |
 | f0076a | SUE标准化未预期盈余 | single |  | current | 2026-09-09 |
-| f0077a | DRIF收益分布形态 | single |  | current | 2026-09-09 |
+| f0077a | DRIF收益分布形态 | single |  | twin | 2026-09-09 |
 | f0078a | 价值BM账面市值比 | single |  | current | 2026-09-09 |
 | f0079a | ΔROE盈利加速 | single |  | current | 2026-09-09 |
+| f0080a | 成交额前分位+均线突破 | single |  | current | 2026-09-10 |
+| f0081a | 动量向上+缩量回调 | single |  | current | 2026-09-10 |
+| f0082a | 双重增长凸性 | single |  | current | 2026-09-11 |
+| f0083a | 市场beta/BAB | single |  | current | 2026-09-11 |
