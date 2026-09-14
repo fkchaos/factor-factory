@@ -86,3 +86,6 @@
 | f0081a | 动量向上+缩量回调 | single |  | current | 2026-09-10 |
 | f0082a | 双重增长凸性 | single |  | current | 2026-09-11 |
 | f0083a | 市场beta/BAB | single |  | current | 2026-09-11 |
+| f0084a | 区间嵌套事件频率 | single |  | current | 2026-09-14 |
+| f0086a | 财报更新收益 | single |  | current | 2026-09-14 |
+| f0085a | Amihud跳跃成分占比 | single |  | current | 2026-09-14 |

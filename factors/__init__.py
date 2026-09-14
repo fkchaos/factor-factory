@@ -72,3 +72,6 @@ from . import amount_rank_ma_breakout  # noqa: F401  （f0080a 成交额前分�
 from . import momentum_volume_shrink_pullback  # noqa: F401  （f0081a 动量向上+缩量回调）
 from . import growth_convexity  # noqa: F401  （f0082a 双重增长凸性 营收同比×净利同比）
 from . import beta_market_60d  # noqa: F401  （f0083a 市场 beta / BAB 异象）
+from . import inside_day_freq  # noqa: F401  （f0084a 区间嵌套事件频率，纯 OHLC）
+from . import amihud_jump_share  # noqa: F401  （f0085a Amihud 跳跃成分占比，日度量价）
+from . import cashflow_update  # noqa: F401  （f0086a 财报更新收益，PIT 现金流环比）
