@@ -18,6 +18,17 @@
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
 
+### 2026-09-16 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip + P5 基线超30天重跑 + 双线例行自检全过）
+
+- 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
+- 步骤0.5 PIT 体检：grep 全仓 `factors/*.py` & `signals/*.py` 的 compute 直接读脏 `market_cap` 唯一命中仍为**已交付** `f0010a`（zoo_basics.py:111 size_log_mcap，09-01 已登记 `pending_handoff.md` 无重复登记）；`feature_factory.py:204` 早已改用 `pit_float_mcap`；研究中=0（无未交付研究因子含脏读取）；signals 全 PIT-clean。
+- 步骤1 灵感池消费：**SKIP（K=0 无候选）**。25 条 hypothesized 经核查**全部**为 data_blocked（H股/行业/流动比/R&D/客户集中度/分析师网络/基金持仓/L2 tick/行业PPI/分钟级/IR文本+LLM）/ meta（组合层改进/ML第三腿/exec_lag诊断/隐性动量/regime研究）—无 1 条 data-ready；factors/ 仅 base class 与已交付模块，无真实「研究中待出包单因子」；hypothesized 维持 25。连续五轮（09-12/13/14/15/16）印证「纯面板/PIT 字段已无干净候选」。
+- 步骤2/3 自检：P4 矩阵 `ic_matrix_2026-08-24.csv` hs1800 列 2/2 非空跳过（stale，universe_hint 缺陷待主理人修）；P5 基线 `ic_overnight_intraday_hs800.csv` mtime 08-17 已**超 30 天** → 重跑 `monthly_review.py baseline --pool hs800 --start 2020-01-01`（venv python，~13min，EXIT=0，CSV 21:13 刷新 1596 行日度 IC）+ 月报 `research/monthly/2026-09.md` 重跑 `monthly_review.py report --month 2026-09` EXIT=0 刷新（21:36）；P7/f0003a 三包齐跳过；信号注册表 `s0001x`–`s0004x` 4 行 current 跳过。
+  - ⚠️ 备注：P5 baseline 进程写完 CSV(21:13) 后 TaskOutput 仍报 running（且无 python.exe 进程残留），疑 baseline 后处理挂起或 shell wrapper 残留；CSV 与月报均已有效落盘，不影响交付物。
+- 步骤4 看板刷新：因子 已交付=86 / 研究中=3(fcode-less 模块) / 灵感池=28(=hypothesized 25+deferred 3) / 已归档=37 / 已拒绝=0；信号 已交付=4（hs800 1672/1572）。CHANGELOG 96 项（本轮无新因子，未插入）。
+- 步骤7 内联自检 5 项全过：board<24h / 矩阵 hs1800 非空 / 月报 2026-09 存在(本轮回刷新) / 信号注册表存在 / 步骤1 跳过(满足"本步跳过"条件)。
+  - 仍待主理人（勿自行拍板）：f0010a PIT 复查（已交付读脏列，交人工）、25 条 hypothesized 数据阻塞项是否接入新源/归档、全局冗余矩阵 `factor_correlation_matrix_*.csv` 仍停 09-09（79×79，未含 f0080–f0086 共 7 因子，冗余前置闸门未覆盖，建议刷新纳入）、历史冗余对是否回退/合并、PBO 恒 null（真缺口）、P4 矩阵 stale（universe_hint 缺陷待修）。
+
 ### 2026-09-15 晚 21:00 推进器（cron 自动 · 对账轮：backlog 三已交付因子回写 + 八灵感分诊；步骤1 无新出包 + 双线例行自检全过）
 
 - 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
