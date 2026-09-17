@@ -13,10 +13,22 @@
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
 
-## 🆕 最新快照（2026-09-15 · 对账轮：backlog 三已交付因子回写 + 八灵感分诊；步骤1 无新出包 + 双线例行自检全过）
+## 🆕 最新快照（2026-09-17 · f0087a drain 触发冗余前置闸门↔f0035a(ρ=0.858)标twin + 11新灵感分诊 + 全局矩阵补 f0080–f0087 + 双线例行自检全过）
 
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
+
+### 2026-09-17 晚 21:00 推进器（cron 自动 · f0087a 第二阶段突破 drain + 触发冗余前置闸门↔f0035a(ρ=0.858)标twin + 11新灵感分诊 + 全局矩阵补 f0080–f0087 + 双线例行自检全过）
+
+- 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
+- 步骤0.5 PIT 体检：grep 全仓 `factors/*.py` & `signals/*.py` 的 compute 直接读脏 `market_cap` 唯一命中仍为**已交付** `f0010a`（zoo_basics.py:111 size_log_mcap，09-01 已登记 `pending_handoff.md` 无重复登记）；`feature_factory.py:204` 早已改用 `pit_float_mcap`；研究中=0（无未交付研究因子含脏读取）；signals 全 PIT-clean。
+- 步骤1 灵感池消费：**drain 1 候选（i20260917-011 第二阶段突破强度，纯 close）→ 出包 f0087a，触发冗余前置闸门**。`factor_correlation_matrix.py` 刷新全局矩阵（87×87，纳入此前停滞缺失的 f0080–f0087）后检出 `f0087a ↔ f0035a`(12-1动量) **ρ=+0.858**（|ρ|≥0.7）→ 标 **twin**（registry status=twin、note 冗余twin@f0035a(ρ=0.858)），灵感 i20260917-011 翻 `deferred`（note 冗余twin@f0035a|ρ=0.858），card 保留作参考，**不计入独立有效计数**。RPS250百分位+偏离200日均线+偏离52周低点本质即动量代理，与12-1动量高度同源，冗余闸门价值再获验证。
+  - 11 条新空 note 灵感（i20260917-001~011，侦察兵13期供给）逐条核查：10 条诚实标 `data_blocked`/meta（叙事暴露度·概念覆盖度·披露漂移·网络文本·委买L2·羊群L2·预期偏度需行业·强势资金·筹码抛压 均缺面板数据；ADD 属多异象并发度非单因子）→ 排除出 data-ready 计数；仅 i20260917-011 纯价量可离线出包（已 drain）。hypothesized 本轮回 **36→35**（起始36 = 旧25阻塞 + 新11；旧25仍全阻塞/meta，新10标阻塞、1标twin-deferred）。
+- 步骤2/3 自检：P4 矩阵 `ic_matrix_2026-08-24.csv` hs1800 列 2/2 非空跳过（stale，universe_hint 缺陷待主理人修）；P5 基线 `ic_overnight_intraday_hs800.csv` mtime 09-16(<30天) → 跳过 baseline，仅重跑 `monthly_review.py report --month 2026-09` EXIT=0 刷新月报；P7/f0003a 三包齐跳过；信号注册表 `s0001x`–`s0004x` 4 行 current 跳过。
+- 步骤4 看板刷新：因子 已交付=87(含 f0087a twin) / 研究中=3 / 灵感池=39 / 已归档=37 / 已拒绝=0；信号 已交付=4。CHANGELOG [Unreleased] 追加 f0087a(twin) 段。
+- 步骤6c CHANGELOG：追加 `2026-09-17 | factor | f0087a | 第二阶段突破强度（stage2_breakout）| deliverables/factors/f0087a/`（twin）。
+- 步骤7 内联自检 5 项全过：board<24h / 矩阵 hs1800 非空 / 月报 2026-09 存在(本轮回刷新) / 信号注册表存在 / 步骤1 已出包(本轮回 drain 1 候选，hypothesized 36→35 下降满足条件)。
+  - 仍待主理人（勿自行拍板）：f0010a PIT 复查（已交付读脏列，交人工）、10 条 i20260917 新灵感 data_blocked 是否接入新源/归档、⚠ **全局冗余矩阵本次已刷新为 87×87 纳入 f0080–f0087**（此前 09-09 停滞缺口已补）、历史冗余对（含 f0047a↔f0050a ρ=−1.00）是否回退/合并、PBO 仍恒 null（真缺口）、P4 矩阵 stale（universe_hint 缺陷待修）、f0087a 冗余twin 是否合并/保留作参考。
 
 ### 2026-09-16 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip + P5 基线超30天重跑 + 双线例行自检全过）
 
@@ -44,6 +56,11 @@
 
 - 灵感池 + 侦察兵：现 **28 条候选**（hypothesized 28，含本周新增 11；deferred 3 单列不计入；容量护栏 28<60 未触发跳过）。
 - 本周侦察兵新增 11 条灵感（来源分布：sell_side 5 / paper 3 / forum 2 / zoo 1），编号 i20260914-001~011，全 hypothesized：高频资金流分布 SIGN-kurt/std（开源金工）、IR问答经营验证文本（国联民生）、价格重叠率区间嵌套转折（Liu SSRN）、行业量能放大反向 / 行业量价背离（雪球实证）、散户占比RTP反向 / 综合筹码得分（UBS）、更新收益因子（Bowles SSRN）、IlliQaR跳跃成分（arXiv）、交叉动量供应链溢出（AQR）。
+
+### 2026-09-17 侦察兵（factor-scout 自动化 · 第13期供给）
+
+- 灵感池 + 侦察兵：现 **36 条候选**（hypothesized 36；容量护栏 36<60 未触发跳过）。
+- 本周侦察兵新增 11 条灵感（来源分布：paper 4 / sell_side 2 / zoo 2 / forum 3），编号 i20260917-001~011，全 hypothesized：叙事暴露度（Reese SSRN）、A股概念数量溢价（Yin&Liu SSRN）、披露漂移评分（Rigel SSRN）、供应链文本信号传播（Yılkı arXiv）、委托挂单手数微观结构（国海金工）、主笔羊群效应（国盛金工）、异象并发需求压力ADD（Posselt&Kjær）、预期偏度管理（Gong et al. Alpha Architect）、雪球强势资金多条件打分、雪球筹码分布抛压、第二阶段主升浪突破（陶博士）。
 
 ### 2026-09-13 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip + 双线例行自检全过）
 
