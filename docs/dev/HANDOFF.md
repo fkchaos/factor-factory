@@ -13,10 +13,21 @@
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
 
-## 🆕 最新快照（2026-09-22 · 常规维护轮：步骤1 无干净候选 skip(K=0) + 45条灵感全阻塞分诊 + PIT体检零新脏读 + P5月报刷新 + 双线例行自检全过）
+## 🆕 最新快照（2026-09-23 · 常规维护轮：步骤1 无干净候选 skip(K=0) + 45条灵感全阻塞分诊 + PIT体检零新脏读 + P5月报刷新 + 双线例行自检全过）
 
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
+
+### 2026-09-23 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip(K=0) + 45条灵感全阻塞分诊 + PIT体检零新脏读 + P5月报刷新 + 双线例行自检全过）
+
+- 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
+- 步骤0.5 PIT 体检：脚本精确定位全仓 `factors/*.py` & `signals/*.py` compute 真实读脏 `market_cap` 的代码行——唯一命中仍为**已交付** `f0010a`（`zoo_basics.py:111` `mcap = day["market_cap"]`，size_log_mcap，09-01 已登记 `.cache/pending_handoff.md` 无重复登记）；`feature_factory.py` 已改用 `pit_float_mcap`（:23 import + :205 注释）；其余 grep 命中均为注释「不读 market_cap 快照列」；`signals/` 全 PIT-clean；研究中待出包单因子=0（factors/ 87 模块 fcode 全部已入 registry 87 目录）→ 零新脏读、零新 PIT 重测。
+- 步骤1 灵感池消费：**SKIP（K=0 无干净候选出包）**。45 条 `hypothesized` 经脚本逐条分诊（note 关键词扫描 + fcode 比对）：**全部**为 data_blocked/meta/同质化，0 条 data-ready；factors/ 无研究中待出包单因子。连续第十一轮（09-12/13/14/15/16/18/19/20/21/22/23，除 09-17 活跃 drain）印证「纯面板/PIT 字段已无干净候选」。
+- 步骤2/3 自检 skip：P4 矩阵 `ic_matrix_2026-08-24.csv` hs1800 列 2/2 非空跳过（stale，universe_hint 缺陷待主理人修）；P5 基线 `ic_overnight_intraday_hs800.csv` mtime 09-16(<30天) → 跳过 baseline，仅重跑 `monthly_review.py report --month 2026-09` EXIT=0 刷新月报；P7/f0003a 三包齐跳过；信号注册表 `s0001x`–`s0004x` 4 行 current 跳过。
+- 步骤4 看板刷新：因子 已交付=87 / 研究中=3(fcode-less 模块) / 灵感池=49(=hypothesized 45+deferred 4) / 已归档=37 / 已拒绝=0；信号 已交付=4（hs800 1672/1572）。CHANGELOG 97 项（本轮无新因子，未插入）。board mtime 21:04。
+- 步骤6c CHANGELOG：skip（无候选消费）。
+- 步骤7 内联自检 5 项全过：board<24h / 矩阵 hs1800 非空 / 月报 2026-09 存在(本轮回刷新) / 信号注册表存在 / 步骤1 跳过(满足"本步跳过"条件)。未写 health_status.json。
+  - 仍待主理人（勿自行拍板）：f0010a PIT 复查（已交付读脏列，交人工）、45 条 hypothesized 数据阻塞/同质化项是否接入新源/归档、⚠ 全局冗余矩阵 87×87 仍停 09-17（f0087a twin 已纳入，但继 09-09 后交付者需持续纳入刷新）、历史冗余对（含 f0047a↔f0050a ρ=−1.00）是否回退/合并、PBO 恒 null（真缺口）、P4 矩阵 stale（universe_hint 缺陷待修）。
 
 ### 2026-09-22 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip(K=0) + 45条灵感全阻塞分诊 + PIT体检零新脏读 + P5月报刷新 + 双线例行自检全过）
 
