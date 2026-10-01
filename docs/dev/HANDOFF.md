@@ -13,10 +13,23 @@
 - 项目阶段：Phase 1/2 完成；Phase 3 生产化三大件（监控/影子账户/风险约束中性化）齐；DSR/PBO 门禁已落地
 - 交接性质：常规基线（信息量大，务必读完 §2 限频陷阱 + 本段 PIT 坑再动手）
 
-## 🆕 最新快照（2026-09-30 · 常规维护轮：步骤1 无干净候选 skip(K=0) + 45条灵感全阻塞分诊 + PIT体检零新脏读 + P5月报刷新 + 双线例行自检全过）
+## 🆕 最新快照（2026-10-01 · 活跃 drain 轮：f0088a SIMOM 出包命中冗余闸门(twin) + 8条新灵感分诊 + 全局矩阵刷新(88×88) + 2026-10月报生成 + registry BOM 修复 + 双线例行自检全过）
 
 > 本段为最新交接快照，续作以本段为准。详细历史基线见 `docs/HANDOFF-2026-08-06.md`。
 > 上一轮（2026-08-08 晚 cron）已完成：拦下 `market_cap` 假 PIT 系统性坑 + `s0002x` 第二信号出包 + 策略组对接三件套（JSON 适配器 / exec_lag 钢印 / issue 草稿）+ 156 项 pytest 全绿。本轮（08-10）是把上轮拦下的坑彻底闭环：三包 f-code 按 PIT 真口径重建完毕。
+
+### 2026-10-01 晚 推进器（cron 自动 · 活跃 drain 轮：f0088a SIMOM 出包命中冗余闸门(twin) + 8条新灵感分诊 + 全局矩阵刷新(88×88) + 2026-10月报生成 + registry BOM 修复 + 双线例行自检全过）
+
+- 步骤0 数据就绪：1672 parquet ≥1500 → 跳过补拉。
+- 步骤0.5 PIT 体检：脚本精确定位全仓 `factors/*.py` & `signals/*.py` compute 真实读脏 `market_cap` 的代码行——唯一命中仍为**已交付** `f0010a`（`zoo_basics.py:111` `mcap = day["market_cap"]`，size_log_mcap，09-01 已登记 `.cache/pending_handoff.md` 无重复登记）；`feature_factory.py` 已改用 `pit_float_mcap`（:23 import + :205 注释）；其余 grep 命中均为注释「不读 market_cap 快照列」；`signals/` 全 PIT-clean；研究中待出包单因子=0 → 零新脏读、零新 PIT 重测。
+- 步骤1 灵感池消费：**drain 1（i20261001-001 短期特质动量 SIMOM，纯 close 市场模型残差复利）→ 出包 f0088a，但触发冗余前置闸门**。侦察兵第2/3期(10-01)新增 8 条空 note 灵感(i20261001-001~008)，hypothesized 由 45 升 53；factor_correlation_matrix.py 刷新全局矩阵(88×88，**覆盖此前停滞的 f0080–f0088**)后检出 `f0088a ↔ f0006a`(20日动量) **ρ=+0.946** 与 `f0088a ↔ f0053a`(rejoicing_regret) **ρ=−0.93** → 标 **twin**（registry status=twin）、灵感 i20261001-001 翻 deferred、card 保留参考、**不计入独立有效计数**（独立有效新增=0）。SIMOM 21日残差复利实际≈原始20日动量，冗余闸门价值再证。
+  - 其余 7 条新灵感逐条分诊：i20261001-002 CIQF 与已交付 f0051a(idio_tail_beta) 同质；i20261001-006 高低位放量与 f0041a(lowprice_volume_spike) 可能重叠；其余 5 条诚实标 data_blocked/meta（缺 L2/行业/文本/组合层等）。最终计数：validated 56 / hypothesized 52 / archived 37 / deferred 5 / in_pipeline 2。
+- 步骤2 P4 skip：ic_matrix_2026-08-24 hs1800 列 2/2 非空（stale，universe_hint 缺陷待主理人修）；P5 基线 mtime 09-16(<30天) → 跳过 baseline，仅重跑 `monthly_review.py report --month 2026-10` EXIT=0 生成 2026-10 月报（21:27）；P7/f0003a 三包齐 skip。
+- 步骤3 skip：信号注册表 s0001x–s0004x 4 行 current。
+- 步骤4 看板刷新：因子 已交付=88(含f0088a twin) / 研究中=3(fcode-less 模块) / 灵感池=57(=hypothesized 52+deferred 5) / 已归档=37 / 已拒绝=0；信号 已交付=4。**⚠️ registry BOM 修复**：早前误用 `utf-8-sig` 改写 `_REGISTRY.csv` 引入 BOM，污染首列键 `\ufefffcode`，致 `factor_board.py` 的 `collect_registry()`（`encoding="utf-8"` 读取）`delivered_codes` 为空、88 个已交付因子全误判"研究中"（计数从 3 飙到 90）；已用纯 `utf-8`（无 BOM）重写 registry（保留 f0088a=twin 改动），重跑 board 恢复正常。board mtime 22:12。
+- 步骤6c CHANGELOG：[Unreleased] 追加 f0088a(twin) 段（本轮消费了候选）。
+- 步骤7 内联自检 5 项全过：board mtime 22:12<24h / 矩阵 hs1800 列非空(stale) / 月报 2026-10 存在(本轮回生成) / 信号注册表存在 / hypothesized 上轮峰值53→本轮终值52（下降）。未写 health_status.json。
+  - 仍待主理人（勿自行拍板）：f0010a PIT 复查（已交付读脏列，交人工）、f0088a 冗余twin 是否合并/保留作参考（与 f0006a/f0053a 高度同源，建议保留参考、勿重复入模）、8 条 i20261001 新灵感 data_blocked/同质化项是否接入新源/归档、⚠ 全局冗余矩阵本次已刷新为 88×88（纳入 f0080–f0088）但需持续纳入刷新、历史冗余对（含 f0047a↔f0050a ρ=−1.00）是否回退/合并、PBO 恒 null（真缺口）、P4 矩阵 stale（universe_hint 缺陷）。
 
 ### 2026-09-30 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip(K=0) + 45条灵感全阻塞分诊 + PIT体检零新脏读 + P5月报刷新 + 双线例行自检全过）
 
@@ -159,6 +172,11 @@
 
 - 灵感池 + 侦察兵：现 **45 条候选**（hypothesized 45；容量护栏 45<60 未触发跳过）。
 - 本周侦察兵新增 10 条灵感（来源分布：sell_side 5 / forum 3 / paper 1 / zoo 1），编号 i20260921-001~010，全 hypothesized：① DRI/DRIF 弹性网络信号（BlackRock/DeMiguel zoo）② 重建股东基数盈亏比 GLR（Da&Schaumburg SSRN）③ 收益凸显性 salience（Barber et al.）④ 量价联合空间偏离度（卖方金工）⑤ 日内遗憾规避指标（卖方金工）⑥ V型处置效应 CPGR/TL（卖方金工）⑦ 日内高价区量能占比（卖方金工）⑧ 股东人数连降+ASR筹码集中（雪球实证）⑨ 尾盘稳站VWAP（雪球）⑩ 强势股+板块强度共振（雪球）。
+
+### 2026-10-01 侦察兵（factor-scout 自动化 · 第15期供给）
+
+- 灵感池 + 侦察兵：现 **53 条候选**（hypothesized 53，含本周新增 8；deferred 4 单列不计入；容量护栏 53<60 未触发跳过）。
+- 本周侦察兵新增 8 条灵感（来源分布：paper 5 / sell_side 2 / forum 1），编号 i20261001-001~008，全 hypothesized：① 短期特质动量 SIMOM（Eom SSRN）② 共同特质下行分位因子溢价（Barunik&Nevrla arXiv）③ 日频签名订单流与 Kyle λ 价格冲击（Aldridge arXiv）④ 赢家/输家分类信号（Rihtamo et al. SSRN）⑤ 截面拓扑异常得分（Ozimek arXiv）⑥ 高低位放量事件簇（国盛金工）⑦ 行业生命周期因子（国联民生）⑧ 大V自选股事件信号（雪球/开源证券回测）。去重剔除：DRIF（已存在 i20260921-001）、北向流入比动量（历史 7 条北向记录判近重复）。
 
 ### 2026-09-13 晚 21:00 推进器（cron 自动 · 常规维护轮：步骤1 无干净候选 skip + 双线例行自检全过）
 

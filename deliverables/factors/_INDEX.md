@@ -89,4 +89,5 @@
 | f0084a | 区间嵌套事件频率 | single |  | current | 2026-09-14 |
 | f0086a | 财报更新收益 | single |  | current | 2026-09-14 |
 | f0085a | Amihud跳跃成分占比 | single |  | current | 2026-09-14 |
-| f0087a | 第二阶段突破强度 | single |  | current | 2026-09-17 |
+| f0087a | 第二阶段突破强度 | single |  | twin | 2026-09-17 |
+| f0088a | 短期特质动量SIMOM | single |  | current | 2026-10-01 |

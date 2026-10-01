@@ -76,3 +76,4 @@ from . import inside_day_freq  # noqa: F401  （f0084a 区间嵌套事件频率�
 from . import amihud_jump_share  # noqa: F401  （f0085a Amihud 跳跃成分占比，日度量价）
 from . import cashflow_update  # noqa: F401  （f0086a 财报更新收益，PIT 现金流环比）
 from . import stage2_breakout  # noqa: F401  （f0087a 第二阶段突破强度，纯 close 趋势+基底突破）
+from . import simom  # noqa: F401  （f0088a 短期特质动量 SIMOM，纯 close 残差复利）
