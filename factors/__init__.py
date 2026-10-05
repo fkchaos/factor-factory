@@ -77,3 +77,6 @@ from . import amihud_jump_share  # noqa: F401  （f0085a Amihud 跳跃成分占�
 from . import cashflow_update  # noqa: F401  （f0086a 财报更新收益，PIT 现金流环比）
 from . import stage2_breakout  # noqa: F401  （f0087a 第二阶段突破强度，纯 close 趋势+基底突破）
 from . import simom  # noqa: F401  （f0088a 短期特质动量 SIMOM，纯 close 残差复利）
+from . import pos_volume_shock  # noqa: F401  （f0089a 正面成交量冲击，纯量价）
+from . import kline_pattern_composite  # noqa: F401  （f0090a K线形态综合，纯OHLC+量能情绪）
+from . import limitup_gene_pullback  # noqa: F401  （f0091a 涨停基因回踩，纯OHLCV）

@@ -90,4 +90,7 @@
 | f0086a | 财报更新收益 | single |  | current | 2026-09-14 |
 | f0085a | Amihud跳跃成分占比 | single |  | current | 2026-09-14 |
 | f0087a | 第二阶段突破强度 | single |  | twin | 2026-09-17 |
-| f0088a | 短期特质动量SIMOM | single |  | current | 2026-10-01 |
+| f0088a | 短期特质动量SIMOM | single |  | twin | 2026-10-01 |
+| f0089a | 正面成交量冲击 | single |  | current | 2026-10-05 |
+| f0090a | K线形态综合 | single |  | current | 2026-10-05 |
+| f0091a | 涨停基因回踩 | single |  | current | 2026-10-05 |

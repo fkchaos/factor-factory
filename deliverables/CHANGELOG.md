@@ -9,6 +9,11 @@
 
 ## [Unreleased]
 
+### 因子（f0089a/f0090a/f0091a · 2026-10-05 推进器 drain + 冗余前置闸门全过）
+- `2026-10-05 | factor | f0089a | 正面成交量冲击（pos_volume_shock） | deliverables/factors/f0089a/`（hs300 RankIC −0.0048 / hs800 −0.0051 ICIR −0.08~−0.10 胜率 ~46%；纯量价：近20日上涨日异常放量强度；DSR/PBO 审计通过；全局矩阵 91×91 独立无冗余twin（|ρ|<0.7）→ 通过冗余前置闸门，计入独立有效新增）
+- `2026-10-05 | factor | f0090a | K线形态综合（kline_pattern_composite） | deliverables/factors/f0090a/`（hs300 RankIC −0.0018 / hs800 −0.0018 ICIR ≈0 胜率 ~49%；纯OHLC+量能情绪系数：近10日多形态加权分×tanh(量能共振)；DSR/PBO 通过；独立无冗余twin → 通过闸门，计入独立有效新增）
+- `2026-10-05 | factor | f0091a | 涨停基因回踩（limitup_gene_pullback） | deliverables/factors/f0091a/`（hs300 RankIC −0.0073 / hs800 −0.0056 ICIR −0.08~−0.09 胜率 ~46-48%；纯OHLCV：近10日涨停次数×健康回踩条件；DSR/PBO 通过；独立无冗余twin → 通过闸门，计入独立有效新增）
+
 ### ⚠️ 口径变更（2026-09-09 · 影响全部 76 个因子的顶层 IC，下游若已对接请注意）
 
 **「主场池」概念废弃，改为「基准池」。**
