@@ -1,0 +1,21 @@
+[plan] 96 因子 → 16 个并行块 （目标墙钟≈各块 CPU 小时的最大值）
+  sz50: 96 因子
+  hs300: 96 因子
+  zz500: 96 因子
+  hs800-c1: 48 因子
+  hs800-c2: 48 因子
+  zz1000-c1: 48 因子
+  zz1000-c2: 48 因子
+  hs1800-c1: 32 因子
+  hs1800-c2: 32 因子
+  hs1800-c3: 32 因子
+  ALL-c1: 16 因子
+  ALL-c2: 16 因子
+  ALL-c3: 16 因子
+  ALL-c4: 16 因子
+  ALL-c5: 16 因子
+  ALL-c6: 16 因子
+
+[run] 已启动 16 个子进程，日志 deliverables/universe_matrix/_p4_<tag>.log
+  [done] sz50 exit=1
+  [done] hs300 exit=1
