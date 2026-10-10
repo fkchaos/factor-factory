@@ -514,6 +514,13 @@ class AkShareProvider:
         "total_equity": "TOTAL_EQUITY",
         "parent_equity": "TOTAL_PARENT_EQUITY",
         "ocf": "NETCASH_OPERATE",
+        # --- Phase A 数据源扩展（2026-10-10）：研发支出 ---
+        # 🔴 实测可用性（详见 docs/dev/PLAN_PHASE_A_DATA.md §0.2）：
+        #   茅台 1.15e8 / 宁德 1.14e10 / 中芯 2.73e9 —— 非金融股普遍有值。
+        #   金融股（银行/保险）天然 NaN 属行业特性（不列研发费用），非数据缺陷，不填充。
+        #   注意：baostock 免费接口无研发字段，本字段**只能由 AkShare 东财提供**，
+        #   故 PitFinancialsService 必须保留 AkShare 后端（不能整体切到 baostock）。
+        "rd_expense": "RESEARCH_EXPENSE",
     }
     # AkShare 东财明细表缺失、只能返回 NaN 的字段（明确登记，防误用/防伪造）
     _PIT_FIELD_UNAVAILABLE = frozenset()
@@ -546,6 +553,8 @@ class AkShareProvider:
         "INVENTORY", "ACCOUNTS_RECE",
         "TOTAL_ASSETS", "TOTAL_EQUITY", "TOTAL_PARENT_EQUITY",
         "NETCASH_OPERATE",
+        # Phase A（2026-10-10）：研发支出（利润表流，东财 RESEARCH_EXPENSE）
+        "RESEARCH_EXPENSE",
     ]
 
     def _fetch_financial_history(self, code: str) -> pd.DataFrame:
@@ -593,6 +602,8 @@ class AkShareProvider:
                 rec["BASIC_EPS"] = self._ak_float(getattr(r, "BASIC_EPS", np.nan))
                 rec["OPERATE_INCOME_YOY"] = self._ak_float(getattr(r, "OPERATE_INCOME_YOY", np.nan))
                 rec["PARENT_NETPROFIT_YOY"] = self._ak_float(getattr(r, "PARENT_NETPROFIT_YOY", np.nan))
+                # Phase A：研发支出（缺失须 NaN，非 0 —— 金融股天然无研发）
+                rec["RESEARCH_EXPENSE"] = self._ak_float(getattr(r, "RESEARCH_EXPENSE", np.nan))
                 profit_recs.append(rec)
         except Exception as e:
             print(f"[warn] AkShare 利润表拉取失败 {code}: {e}", flush=True)
@@ -1137,60 +1148,126 @@ class BaoStockProvider:
         "net_profit": "netProfit",
         "total_assets": "performanceExpressTotalAsset",
         "net_assets": "performanceExpressNetAsset",
+        # --- Phase A 数据源扩展（2026-10-10）：偿债能力 / 杠杆比率 ---
+        # 来源 baostock query_balance_data（按 (年,季) 逐期，带 pubDate → PIT 合规）。
+        # 🔴 为什么取现成比率而不是自算：AkShare 东财 by_report 的 CURRENT_ASSET_BALANCE /
+        # CURRENT_LIAB_BALANCE 实测**不可用**（茅台恒 0.0、宁德 -1000 哨兵值、银行股 NaN），
+        # 用它自算会造出假因子。baostock 官方口径实测：茅台 5.73/4.45、宁德 1.69/1.47，
+        # 2018-2026 共 34 期零缺失（详见 docs/dev/PLAN_PHASE_A_DATA.md §0.2）。
+        # 金融股 currentRatio/quickRatio/cashRatio 天然 NaN（银行报表无流动/非流动之分），
+        # 属**行业特性**而非数据缺陷 —— 因子侧按 NaN 处理，不填充、不伪造。
+        "current_ratio": "currentRatio",
+        "quick_ratio": "quickRatio",
+        "cash_ratio": "cashRatio",
+        "liability_yoy": "YOYLiability",
+        "liability_to_asset": "liabilityToAsset",
+        "asset_to_equity": "assetToEquity",
     }
     # baostock 免费接口缺失、只能返回 NaN 的字段（明确登记，防误用/防伪造）
     _PIT_FIELD_UNAVAILABLE = frozenset({"cogs", "inventory", "accounts_receivable"})
+
+    # Phase A（2026-10-10）：落地到 .parquet 缓存的列全集（规范名经 _PIT_FIELD_MAP 映射）。
+    # 🔴 缓存列指纹（与 AkShare 同款坑）：新增字段后旧缓存缺列会**静默返回 NaN**
+    # （见 MEMORY 记的 PIT 市值缓存陷阱）。读取时校验列全集，缺列即视为失效、重拉。
+    _PIT_CACHE_COLS = [
+        "statDate", "pubDate",
+        "MBRevenue", "netProfit",
+        "performanceExpressTotalAsset", "performanceExpressNetAsset",
+        # Phase A：balance_data 流（偿债能力 / 杠杆比率）
+        "currentRatio", "quickRatio", "cashRatio",
+        "YOYLiability", "liabilityToAsset", "assetToEquity",
+    ]
 
     def _fetch_financial_history(self, code: str) -> pd.DataFrame:
         """拉取单票全部财报披露历史，返回长表（已缓存 .cache/baostock/financial/{code}.parquet）。
 
         列：statDate(报告期) / pubDate(公告日，PIT 对齐的唯一依据) / 各可用原始字段。
-        每个 (年,季) 调一次 profit_data（取 营业收入/净利润）；业绩快报一次拉全（取 总资产/净资产）。
-        balance_data / cash_flow_data 仅含比率、无可用行项目，跳过以省调用。
-        单票首跑约 (当前年-_pit_start_year+1)×4 + 1 次调用，落缓存后零网络。
+
+        三条独立披露流，各自仅带部分字段，按 (statDate,pubDate) 纵向拼接后交给
+        ``_pit_select_snapshot`` 做**字段独立取数**（互补不覆盖）：
+          1. ``profit_data``        （按 (年,季) 逐期）→ 营业收入 / 净利润
+          2. ``balance_data``       （按 (年,季) 逐期）→ 流动/速动/现金比率 + 杠杆比率
+          3. ``performance_express``（区间一次拉全）→ 总资产 / 净资产（仅业绩快报）
+
+        🔴 修正（2026-10-10）：旧注释称「balance_data 仅含比率、无可用行项目，跳过以省调用」
+        —— 对**行项目**（如流动资产原值）成立，但**比率本身正是所需字段**，故改为纳入。
+        单票首跑约 (当前年-_pit_start_year+1)×4×2 + 1 次调用，落缓存后零网络。
         """
         key = self._fin_cache / f"{code}.parquet"
         if key.exists():
-            return pd.read_parquet(key)
+            try:
+                cached = pd.read_parquet(key)
+                if all(c in cached.columns for c in self._PIT_CACHE_COLS):
+                    return cached
+                print(f"[info] baostock 财报缓存列不全，失效重拉 {code}", flush=True)
+            except Exception:
+                pass
         bs_code = self._to_bs_code(code)
         bs = self._get_bs()
         this_year = pd.Timestamp.now().year
-        recs = []
-        # 利润表指标（营业收入/净利润），按 (年,季) 逐期
+        cols = list(self._PIT_CACHE_COLS)
+
+        def blank():
+            return {c: np.nan for c in cols}
+
+        # 🔴 三条流**分别**收集、分别去重，最后才 concat（与 AkShareProvider 同构）。
+        # 绝不能把所有 rec 混在一起做 drop_duplicates(["statDate","pubDate"])：
+        # 利润表与资产负债表对同一报告期的 pubDate **完全相同**，跨流去重会
+        # keep="last" 保留后加入的 balance 行，把 profit 行**整条干掉**
+        # → MBRevenue/netProfit 静默全 NaN（2026-10-10 实测踩过：33 行 = 22 balance + 11 快报）。
+        # 字段独立取数（_pit_select_snapshot_dated）本就要求各流行都保留、互补不覆盖。
+        profit_recs, balance_recs, express_recs = [], [], []
         for yr in range(self._pit_start_year, this_year + 1):
             for q in (1, 2, 3, 4):
                 rs = self._call(bs.query_profit_data, bs_code, str(yr), str(q))
                 for r in self._collect_rows(rs):
-                    recs.append({
-                        "statDate": r.get("statDate"),
-                        "pubDate": r.get("pubDate"),
-                        "MBRevenue": self._safe_float(r.get("MBRevenue")),
-                        "netProfit": self._safe_float(r.get("netProfit")),
-                        "performanceExpressTotalAsset": np.nan,
-                        "performanceExpressNetAsset": np.nan,
-                    })
-        # 业绩快报（总资产/净资产），按日期区间一次拉全
+                    rec = blank()
+                    rec["statDate"] = r.get("statDate")
+                    rec["pubDate"] = r.get("pubDate")
+                    rec["MBRevenue"] = self._safe_float(r.get("MBRevenue"), np.nan)
+                    rec["netProfit"] = self._safe_float(r.get("netProfit"), np.nan)
+                    profit_recs.append(rec)
+                rs = self._call(bs.query_balance_data, bs_code, str(yr), str(q))
+                for r in self._collect_rows(rs):
+                    rec = blank()
+                    rec["statDate"] = r.get("statDate")
+                    rec["pubDate"] = r.get("pubDate")
+                    rec["currentRatio"] = self._safe_float(r.get("currentRatio"), np.nan)
+                    rec["quickRatio"] = self._safe_float(r.get("quickRatio"), np.nan)
+                    rec["cashRatio"] = self._safe_float(r.get("cashRatio"), np.nan)
+                    rec["YOYLiability"] = self._safe_float(r.get("YOYLiability"), np.nan)
+                    rec["liabilityToAsset"] = self._safe_float(r.get("liabilityToAsset"), np.nan)
+                    rec["assetToEquity"] = self._safe_float(r.get("assetToEquity"), np.nan)
+                    balance_recs.append(rec)
+        # 流 3：业绩快报（总资产/净资产），按日期区间一次拉全
         rs = self._call(bs.query_performance_express_report, bs_code,
                         f"{self._pit_start_year}-01-01", "2099-12-31")
         for r in self._collect_rows(rs):
-            recs.append({
-                "statDate": r.get("performanceExpStatDate"),
-                "pubDate": r.get("performanceExpPubDate"),
-                "MBRevenue": np.nan,
-                "netProfit": np.nan,
-                "performanceExpressTotalAsset": self._safe_float(r.get("performanceExpressTotalAsset")),
-                "performanceExpressNetAsset": self._safe_float(r.get("performanceExpressNetAsset")),
-            })
-        if not recs:
-            df = pd.DataFrame(columns=["statDate", "pubDate", "MBRevenue", "netProfit",
-                                       "performanceExpressTotalAsset", "performanceExpressNetAsset"])
-        else:
-            df = pd.DataFrame(recs)
-            df["statDate"] = pd.to_datetime(df["statDate"], errors="coerce")
-            df["pubDate"] = pd.to_datetime(df["pubDate"], errors="coerce")
-            # 丢弃无报告期/无公告日的脏行；同 (statDate,pubDate) 去重
-            df = df.dropna(subset=["statDate", "pubDate"]).drop_duplicates(
-                ["statDate", "pubDate"], keep="last").reset_index(drop=True)
+            rec = blank()
+            rec["statDate"] = r.get("performanceExpStatDate")
+            rec["pubDate"] = r.get("performanceExpPubDate")
+            rec["performanceExpressTotalAsset"] = self._safe_float(
+                r.get("performanceExpressTotalAsset"), np.nan)
+            rec["performanceExpressNetAsset"] = self._safe_float(
+                r.get("performanceExpressNetAsset"), np.nan)
+            express_recs.append(rec)
+
+        def _clean(records: list) -> pd.DataFrame:
+            """单条流内部：时间列规范化 + 丢脏行 + **流内**去重（不跨流）。"""
+            d = pd.DataFrame(records, columns=cols)
+            if len(d):
+                d["statDate"] = pd.to_datetime(d["statDate"], errors="coerce")
+                d["pubDate"] = pd.to_datetime(d["pubDate"], errors="coerce")
+                d = (d.dropna(subset=["statDate", "pubDate"])
+                       .drop_duplicates(["statDate", "pubDate"], keep="last"))
+            return d
+
+        parts = [_clean(profit_recs), _clean(balance_recs), _clean(express_recs)]
+        parts = [p for p in parts if len(p)]
+        df = pd.concat(parts, ignore_index=True) if parts else pd.DataFrame(columns=cols)
+        if len(df):
+            df = df.reset_index(drop=True)
+        key.parent.mkdir(parents=True, exist_ok=True)
         df.to_parquet(key)
         return df
 

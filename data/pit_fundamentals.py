@@ -15,8 +15,13 @@
 （provider 内部仍按 .parquet 落盘缓存，断点可续），之后每一个 as_of 只是内存里的
 字段独立选择，O(资产) 极快。
 
-数据源：当前只有 AkShare 东财明细表能返 cogs/inventory/accounts_receivable
-（baostock 免费接口这三字段在 _PIT_FIELD_UNAVAILABLE）。故服务以 AkShareProvider 为后端。
+数据源：**多后端互补**（Phase A 2026-10-10 起）。
+  - AkShare 东财明细表：cogs / inventory / accounts_receivable / **rd_expense**
+    （baostock 免费接口无这些行项目，见其 `_PIT_FIELD_UNAVAILABLE`）。
+  - BaoStock `query_balance_data`：**currentRatio / quickRatio / cashRatio** 等偿债能力
+    与杠杆比率（东财 by_report 的 CURRENT_ASSET_BALANCE / CURRENT_LIAB_BALANCE 实测
+    恒 0 / -1000 哨兵 / NaN，**不可用**，故不自算比率而取 baostock 现成口径）。
+  两者披露流纵向拼接后由 `_pit_select_snapshot_dated` 做字段独立取数（互补不覆盖）。
 """
 from __future__ import annotations
 
@@ -31,25 +36,45 @@ class PitFinancialsService:
     """[资产 × as_of] → PIT 财报截面快照。构建时一次性载入全宇宙披露历史。"""
 
     def __init__(self, provider, assets, fields):
-        self.provider = provider
+        # Phase A（2026-10-10）：支持**多后端**。不同 provider 能提供的财报字段互补：
+        #   AkShare 东财明细表 → cogs / inventory / accounts_receivable / rd_expense
+        #   BaoStock           → currentRatio / quickRatio 等偿债能力比率
+        # （背景与实测见 docs/dev/PLAN_PHASE_A_DATA.md §0.2 / §0.3）
+        self.providers = list(provider) if isinstance(provider, (list, tuple)) else [provider]
+        self.provider = self.providers[0]      # 向后兼容：旧代码按单 provider 取用
         self.fields = list(fields)
-        # AkShare 的字段映射（baostock 这三字段在 _PIT_FIELD_UNAVAILABLE，必须 AkShare）
-        self.field_map = getattr(provider, "_PIT_FIELD_MAP", {})
+        # 字段映射取各后端并集；同名以**先加入者**为准（AkShare 优先，保持历史口径稳定）
+        self.field_map: dict = {}
+        for p in self.providers:
+            for k, v in (getattr(p, "_PIT_FIELD_MAP", {}) or {}).items():
+                self.field_map.setdefault(k, v)
         # 预载每只股票的披露历史（provider 内部按 .parquet 缓存：首次联网、之后磁盘读）
         self._hist: dict[str, pd.DataFrame] = {}
         for a in [normalize_code(a) for a in assets]:
             self._ensure_history(a)
 
     def _ensure_history(self, a: str) -> None:
-        """懒加载单只股票的披露历史；缺失才联网/读盘，失败置空表不拖垮整轮。"""
+        """懒加载单只股票的披露历史（多后端纵向拼接）；失败置空表不拖垮整轮。"""
         a = normalize_code(a)
         if a in self._hist:
             return
-        try:
-            self._hist[a] = self.provider._fetch_financial_history(a)
-        except Exception as e:  # 单票拉取失败不应拖垮整轮
-            print(f"[warn] PIT 历史拉取失败 {a}: {e}", flush=True)
+        frames = []
+        for p in self.providers:
+            try:
+                h = p._fetch_financial_history(a)
+                if h is not None and len(h):
+                    frames.append(h)
+            except Exception as e:  # 单后端/单票拉取失败不应拖垮整轮
+                print(f"[warn] PIT 历史拉取失败 {a} @{type(p).__name__}: {e}", flush=True)
+        if not frames:
             self._hist[a] = pd.DataFrame()
+            return
+        # 🔴 PIT 安全：各后端的历史帧记录的是各自披露流的 (statDate, pubDate)，
+        # 纵向拼接只是把**不同披露流的行**放进同一张表（互补不覆盖）。
+        # 真正的前视过滤发生在 _pit_select_snapshot_dated（pubDate <= as_of +
+        # 字段独立取最新），这里不做任何时间过滤 → 拼接不会引入"未来行"。
+        merged = frames[0] if len(frames) == 1 else pd.concat(frames, ignore_index=True)
+        self._hist[a] = merged.reset_index(drop=True)
 
     def snapshot(self, assets, as_of, with_dates: bool = False):
         """返回 as_of 截面快照。
@@ -142,11 +167,15 @@ _DEFAULT_PIT_FIELDS = [
     "operate_profit", "total_profit", "net_profit", "net_profit_parent",
     "deduct_net_profit", "eps", "operate_income_yoy", "net_profit_parent_yoy",
     "total_assets", "total_equity", "parent_equity", "ocf",
+    # --- Phase A 数据源扩展（2026-10-10）---
+    "rd_expense",                       # AkShare 东财：研发支出（金融股天然 NaN）
+    "current_ratio", "quick_ratio", "cash_ratio",      # BaoStock：偿债能力
+    "liability_to_asset", "asset_to_equity", "liability_yoy",   # BaoStock：杠杆
 ]
 
 
 def default_store(assets=None, fields=None):
-    """返回进程内共享的 PitFinancialsService（懒加载 AkShareProvider）。
+    """返回进程内共享的 PitFinancialsService（**多后端**：AkShare + BaoStock）。
 
     因子 compute 若未从 ctx 拿到注入的 pit_service，走此兜底。第一调用构建并缓存，
     后续复用（披露历史是静态的，不随 as_of 变化，安全）。
@@ -157,7 +186,11 @@ def default_store(assets=None, fields=None):
     """
     global _DEFAULT_STORE
     if _DEFAULT_STORE is None:
-        from data.providers import AkShareProvider
-        ak = AkShareProvider()
-        _DEFAULT_STORE = PitFinancialsService(ak, assets or [], _DEFAULT_PIT_FIELDS)
+        from data.providers import AkShareProvider, BaoStockProvider
+        providers = [AkShareProvider()]
+        try:
+            providers.append(BaoStockProvider())
+        except Exception as e:      # baostock 不可用不应拖垮财报服务整体
+            print(f"[warn] baostock 后端不可用，财报仅走东财: {e}", flush=True)
+        _DEFAULT_STORE = PitFinancialsService(providers, assets or [], _DEFAULT_PIT_FIELDS)
     return _DEFAULT_STORE
