@@ -1,0 +1,15 @@
+{
+  "pool": "hs300",
+  "dsr": 1.0,
+  "pbo": null,
+  "verdict": "PASS",
+  "n_trials": 8,
+  "n_splits": 12,
+  "by_pool": {
+    "hs300": {
+      "dsr": 1.0,
+      "pbo": null,
+      "verdict": "PASS"
+    }
+  }
+}

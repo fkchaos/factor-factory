@@ -167,6 +167,10 @@ def build_stock_factor(pkg_dir: Path) -> Optional[dict]:
     card_path = pkg_dir / "card.md"
     if not manifest or not card_path.exists():
         return None
+    # 🔴 归档因子（status != current）不进入对外发货 JSON，遏制"静默交付缺口"
+    if (manifest.get("status") or "current") != "current":
+        print(f"  [skip] {pkg_dir.name}: status={manifest.get('status')}（已归档，跳过发货）")
+        return None
     card = card_path.read_text(encoding="utf-8")
 
     pool_metrics: dict[str, dict] = {}
@@ -245,6 +249,7 @@ def build_stock_factor(pkg_dir: Path) -> Optional[dict]:
         "decay_status": "unknown",
         "expiry_date": None,
         "source": "external",
+        "status": manifest.get("status", "current"),
         "description": f"{title}｜{logic_one}",
         # ---- 我方增量（不属于对方 schema，独立命名空间避免污染解析）----
         "_factory_extra": {

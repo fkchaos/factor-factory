@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-10 10:19",
+  "generated": "2026-10-10 20:17",
   "source": "external",
   "producer": "factor-factory",
   "factors": [
@@ -20,6 +20,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "隔夜-日内反转（f0001a）｜overnight_intraday",
       "_factory_extra": {
         "fcode": "f0001a",
@@ -172,6 +173,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "特质波动率(低波溢价)（f0002a）｜ivol",
       "_factory_extra": {
         "fcode": "f0002a",
@@ -324,6 +326,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "等权组合(隔夜反转+低波)（f0003a）｜等权组合因子：成分 z-score 后按方向系数等权平均。",
       "_factory_extra": {
         "fcode": "f0003a",
@@ -476,6 +479,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "筹码成本偏离（f0004a）｜chip_cost_distance",
       "_factory_extra": {
         "fcode": "f0004a",
@@ -553,6 +557,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "量能扩张速度（f0005a）｜volume_expansion_speed",
       "_factory_extra": {
         "fcode": "f0005a",
@@ -630,6 +635,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "动量20日（f0006a）｜20 交易日动量（跳过最近 1 日，规避 1 日微观结构污染）。",
       "_factory_extra": {
         "fcode": "f0006a",
@@ -722,6 +728,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "反转5日（f0007a）｜5 交易日短期反转（做空近期赢家）。",
       "_factory_extra": {
         "fcode": "f0007a",
@@ -814,6 +821,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "隔夜跳空缺口（f0008a）｜隔夜跳空因子：open / 前收 - 1。正值=隔夜跳空高开。",
       "_factory_extra": {
         "fcode": "f0008a",
@@ -906,6 +914,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "涨停封板强度（f0009a）｜涨停封板代理：A股 ±10% 限制下的封板强度。",
       "_factory_extra": {
         "fcode": "f0009a",
@@ -998,6 +1007,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "市值对数（f0010a）｜规模因子：log(总市值)。",
       "_factory_extra": {
         "fcode": "f0010a",
@@ -1090,6 +1100,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "120日平均换手率（f0011a）｜avg_turnover_120d",
       "_factory_extra": {
         "fcode": "f0011a",
@@ -1167,6 +1178,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "10日平均换手率（f0012a）｜avg_turnover_10d",
       "_factory_extra": {
         "fcode": "f0012a",
@@ -1244,6 +1256,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "240日平均换手率（f0013a）｜avg_turnover_240d",
       "_factory_extra": {
         "fcode": "f0013a",
@@ -1321,6 +1334,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "存货周转天数（f0014a）｜inventory_turnover_days",
       "_factory_extra": {
         "fcode": "f0014a",
@@ -1398,6 +1412,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "应收账款周转天数（f0015a）｜ar_turnover_days",
       "_factory_extra": {
         "fcode": "f0015a",
@@ -1475,6 +1490,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "20日成交金额标准差（f0016a）｜amount_std_20d",
       "_factory_extra": {
         "fcode": "f0016a",
@@ -1552,6 +1568,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "5日平均换手率（f0017a）｜avg_turnover_5d",
       "_factory_extra": {
         "fcode": "f0017a",
@@ -1629,6 +1646,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "5日EMA（f0018a）｜ema_5d",
       "_factory_extra": {
         "fcode": "f0018a",
@@ -1706,6 +1724,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "10日EMA（f0019a）｜ema_10d",
       "_factory_extra": {
         "fcode": "f0019a",
@@ -1783,6 +1802,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "12日EMA（f0020a）｜ema_12d",
       "_factory_extra": {
         "fcode": "f0020a",
@@ -1860,6 +1880,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "120日EMA（f0021a）｜ema_120d",
       "_factory_extra": {
         "fcode": "f0021a",
@@ -1937,6 +1958,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "5日MA（f0022a）｜ma_5d",
       "_factory_extra": {
         "fcode": "f0022a",
@@ -2014,6 +2036,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "20日成交金额MA（f0023a）｜amount_ma_20d",
       "_factory_extra": {
         "fcode": "f0023a",
@@ -2091,6 +2114,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "20日资金流量（f0024a）｜money_flow_ma_20d",
       "_factory_extra": {
         "fcode": "f0024a",
@@ -2168,6 +2192,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "布林上轨(20日)（f0025a）｜bollinger_upper_20d",
       "_factory_extra": {
         "fcode": "f0025a",
@@ -2245,6 +2270,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "量能扩张速度（f0026a）｜volume_expansion_speed",
       "_factory_extra": {
         "fcode": "f0026a",
@@ -2337,6 +2363,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "近20日已实现偏度（f0027a）｜realized_skew_20d",
       "_factory_extra": {
         "fcode": "f0027a",
@@ -2429,6 +2456,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "长下影线（f0028a）｜lower_shadow",
       "_factory_extra": {
         "fcode": "f0028a",
@@ -2521,6 +2549,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "连涨占比短期反转（f0029a）｜up_run_reversal",
       "_factory_extra": {
         "fcode": "f0029a",
@@ -2613,6 +2642,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "20日成交量变异系数（f0030a）｜volume_cv_20d",
       "_factory_extra": {
         "fcode": "f0030a",
@@ -2705,6 +2735,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "20日Amihud非流动性（f0031a）｜amihud_illiquidity_20d",
       "_factory_extra": {
         "fcode": "f0031a",
@@ -2797,6 +2828,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "波动率扩张速度（f0032a）｜vol_expansion_speed",
       "_factory_extra": {
         "fcode": "f0032a",
@@ -2889,6 +2921,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "流动性改善度（f0033a）｜liquidity_improvement",
       "_factory_extra": {
         "fcode": "f0033a",
@@ -2981,6 +3014,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "触底反弹信号（f0034a）｜bottom_rebound",
       "_factory_extra": {
         "fcode": "f0034a",
@@ -3073,6 +3107,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "12-1动量（f0035a）｜12-1 动量：close[t-21] / close[t-252] - 1。正值 = 过去约 11 个月上涨的票。",
       "_factory_extra": {
         "fcode": "f0035a",
@@ -3165,6 +3200,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "长上影线（f0036a）｜upper_shadow",
       "_factory_extra": {
         "fcode": "f0036a",
@@ -3257,6 +3293,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "收益反向交叉次数（f0037a）｜reverse_cross_60",
       "_factory_extra": {
         "fcode": "f0037a",
@@ -3349,6 +3386,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "趋势平滑度R²（f0038a）｜trend_smoothness_r2",
       "_factory_extra": {
         "fcode": "f0038a",
@@ -3441,6 +3479,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "最大5日涨幅（f0039a）｜max5_return",
       "_factory_extra": {
         "fcode": "f0039a",
@@ -3533,6 +3572,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "最低3日收益（f0040a）｜min3_return",
       "_factory_extra": {
         "fcode": "f0040a",
@@ -3625,6 +3665,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "低位放量事件（f0041a）｜lowprice_volume_spike",
       "_factory_extra": {
         "fcode": "f0041a",
@@ -3717,6 +3758,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "分歧度代理（f0042a）｜dispersion_agent",
       "_factory_extra": {
         "fcode": "f0042a",
@@ -3809,6 +3851,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "特异度占比（f0043a）｜idiosyncratic_share",
       "_factory_extra": {
         "fcode": "f0043a",
@@ -3901,6 +3944,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "隔夜收益占比（f0044a）｜隔夜收益占比：60 日隔夜累计 / 60 日总累计。正值 = 收益靠隔夜跳空。",
       "_factory_extra": {
         "fcode": "f0044a",
@@ -3993,6 +4037,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "隔夜-日内分解（f0045a）｜隔夜-日内分解：20 日隔夜累计 − 20 日日内累计。",
       "_factory_extra": {
         "fcode": "f0045a",
@@ -4085,6 +4130,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "特质波动率比率（f0046a）｜特质波动率比率：20 日特质波动 / 120 日特质波动。",
       "_factory_extra": {
         "fcode": "f0046a",
@@ -4177,6 +4223,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "相对市场收益偏离（f0047a）｜相对市场收益偏离：5 日累计(r_i − r_mkt)。正值 = 持续跑赢。",
       "_factory_extra": {
         "fcode": "f0047a",
@@ -4269,6 +4316,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "隔夜跳空-波动扩张价差（f0048a）｜隔夜跳空-波动扩张价差：z(60日隔夜均值) − z(波动扩张)。",
       "_factory_extra": {
         "fcode": "f0048a",
@@ -4361,6 +4409,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "60日反转（f0049a）｜60 日价格反转：−(close[t]/close[t-60] − 1)。",
       "_factory_extra": {
         "fcode": "f0049a",
@@ -4453,6 +4502,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "非对称5日反转（f0050a）｜非对称 5 日价格反转：−(close[t]/close[t-5] − 1)。",
       "_factory_extra": {
         "fcode": "f0050a",
@@ -4545,6 +4595,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "特质收益下尾beta（f0051a）｜特质收益下尾 beta：个股 idio 对市场-wide 特质下尾变化的 250 日滚动 beta。",
       "_factory_extra": {
         "fcode": "f0051a",
@@ -4637,6 +4688,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "双过滤动量（f0052a）｜双过滤动量：12-1 相对动量，叠加 12 月绝对收益方向门控。",
       "_factory_extra": {
         "fcode": "f0052a",
@@ -4729,6 +4781,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "rejoicing-regret度（f0053a）｜rejoicing-regret 度：上涨日 rejoicing 减下跌日 regret，取负号。",
       "_factory_extra": {
         "fcode": "f0053a",
@@ -4821,6 +4874,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "超额收益信息比率（f0054a）｜超额收益信息比率：市场中性超额收益 60 日均值/标准差。",
       "_factory_extra": {
         "fcode": "f0054a",
@@ -4913,6 +4967,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "量价背离（f0055a）｜量价背离：价格动量 z 减量比 z，取负号。",
       "_factory_extra": {
         "fcode": "f0055a",
@@ -5005,6 +5060,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "日内博弈激烈度（f0056a）｜日内博弈激烈度：近 20 日 (振幅 / 实体) 均值。",
       "_factory_extra": {
         "fcode": "f0056a",
@@ -5097,6 +5153,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "超跌反弹分（f0057a）｜超跌反弹分：z(60日最大回撤深度) × z(5日反弹幅度)。",
       "_factory_extra": {
         "fcode": "f0057a",
@@ -5189,6 +5246,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "beta量波动交互（f0058a）｜beta×q 交互项：60 日市场 beta × 20 日换手率变异系数。",
       "_factory_extra": {
         "fcode": "f0058a",
@@ -5281,6 +5339,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "组内换手异常超出幅度（f0059a）｜组内换手异常超出幅度：max(turnover − 组内80%分位, 0) 的 21 日均值。",
       "_factory_extra": {
         "fcode": "f0059a",
@@ -5373,6 +5432,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "ROE（f0060a）｜roe",
       "_factory_extra": {
         "fcode": "f0060a",
@@ -5465,6 +5525,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "ROA（f0061a）｜roa",
       "_factory_extra": {
         "fcode": "f0061a",
@@ -5557,6 +5618,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "毛利率（f0062a）｜gross_margin",
       "_factory_extra": {
         "fcode": "f0062a",
@@ -5649,6 +5711,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "净利率（f0063a）｜net_margin",
       "_factory_extra": {
         "fcode": "f0063a",
@@ -5741,6 +5804,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "资产周转率（f0064a）｜asset_turnover",
       "_factory_extra": {
         "fcode": "f0064a",
@@ -5833,6 +5897,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "营业利润率（f0065a）｜operate_profit_margin",
       "_factory_extra": {
         "fcode": "f0065a",
@@ -5925,6 +5990,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "财务杠杆（f0066a）｜financial_leverage",
       "_factory_extra": {
         "fcode": "f0066a",
@@ -6017,6 +6083,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "盈利现金保障（f0067a）｜cash_coverage",
       "_factory_extra": {
         "fcode": "f0067a",
@@ -6109,6 +6176,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "应计（f0068a）｜accrual",
       "_factory_extra": {
         "fcode": "f0068a",
@@ -6201,6 +6269,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "扣非净利占比（f0069a）｜deduct_ratio",
       "_factory_extra": {
         "fcode": "f0069a",
@@ -6293,6 +6362,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "EP（f0070a）｜ep",
       "_factory_extra": {
         "fcode": "f0070a",
@@ -6385,6 +6455,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "营收同比（f0071a）｜revenue_yoy",
       "_factory_extra": {
         "fcode": "f0071a",
@@ -6477,6 +6548,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "净利同比（f0072a）｜netprofit_yoy",
       "_factory_extra": {
         "fcode": "f0072a",
@@ -6553,190 +6625,6 @@
       }
     },
     {
-      "name": "f0073a",
-      "type": "stock",
-      "category": "technical",
-      "direction": "positive",
-      "data_source": "baostock/qfq",
-      "calc_logic": "forecast_yoy | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_yoy --pool hs300",
-      "ic_mean": 0.0003620783203403516,
-      "ir": 0.004459516335491985,
-      "dsr": 1.0,
-      "pbo": null,
-      "pbo_computed": false,
-      "ic_win_rate": 0.494148244473342,
-      "regime_dependency": "unknown",
-      "decay_status": "unknown",
-      "expiry_date": null,
-      "source": "external",
-      "description": "预告净利同比（f0073a）｜forecast_yoy",
-      "_factory_extra": {
-        "fcode": "f0073a",
-        "factor_impl": "forecast_yoy",
-        "display_name": "预告净利同比（f0073a）",
-        "home_pool": "hs300",
-        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
-        "reference_pool": "hs300",
-        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
-        "metrics_by_pool": [
-          {
-            "pool": "hs300",
-            "ic_mean": 0.0003620783203403516,
-            "ir": 0.004459516335491985,
-            "ic_win_rate": 0.494148244473342,
-            "n_days": 1538,
-            "sharpe_net": 1.2429687228542772,
-            "max_dd_net": -0.3352089986853435,
-            "gate_7_2_verdict": "refuted"
-          },
-          {
-            "pool": "hs800",
-            "ic_mean": 0.002836073079018329,
-            "ir": 0.038326253451996896,
-            "ic_win_rate": 0.5190199871050934,
-            "n_days": 1551,
-            "sharpe_net": 1.253540490424804,
-            "max_dd_net": -0.32987207138006114,
-            "gate_7_2_verdict": "refuted"
-          }
-        ],
-        "gate_7_2_at_reference_pool": "refuted",
-        "gate_7_2_at_home_pool": "refuted",
-        "gate_7_2_rule": {
-          "valid": [
-            "|IC|>0.03",
-            "|IR|>0.3"
-          ],
-          "refuted": [
-            "|IC|<0.01",
-            "|IR|<0.1"
-          ]
-        },
-        "overfit_audit": {
-          "pool": "hs300",
-          "dsr": 1.0,
-          "pbo": null,
-          "verdict": "PASS",
-          "n_trials": 8,
-          "n_splits": 12,
-          "by_pool": {
-            "hs300": {
-              "dsr": 1.0,
-              "pbo": null,
-              "verdict": "PASS"
-            },
-            "hs800": {
-              "dsr": 1.0,
-              "pbo": null,
-              "verdict": "PASS"
-            }
-          }
-        },
-        "neutralization": "industry+mktcap(PIT: amount/turnover)",
-        "pit_certified": true,
-        "window_start": "2020-01-01",
-        "contract_version": "1",
-        "package_path": "deliverables/factors/f0073a",
-        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_yoy --pool hs300",
-        "todo": [
-          "regime_dependency 待 P0『分 regime IC』补丁量化",
-          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
-        ]
-      }
-    },
-    {
-      "name": "f0074a",
-      "type": "stock",
-      "category": "technical",
-      "direction": "positive",
-      "data_source": "baostock/qfq",
-      "calc_logic": "forecast_kind | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_kind --pool hs300",
-      "ic_mean": 0.002733507340243899,
-      "ir": 0.031745684329099105,
-      "dsr": 1.0,
-      "pbo": null,
-      "pbo_computed": false,
-      "ic_win_rate": 0.5208062418725617,
-      "regime_dependency": "unknown",
-      "decay_status": "unknown",
-      "expiry_date": null,
-      "source": "external",
-      "description": "预告类型分档（f0074a）｜forecast_kind",
-      "_factory_extra": {
-        "fcode": "f0074a",
-        "factor_impl": "forecast_kind",
-        "display_name": "预告类型分档（f0074a）",
-        "home_pool": "hs300",
-        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
-        "reference_pool": "hs300",
-        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
-        "metrics_by_pool": [
-          {
-            "pool": "hs300",
-            "ic_mean": 0.002733507340243899,
-            "ir": 0.031745684329099105,
-            "ic_win_rate": 0.5208062418725617,
-            "n_days": 1538,
-            "sharpe_net": 1.249127790450645,
-            "max_dd_net": -0.264463260202057,
-            "gate_7_2_verdict": "refuted"
-          },
-          {
-            "pool": "hs800",
-            "ic_mean": 0.0028263051274556162,
-            "ir": 0.03715751384598027,
-            "ic_win_rate": 0.5267569310122502,
-            "n_days": 1551,
-            "sharpe_net": 0.9364046625632073,
-            "max_dd_net": -0.2919571197288894,
-            "gate_7_2_verdict": "refuted"
-          }
-        ],
-        "gate_7_2_at_reference_pool": "refuted",
-        "gate_7_2_at_home_pool": "refuted",
-        "gate_7_2_rule": {
-          "valid": [
-            "|IC|>0.03",
-            "|IR|>0.3"
-          ],
-          "refuted": [
-            "|IC|<0.01",
-            "|IR|<0.1"
-          ]
-        },
-        "overfit_audit": {
-          "pool": "hs300",
-          "dsr": 1.0,
-          "pbo": null,
-          "verdict": "PASS",
-          "n_trials": 8,
-          "n_splits": 12,
-          "by_pool": {
-            "hs300": {
-              "dsr": 1.0,
-              "pbo": null,
-              "verdict": "PASS"
-            },
-            "hs800": {
-              "dsr": 1.0,
-              "pbo": null,
-              "verdict": "PASS"
-            }
-          }
-        },
-        "neutralization": "industry+mktcap(PIT: amount/turnover)",
-        "pit_certified": true,
-        "window_start": "2020-01-01",
-        "contract_version": "1",
-        "package_path": "deliverables/factors/f0074a",
-        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor forecast_kind --pool hs300",
-        "todo": [
-          "regime_dependency 待 P0『分 regime IC』补丁量化",
-          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
-        ]
-      }
-    },
-    {
       "name": "f0075a",
       "type": "stock",
       "category": "technical",
@@ -6753,6 +6641,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "前瞻EP（f0075a）｜前瞻 EP：分子（年化预告净利）阶梯、分母（市值）逐日。",
       "_factory_extra": {
         "fcode": "f0075a",
@@ -6845,6 +6734,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "SUE标准化未预期盈余（f0076a）｜SUE = (当季净利 − 去年同季净利) / 过去 8 季该惊喜的标准差。",
       "_factory_extra": {
         "fcode": "f0076a",
@@ -6937,6 +6827,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "DRIF收益分布形态（f0077a）｜drif",
       "_factory_extra": {
         "fcode": "f0077a",
@@ -7029,6 +6920,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "价值BM账面市值比（f0078a）｜value_bm",
       "_factory_extra": {
         "fcode": "f0078a",
@@ -7121,6 +7013,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "ΔROE盈利加速（f0079a）｜delta_roe",
       "_factory_extra": {
         "fcode": "f0079a",
@@ -7213,6 +7106,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "成交额前分位+均线突破（f0080a）｜amount_rank_ma_breakout",
       "_factory_extra": {
         "fcode": "f0080a",
@@ -7305,6 +7199,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "动量向上+缩量回调（f0081a）｜momentum_volume_shrink_pullback",
       "_factory_extra": {
         "fcode": "f0081a",
@@ -7397,6 +7292,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "双重增长凸性（f0082a）｜growth_convexity",
       "_factory_extra": {
         "fcode": "f0082a",
@@ -7489,6 +7385,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "市场beta/BAB（f0083a）｜60 日市场 beta（BAB 方向：取负号）。",
       "_factory_extra": {
         "fcode": "f0083a",
@@ -7581,6 +7478,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "区间嵌套事件频率（f0084a）｜inside_day_freq",
       "_factory_extra": {
         "fcode": "f0084a",
@@ -7673,6 +7571,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "Amihud跳跃成分占比（f0085a）｜amihud_jump_share",
       "_factory_extra": {
         "fcode": "f0085a",
@@ -7765,6 +7664,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "财报更新收益（f0086a）｜cashflow_update",
       "_factory_extra": {
         "fcode": "f0086a",
@@ -7857,6 +7757,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "第二阶段突破强度（f0087a）｜第二阶段突破强度（趋势 + 基底突破复合）。",
       "_factory_extra": {
         "fcode": "f0087a",
@@ -7949,6 +7850,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "短期特质动量SIMOM（f0088a）｜短期特质动量：近 21 日市场模型残差复利。",
       "_factory_extra": {
         "fcode": "f0088a",
@@ -8041,6 +7943,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "正面成交量冲击（f0089a）｜正面成交量冲击：近 20 日上涨日异常放量强度。",
       "_factory_extra": {
         "fcode": "f0089a",
@@ -8133,6 +8036,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "K线形态综合（f0090a）｜K 线形态综合：近 10 日多形态加权分 × 量能情绪系数。",
       "_factory_extra": {
         "fcode": "f0090a",
@@ -8225,6 +8129,7 @@
       "decay_status": "unknown",
       "expiry_date": null,
       "source": "external",
+      "status": "current",
       "description": "涨停基因回踩（f0091a）｜涨停基因回踩：近 10 日涨停次数 × 健康回踩条件。",
       "_factory_extra": {
         "fcode": "f0091a",
@@ -8294,6 +8199,396 @@
         "contract_version": "1",
         "package_path": "deliverables/factors/f0091a",
         "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor limitup_gene_pullback --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0092a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "f0092a 流动比率 = 流动资产 / 流动负债（baostock 官方口径）。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor current_ratio --pool hs300",
+      "ic_mean": -0.0005173401915219609,
+      "ir": -0.0065662212381746516,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.4898989898989899,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "流动比率（f0092a）｜f0092a 流动比率 = 流动资产 / 流动负债（baostock 官方口径）。",
+      "_factory_extra": {
+        "fcode": "f0092a",
+        "factor_impl": "current_ratio",
+        "display_name": "流动比率（f0092a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.0005173401915219609,
+            "ir": -0.0065662212381746516,
+            "ic_win_rate": 0.4898989898989899,
+            "n_days": 1584,
+            "sharpe_net": 0.7651412151590373,
+            "max_dd_net": -0.37173185206009585,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0092a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor current_ratio --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0093a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "f0093a 速动比率 = (流动资产 − 存货) / 流动负债（baostock 官方口径）。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor quick_ratio --pool hs300",
+      "ic_mean": -8.2083060622705e-05,
+      "ir": -0.0010593500887189009,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.5069444444444444,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "速动比率（f0093a）｜f0093a 速动比率 = (流动资产 − 存货) / 流动负债（baostock 官方口径）。",
+      "_factory_extra": {
+        "fcode": "f0093a",
+        "factor_impl": "quick_ratio",
+        "display_name": "速动比率（f0093a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -8.2083060622705e-05,
+            "ir": -0.0010593500887189009,
+            "ic_win_rate": 0.5069444444444444,
+            "n_days": 1584,
+            "sharpe_net": 0.6273353918211003,
+            "max_dd_net": -0.4681463562878344,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0093a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor quick_ratio --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0094a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "f0094a 研发强度 = 研发支出 / 营业收入（同为流量项，年化系数可约）。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor rd_intensity --pool hs300",
+      "ic_mean": -0.00038975764067909687,
+      "ir": -0.00430056387079894,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.494949494949495,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "研发强度（f0094a）｜f0094a 研发强度 = 研发支出 / 营业收入（同为流量项，年化系数可约）。",
+      "_factory_extra": {
+        "fcode": "f0094a",
+        "factor_impl": "rd_intensity",
+        "display_name": "研发强度（f0094a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.00038975764067909687,
+            "ir": -0.00430056387079894,
+            "ic_win_rate": 0.494949494949495,
+            "n_days": 1584,
+            "sharpe_net": 1.0476984749473919,
+            "max_dd_net": -0.34690771650220564,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0094a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor rd_intensity --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0095a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "lhb_netbuy_intensity | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_netbuy_intensity --pool hs300",
+      "ic_mean": 0.00033713063927472473,
+      "ir": 0.002772336805531215,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.5128688010043942,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "龙虎榜净买入强度（f0095a）｜lhb_netbuy_intensity",
+      "_factory_extra": {
+        "fcode": "f0095a",
+        "factor_impl": "lhb_netbuy_intensity",
+        "display_name": "龙虎榜净买入强度（f0095a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.00033713063927472473,
+            "ir": 0.002772336805531215,
+            "ic_win_rate": 0.5128688010043942,
+            "n_days": 1593,
+            "sharpe_net": 1.309398678278108,
+            "max_dd_net": -0.4130464949980154,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0095a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_netbuy_intensity --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0096a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "positive",
+      "data_source": "baostock/qfq",
+      "calc_logic": "lhb_attention | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_attention --pool hs300",
+      "ic_mean": 0.0012792414909815898,
+      "ir": 0.010358347623183588,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.5059635907093534,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "龙虎榜上榜关注度（f0096a）｜lhb_attention",
+      "_factory_extra": {
+        "fcode": "f0096a",
+        "factor_impl": "lhb_attention",
+        "display_name": "龙虎榜上榜关注度（f0096a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": 0.0012792414909815898,
+            "ir": 0.010358347623183588,
+            "ic_win_rate": 0.5059635907093534,
+            "n_days": 1593,
+            "sharpe_net": 1.3669904061481202,
+            "max_dd_net": -0.3005400466051087,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0096a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_attention --pool hs300",
         "todo": [
           "regime_dependency 待 P0『分 regime IC』补丁量化",
           "decay_status 待 P0『IC 衰减/半衰期』补丁量化"

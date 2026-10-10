@@ -81,3 +81,6 @@ from . import pos_volume_shock  # noqa: F401  （f0089a 正面成交量冲击，
 from . import kline_pattern_composite  # noqa: F401  （f0090a K线形态综合，纯OHLC+量能情绪）
 from . import limitup_gene_pullback  # noqa: F401  （f0091a 涨停基因回踩，纯OHLCV）
 from . import solvency  # noqa: F401  （f0092a-f0094a Phase A：流动/速动比率 + 研发强度，多后端财报）
+from . import lhb_netbuy_intensity  # noqa: F401  （f0095a 龙虎榜净买入强度，Phase 2 资金面）
+from . import lhb_attention  # noqa: F401  （f0096a 龙虎榜上榜关注度，Phase 2 资金面）
+from . import margin_balance  # noqa: F401  （f0097a 融资余额5日增幅，Phase 2 资金面）

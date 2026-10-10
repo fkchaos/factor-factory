@@ -75,8 +75,8 @@
 | f0070a | EP | single |  | current | 2026-09-09 |
 | f0071a | 营收同比 | single |  | current | 2026-09-09 |
 | f0072a | 净利同比 | single |  | current | 2026-09-09 |
-| f0073a | 预告净利同比 | single |  | current | 2026-09-09 |
-| f0074a | 预告类型分档 | single |  | current | 2026-09-09 |
+| f0073a | 预告净利同比 | single |  | archived | 2026-09-09 |
+| f0074a | 预告类型分档 | single |  | archived | 2026-09-09 |
 | f0075a | 前瞻EP | single |  | current | 2026-09-09 |
 | f0076a | SUE标准化未预期盈余 | single |  | current | 2026-09-09 |
 | f0077a | DRIF收益分布形态 | single |  | twin | 2026-09-09 |
@@ -94,3 +94,8 @@
 | f0089a | 正面成交量冲击 | single |  | current | 2026-10-05 |
 | f0090a | K线形态综合 | single |  | current | 2026-10-05 |
 | f0091a | 涨停基因回踩 | single |  | current | 2026-10-05 |
+| f0093a | 速动比率 | single |  | current | 2026-10-10 |
+| f0094a | 研发强度 | single |  | current | 2026-10-10 |
+| f0092a | 流动比率 | single |  | current | 2026-10-10 |
+| f0095a | 龙虎榜净买入强度 | single |  | current | 2026-10-10 |
+| f0096a | 龙虎榜上榜关注度 | single |  | current | 2026-10-10 |

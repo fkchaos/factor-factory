@@ -27,6 +27,27 @@
 「因子/信号包有更新后要重跑一次，否则 JSON 是旧快照」，但仅停留在文档约定、未进 cron。
 ⚠️ **该流程缺口待主理人决定是否补进驱动器脚本**（改动 cron 行为，未擅自改）。
 
+### 归档止损（2026-10-10 · 待决项③）
+
+- `f0073a` 预告净利同比、`f0074a` 预告类型分档：**归档止损**（manifest / _REGISTRY.csv(note) / _INDEX.md / 两张 card.md 顶部停用横幅 status → archived）。
+  依据：全池 RankIC≈0（hs300 0.0004 / 0.0027）、IC胜率≈50%；DSR=1.0 / PBO=PASS（真实但无截面预测力，非假因子），属预告类弱因子。
+  同步发货端：修 `scripts/export_to_strategy_json.py` 跳过非 current 因子并在 JSON 带 `status` 字段，重跑后 f0073a/f0074a 不再进入 `stock_factors.json`。
+  文件保留供追溯，不再纳入新策略选股；冗余簇 C13（ρ=0.748）随之消失。
+
+### Phase 2 资金面开工（2026-10-10 · 待决项④，用户拍板「开 3 因子起步集」）
+- `2026-10-10 | factor | f0095a | 龙虎榜净买入强度（lhb_netbuy_intensity） | deliverables/factors/f0095a/`
+  （hs300 RankIC +0.0003 / ICIR +0.00 / 胜率 51.3% / n=1593；近 20 日历日「上榜日 龙虎榜净买额/流通市值」之和，连续型；DSR=1.0 PASS）
+- `2026-10-10 | factor | f0096a | 龙虎榜上榜关注度（lhb_attention） | deliverables/factors/f0096a/`
+  （hs300 RankIC +0.0013 / ICIR +0.01 / 胜率 50.6% / n=1593；近 20 日历日上榜天数；DSR=1.0 PASS）
+- **新数据源接入（AkShare 免费，已实测）**：`stock_lhb_detail_em` 龙虎榜每日明细
+  → 139,579 行 / 5,796 股 / 138,094 次上榜事件，预建面板
+  `data/moneyflow_cache/lhb_netbuy_20d.parquet`、`lhb_attention_20d.parquet`（2838 日 × 5796 股）。
+  构建器 `scripts/build_lhb_signals.py`；配套 `stock_margin_detail_sse/szse`（两融，按 `date=` 逐日取全市场 ~2000+2100 行）。
+- ⚠️ **结论判读**：两个龙虎榜因子截面 RankIC≈0，属 **dud**（真实非假因子——DSR=1.0 / PBO=PASS，前视防护合规），
+  只是无截面 alpha。与既有资金流因子 f0024a（RankIC≈−0.015）同向印证：**资金面/龙虎榜类信号在本厂 PIT 口径下截面预测力普遍≈0**。
+  按产线纪律照常交付（不设质量门槛），好坏由下游策略组在 JSON 层自行判断。
+- `f0097a` 融资余额5日增幅（margin_balance_5d）待两融逐日面板 `margin_balance_panel.parquet` 建完后出包（后台构建中）。
+
 ### 因子（f0089a/f0090a/f0091a · 2026-10-05 推进器 drain + 冗余前置闸门全过）
 - `2026-10-05 | factor | f0089a | 正面成交量冲击（pos_volume_shock） | deliverables/factors/f0089a/`（hs300 RankIC −0.0048 / hs800 −0.0051 ICIR −0.08~−0.10 胜率 ~46%；纯量价：近20日上涨日异常放量强度；DSR/PBO 审计通过；全局矩阵 91×91 独立无冗余twin（|ρ|<0.7）→ 通过冗余前置闸门，计入独立有效新增）
 - `2026-10-05 | factor | f0090a | K线形态综合（kline_pattern_composite） | deliverables/factors/f0090a/`（hs300 RankIC −0.0018 / hs800 −0.0018 ICIR ≈0 胜率 ~49%；纯OHLC+量能情绪系数：近10日多形态加权分×tanh(量能共振)；DSR/PBO 通过；独立无冗余twin → 通过闸门，计入独立有效新增）
