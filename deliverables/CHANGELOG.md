@@ -9,6 +9,24 @@
 
 ## [Unreleased]
 
+### 补录（2026-10-10 人工核查 · 推进器漏登 + 对外发货 JSON 陈旧修复）
+
+> 2026-10-10 主理人交互核查发现两处**产物与仓库不同步**。均非代码缺陷，是流程缺口，本次一并修复。
+
+**① CHANGELOG 漏登 5 个已交付因子包**（推进器只在「消费灵感出包」路径写 CHANGELOG，批量补矩阵路径不写）：
+- `2026-09-11 | factor | f0080a | 成交额前分位+均线突破（amount_rank_ma_breakout） | deliverables/factors/f0080a/`（hs300 RankIC −0.0163）
+- `2026-09-11 | factor | f0081a | 动量向上+缩量回调（momentum_volume_shrink_pullback） | deliverables/factors/f0081a/`（hs300 RankIC +0.0013）
+- `2026-09-14 | factor | f0084a | 区间嵌套事件频率（inside_day_freq） | deliverables/factors/f0084a/`（hs300 RankIC +0.0018）
+- `2026-09-14 | factor | f0085a | Amihud跳跃成分占比（amihud_jump_share） | deliverables/factors/f0085a/`（hs300 RankIC −0.0014）
+- `2026-09-14 | factor | f0086a | 财报更新收益（cashflow_update） | deliverables/factors/f0086a/`（hs300 RankIC −0.0000）
+
+**② 对外发货 JSON 陈旧 31 天（对外交付缺口，重要）**：`deliverables/strategy_export/stock_factors.json`
+停在 2026-09-09 的 76 条，而交付目录已有 91 个因子包 → 策略组拿到的清单**缺 f0077a–f0091a 共 15 个**。
+已重跑 `scripts/export_to_strategy_json.py`，现为 **91 因子 / 4 信号**（generated 2026-10-10 10:19）。
+根因：推进器 cron 步骤里**没有"重跑 export"这一步**——`docs/dev/HANDOFF.md` §关键环境变化 已写明
+「因子/信号包有更新后要重跑一次，否则 JSON 是旧快照」，但仅停留在文档约定、未进 cron。
+⚠️ **该流程缺口待主理人决定是否补进驱动器脚本**（改动 cron 行为，未擅自改）。
+
 ### 因子（f0089a/f0090a/f0091a · 2026-10-05 推进器 drain + 冗余前置闸门全过）
 - `2026-10-05 | factor | f0089a | 正面成交量冲击（pos_volume_shock） | deliverables/factors/f0089a/`（hs300 RankIC −0.0048 / hs800 −0.0051 ICIR −0.08~−0.10 胜率 ~46%；纯量价：近20日上涨日异常放量强度；DSR/PBO 审计通过；全局矩阵 91×91 独立无冗余twin（|ρ|<0.7）→ 通过冗余前置闸门，计入独立有效新增）
 - `2026-10-05 | factor | f0090a | K线形态综合（kline_pattern_composite） | deliverables/factors/f0090a/`（hs300 RankIC −0.0018 / hs800 −0.0018 ICIR ≈0 胜率 ~49%；纯OHLC+量能情绪系数：近10日多形态加权分×tanh(量能共振)；DSR/PBO 通过；独立无冗余twin → 通过闸门，计入独立有效新增）
