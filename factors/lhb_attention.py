@@ -18,6 +18,8 @@ _CACHE: dict = {}
 
 @register_factor
 class LhbAttentionFactor:
+    """龙虎榜上榜关注度：近 20 日内登上龙虎榜的天数，度量游资/机构曝光热度。"""
+
     name = "lhb_attention"
     fcode = "f0096a"
     universe_hint = "hs300"

@@ -99,3 +99,4 @@
 | f0092a | 流动比率 | single |  | current | 2026-10-10 |
 | f0095a | 龙虎榜净买入强度 | single |  | current | 2026-10-10 |
 | f0096a | 龙虎榜上榜关注度 | single |  | current | 2026-10-10 |
+| f0097a | 融资余额5日增幅 | single |  | current | 2026-10-10 |

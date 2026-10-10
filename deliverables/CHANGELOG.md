@@ -46,7 +46,19 @@
 - ⚠️ **结论判读**：两个龙虎榜因子截面 RankIC≈0，属 **dud**（真实非假因子——DSR=1.0 / PBO=PASS，前视防护合规），
   只是无截面 alpha。与既有资金流因子 f0024a（RankIC≈−0.015）同向印证：**资金面/龙虎榜类信号在本厂 PIT 口径下截面预测力普遍≈0**。
   按产线纪律照常交付（不设质量门槛），好坏由下游策略组在 JSON 层自行判断。
-- `f0097a` 融资余额5日增幅（margin_balance_5d）待两融逐日面板 `margin_balance_panel.parquet` 建完后出包（后台构建中）。
+- ⚠️ **根因诊断（覆盖率）**：龙虎榜是**稀疏事件**——预建面板里任一交易日仅约 **7.1%** 的股票在 20 日窗口内有上榜记录，
+  其余 93% 恒为 0（截面大量并列）。并列值不携带排序信息，RankIC 被**机械压到 ≈0**，
+  这与"因子逻辑不成立"是两回事。若要真正检验游资效应，应改用**事件研究口径**（conditional on 上榜）
+  或只在"当日事件股池"内做选股，而不是全市场截面排名。融资余额不受此限（两融标的覆盖率 ~38% 且大盘股接近全覆盖）。
+- `2026-10-10 | factor | f0097a | 融资余额5日增幅（margin_balance_5d） | deliverables/factors/f0097a/`
+  （hs300 RankIC **−0.0099** / ICIR −0.13 / 胜率 44.4% / n=1510；DSR=1.0 PASS。
+  **方向与灵感假设完全吻合**：融资盘加杠杆追涨 → 后续回吐，故 RankIC 取负；
+  强度为两个龙虎榜因子的 5–10 倍，是本次 3 因子起步集里唯一有实质截面信号者。
+  gross 年化 0.119 / Sharpe 0.610，net（含成本）0.0247 / Sharpe 0.221）
+- **新数据源接入（AkShare 免费）· 两融**：`stock_margin_detail_sse` / `stock_margin_detail_szse`（按 `date=` 逐日取全市场）
+  → 构建器 `scripts/build_margin_panel.py`（按日缓存 `.cache/margin_raw/` 可续跑），
+  产出 `data/moneyflow_cache/margin_balance_panel.parquet`：**1646 交易日 × 4428 两融标的**（ok=1646 / empty=841 周末节假日）。
+  周末节假日与个别 `ProxyError 502`（query.sse.com.cn）以空占位跳过，留下零星日期 NaN 缺口，对 5 日增幅口径可接受。
 
 ### 因子（f0089a/f0090a/f0091a · 2026-10-05 推进器 drain + 冗余前置闸门全过）
 - `2026-10-05 | factor | f0089a | 正面成交量冲击（pos_volume_shock） | deliverables/factors/f0089a/`（hs300 RankIC −0.0048 / hs800 −0.0051 ICIR −0.08~−0.10 胜率 ~46%；纯量价：近20日上涨日异常放量强度；DSR/PBO 审计通过；全局矩阵 91×91 独立无冗余twin（|ρ|<0.7）→ 通过冗余前置闸门，计入独立有效新增）

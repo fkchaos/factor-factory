@@ -19,6 +19,8 @@ _CACHE: dict = {}
 
 @register_factor
 class LhbNetbuyIntensityFactor:
+    """龙虎榜净买入强度：近 20 日上榜日「净买额 / 流通市值」之和，度量游资抢筹力度。"""
+
     name = "lhb_netbuy_intensity"
     fcode = "f0095a"
     universe_hint = "hs300"

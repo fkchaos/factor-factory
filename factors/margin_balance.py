@@ -20,6 +20,8 @@ _CACHE: dict = {}
 
 @register_factor
 class MarginBalance5dFactor:
+    """融资余额 5 日增幅：杠杆资金短期加仓速度（预期反向——激进追涨后易回吐）。"""
+
     name = "margin_balance_5d"
     fcode = "f0097a"
     universe_hint = "hs300"

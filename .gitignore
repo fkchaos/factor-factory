@@ -39,4 +39,8 @@ data/moneyflow_cache/
 
 # ---- 后台运行日志（落盘在 deliverables 下的临时日志，禁止入库）----
 deliverables/universe_matrix/_*_run_*.log
+deliverables/universe_matrix/_p4_*.log
 deliverables/universe_matrix/*.csv.bak
+
+# ---- 矩阵分片并行中间产物（由 scripts/merge_universe_matrix.py 合并回主矩阵）----
+deliverables/universe_matrix/parts/

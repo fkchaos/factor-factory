@@ -57,6 +57,13 @@ def main() -> None:
     # 或传逗号分隔的注册名。配合脚本自带的断点续算（ic_matrix_*.csv），可分多批累积。
     ap.add_argument("--factors", default="",
                     help="'all'=全量注册因子；或逗号分隔注册名；留空=默认 2 个老因子")
+    # 🔴 2026-10-10 新增分片并行：单进程串行跑 93 因子×7 池 ≈31h，机器 16 核却只用一个。
+    # 传 --tag <分片名> 时输出到 parts/ 子目录（ic_matrix_{tag}.csv），各分片互不覆盖，
+    # 算完用 scripts/merge_universe_matrix.py 合并回主矩阵。
+    # 分片文件放子目录是刻意的：主目录 glob("ic_matrix_*.csv") 取最新做续算基准，
+    # 分片文件若落在主目录会被误当成续算基准（只含单池 → 静默丢进度）。
+    ap.add_argument("--tag", default="",
+                    help="非空=分片并行模式，产物写入 parts/ic_matrix_{tag}.csv")
     args = ap.parse_args()
     requested = [p.strip() for p in args.pools.split(",") if p.strip()]
 
@@ -79,13 +86,19 @@ def main() -> None:
     cfg = BacktestConfig(train_days=252, test_days=126, step_days=63, top_n=20)
 
     out_dir = ROOT / "deliverables" / "universe_matrix"
+    if args.tag:
+        out_dir = out_dir / "parts"
     out_dir.mkdir(parents=True, exist_ok=True)
     today = date.today().isoformat()
+    file_tag = args.tag or today  # 分片模式用 tag 作文件名，避免与主矩阵/其他分片互串
 
     factor_names = [f.name for f in factors]
 
     # 断点续算：载入最近的已有矩阵（不论日期），保留已填列/行，只算缺失单元格（根因1/2）
     def _latest_existing() -> Path | None:
+        if args.tag:  # 分片模式：只认自己的分片文件，绝不读主矩阵
+            p = out_dir / f"ic_matrix_{args.tag}.csv"
+            return p if p.exists() else None
         cands = sorted(out_dir.glob("ic_matrix_*.csv"))
         return cands[-1] if cands else None
 
@@ -123,9 +136,9 @@ def main() -> None:
         print(f"[resume] 载入已有矩阵 {prev.name}，保留已填单元格 {filled}/{len(full_index) * len(ALL_POOLS)}", flush=True)
 
     def _flush_csv() -> None:
-        ic_mat.to_csv(out_dir / f"ic_matrix_{today}.csv")
-        icir_mat.to_csv(out_dir / f"icir_matrix_{today}.csv")
-        dsr_mat.to_csv(out_dir / f"dsr_matrix_{today}.csv")
+        ic_mat.to_csv(out_dir / f"ic_matrix_{file_tag}.csv")
+        icir_mat.to_csv(out_dir / f"icir_matrix_{file_tag}.csv")
+        dsr_mat.to_csv(out_dir / f"dsr_matrix_{file_tag}.csv")
 
     # 续算前先落一次盘，确保从既有进度起步
     _flush_csv()
@@ -149,7 +162,7 @@ def main() -> None:
             print(f"  {f.name}: RankIC={m['rank_ic']:+.4f} ICIR={m['icir']:+.2f} "
                   f"DSR={m['dsr']} PBO={m['pbo']}", flush=True)
         _flush_csv()  # 每池落盘一次，断点可续
-        print(f"  ↳ 已落盘 {out_dir.name}/ic_matrix_{today}.csv", flush=True)
+        print(f"  ↳ 已落盘 {out_dir.name}/ic_matrix_{file_tag}.csv", flush=True)
 
     # 主场标注：每因子 IC 最高的池子；反转实例：最高与最低 IC 异号
     print("\n" + "=" * 60)
