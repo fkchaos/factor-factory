@@ -53,10 +53,29 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pools", default=",".join(ALL_POOLS))
     ap.add_argument("--start", default="2020-01-01")
+    # 🔴 因子集长期硬编码为 2 个老因子（2026-10-10 修复）：传 all 覆盖全量注册因子，
+    # 或传逗号分隔的注册名。配合脚本自带的断点续算（ic_matrix_*.csv），可分多批累积。
+    ap.add_argument("--factors", default="",
+                    help="'all'=全量注册因子；或逗号分隔注册名；留空=默认 2 个老因子")
     args = ap.parse_args()
     requested = [p.strip() for p in args.pools.split(",") if p.strip()]
 
-    factors = [OvernightIntradayFactor(), IvolFactor()]
+    spec = (args.factors or "").strip()
+    if spec:
+        import factors as _factors_pkg  # noqa: F401  触发全量注册
+        from factors.interface import get_factor, list_factors
+        names = list_factors() if spec == "all" else [n.strip() for n in spec.split(",") if n.strip()]
+        factors, missing = [], []
+        for n in names:
+            try:
+                factors.append(get_factor(n))
+            except KeyError:
+                missing.append(n)
+        if missing:
+            print(f"[warn] 未注册因子名，跳过：{missing}", flush=True)
+        print(f"[factors] 本次纳入 {len(factors)} 个因子", flush=True)
+    else:
+        factors = [OvernightIntradayFactor(), IvolFactor()]
     cfg = BacktestConfig(train_days=252, test_days=126, step_days=63, top_n=20)
 
     out_dir = ROOT / "deliverables" / "universe_matrix"
@@ -150,14 +169,23 @@ def main() -> None:
         print("  （无 IC 异号实例）")
 
     # 落盘：写入因子卡片（幂等：同名"池子矩阵"段整体替换，重跑不堆叠历史）
+    # 🔴 路径修复（2026-10-10）：卡片早已迁到 deliverables/factors/{fcode}/card.md，
+    # 旧路径 research/factor_cards/{name}.md 不存在 → 全部 continue 跳过，P4 长期零产出。
     for name in ic_mat.index:
-        card = ROOT / "research" / "factor_cards" / f"{name}.md"
+        fobj = next((f for f in factors if getattr(f, "name", None) == name), None)
+        fcode = getattr(fobj, "fcode", None)
+        if fcode:
+            card = ROOT / "deliverables" / "factors" / fcode / "card.md"
+        else:  # 兜底：无 fcode 的因子回退旧路径
+            card = ROOT / "research" / "factor_cards" / f"{name}.md"
         if not card.exists():
+            print(f"  [skip] {name} 卡片不存在：{card.relative_to(ROOT)}")
             continue
+        # 口径修正（2026-09-09）：不再称"主场池"，IC 最高池仅是**观测值**，本厂不推荐配池
         section = (f"\n## 池子矩阵（{today}）\n\n"
                    f"- RankIC: {ic_mat.loc[name].round(4).to_dict()}\n"
                    f"- ICIR: {icir_mat.loc[name].round(2).to_dict()}\n"
-                   f"- 主场: **{home[name]}**\n")
+                   f"- IC 最高池（**观测值，非推荐**）: {home[name]}\n")
         text = card.read_text(encoding="utf-8")
         marker = "\n## 池子矩阵（"
         if marker in text:
