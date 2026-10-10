@@ -103,6 +103,21 @@ def main() -> None:
         return cands[-1] if cands else None
 
     prev = _latest_existing()
+
+    def _read_companion(kind: str):
+        """读同 tag 的 icir/dsr 分片；🔴 缺失一律返回 None，绝不抛异常。
+
+        2026-10-10 血泪：三张矩阵是**逐个文件**落盘的（ic → icir → dsr），
+        进程在 flush 中间被杀就会留下"ic 有、dsr 无"的孤儿分片。
+        旧逻辑直接 `pd.read_csv(伙伴路径)` → FileNotFoundError 让整块任务启动即崩，
+        且崩的是**续算路径**（新 tag 无 prev 反而正常跑），表现为"有的块跑、有的块秒退"。
+        孤儿分片内容本身也不一致（ic 有值而 icir/dsr 缺失），故一律按"无进度"处理重算。
+        """
+        if prev is None:
+            return None
+        p = out_dir / f"{kind}_matrix_{file_tag}.csv"
+        return pd.read_csv(p, index_col=0) if p.exists() else None
+
     # 🔴 2026-10-10 修复断点续算 index 对齐 bug（已造成一次真实数据丢失）：
     # 旧逻辑先按"当前因子集"建空矩阵，再 `ic_mat[col] = old[col]` 按 index 复制——
     # 若本次只跑部分因子（如单因子冒烟），旧矩阵里其余已算因子因 index 不匹配被全丢成 NaN，
@@ -111,8 +126,8 @@ def main() -> None:
     # 同时去掉 `not isna().all()` 守卫，全列整列复制（全 NaN 列复制是空操作，无害）。
     if prev is not None:
         old_ic = pd.read_csv(prev, index_col=0)
-        old_ici = pd.read_csv(out_dir / f"icir_matrix_{prev.name.split('_')[-1]}", index_col=0)
-        old_dsr = pd.read_csv(out_dir / f"dsr_matrix_{prev.name.split('_')[-1]}", index_col=0)
+        old_ici = _read_companion("icir")
+        old_dsr = _read_companion("dsr")
         full_index = old_ic.index.union(pd.Index(factor_names))
     else:
         old_ic = old_ici = old_dsr = None
@@ -128,9 +143,9 @@ def main() -> None:
         for col in ALL_POOLS:
             if col in old_ic.columns:
                 ic_mat[col] = old_ic[col]
-            if col in old_ici.columns:
+            if old_ici is not None and col in old_ici.columns:
                 icir_mat[col] = old_ici[col]
-            if col in old_dsr.columns:
+            if old_dsr is not None and col in old_dsr.columns:
                 dsr_mat[col] = old_dsr[col]
         filled = int(ic_mat.notna().sum().sum())
         print(f"[resume] 载入已有矩阵 {prev.name}，保留已填单元格 {filled}/{len(full_index) * len(ALL_POOLS)}", flush=True)
@@ -147,8 +162,11 @@ def main() -> None:
         prov = BaoStockProvider(universe=pool, history_start=args.start, **POOLS.get(pool, {}))
         print(f"[{pool}] 池子规模={len(prov.list_universe('2024-12-31'))}，验证中...", flush=True)
         for f in factors:
-            # 已填则跳过（续算核心）
-            if not pd.isna(ic_mat.loc[f.name, pool]):
+            # 已填则跳过（续算核心）。🔴 2026-10-10：必须**三张矩阵都有值**才算"已填"——
+            # 只凭 ic 判断会在孤儿分片（ic 有 / icir+dsr 无）下永久跳过，留下残缺单元格。
+            if not (pd.isna(ic_mat.loc[f.name, pool])
+                    or pd.isna(icir_mat.loc[f.name, pool])
+                    or pd.isna(dsr_mat.loc[f.name, pool])):
                 print(f"  skip {f.name}/{pool} (已存在，续算跳过)", flush=True)
                 continue
             try:
