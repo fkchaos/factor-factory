@@ -729,6 +729,7 @@
 6. （P1）因子线补分状态 IC + IC 衰减 + 经济逻辑长文（v75 复盘盲区① + 需求对接项）。
 
 ### 遗留问题 / 待决策
+- ✅ **（2026-10-10 人工核查已修，commit `c9fcdce`）对外发货 JSON 陈旧 + CHANGELOG 漏登**：`strategy_export/stock_factors.json` 停在 09-09 的 76 条（交付目录已 91）→ 策略组清单缺 f0077a–f0091a 共 15 个，已重跑 export 补齐（91 因子 / 4 信号）；CHANGELOG 漏登的 f0080a/f0081a/f0084a/f0085a/f0086a 已按 git 首提日期补录，漏登数归零。**根因是流程缺口：推进器 cron 无「重跑 export」步骤**（HANDOFF 有文字约定但未入代码）。⚠️ **是否补进驱动器脚本待主理人拍板，未擅自改 cron 行为。** 核查范式见 `.cache/status_check_20261010.py`。
 - 🟢 **GitHub 连接器写权限问题已绕过（2026-08-17 16:19）**：WorkBuddy GitHub 连接器对该仓库仍只读/已断开（所有写操作 403，2026-08-17 实测），但**用户本地 GCM 凭证存有 fkchaos PAT**，经 GitHub REST API 已成功建 issue **[#1](https://github.com/fkchaos/a-share-quant-sim/issues/1)**。结论：连接器不可用，但本地 PAT + API 可写（issue/PR/代码均可走 `git`/`gh`/API）。注意 `gh` CLI 未安装，代码推送需用 `git`（remote 在 `a-share-quant-sim` 克隆，非 factor-factory 内）。**后续新交付走「批次累积」模式（见关键环境变化）：驱动器挂队列、主理人交互时经 `scripts/gh_issue.py` 发出，不占 cron 交互。**
 - ⚠️ **`data/providers.py::_share_map()` 本体未改**：本轮是"绕开"而非"修好"——面板里那列假 `market_cap` 仍在，只是所有消费方改用 `data/pit.py`。彻底修需要 provider 层拉历史股本序列（Tushare `daily_basic` 受限频、baostock 有 `peTTM/psTTM` 但无直接流通股本）。保留脏列的好处是不破坏既有契约测试，坏处是后人可能再次误用——已用 `data/contract.py` 的 PIT 分级段 + 测试断言双重设防。
 - ⚠️ **s0001x 按对方门槛判 refuted（sharpe 0.94 < 1.0）**：我方不设质量门槛（用户决策），但需明确——首个信号在策略组 §7.2 口径下是不合格的。它的价值在**回撤改善 +14.27pct**（择时信号本就更该看 DD 而非 Sharpe），建议对接时主动说明口径分歧，别让对方一眼 refuted 就丢掉。
