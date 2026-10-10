@@ -189,7 +189,7 @@ def default_store(assets=None, fields=None):
         from data.providers import AkShareProvider, BaoStockProvider
         providers = [AkShareProvider()]
         try:
-            providers.append(BaoStockProvider())
+            providers.append(BaoStockProvider(pit_start_year=2015))
         except Exception as e:      # baostock 不可用不应拖垮财报服务整体
             print(f"[warn] baostock 后端不可用，财报仅走东财: {e}", flush=True)
         _DEFAULT_STORE = PitFinancialsService(providers, assets or [], _DEFAULT_PIT_FIELDS)

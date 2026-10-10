@@ -812,13 +812,15 @@ class BaoStockProvider:
     def __init__(self, cache_dir: str = ".cache/baostock", universe: str = "hs300",
                  index_code: str = "000300.SH", retry: int = 3,
                  history_start: Optional[str] = None, min_mcap: float = 0.0,
-                 pit_start_year: int = 2005):
+                 pit_start_year: int = 2015):
         """history_start：分析窗口起点（如 '2024-01-01'），构建内存缓存时丢弃更早数据，
         显著降低内存与计算量；None=全历史。仅影响取数窗口，不影响 parquet 磁盘缓存完整性。
         min_mcap：全 A（ALL）池的市值下限（元），用 AkShare 市值快照过滤小市值/壳股；
         0=不过滤。
-        pit_start_year：PIT 财报取数起始年（如 2015）。财报历史按 (年,季) 逐期拉取，
-        窗口越小首跑调用越少；结果按股票落 .cache/baostock/financial/*.parquet 复用。"""
+        pit_start_year：PIT 财报取数起始年（默认 2015）。财报历史按 (年,季) 逐期拉取，
+        窗口越小首跑调用越少；结果按股票落 .cache/baostock/financial/*.parquet 复用。
+        🔴 改默认值会缩短 PIT 财务回溯窗口；已落盘的 2005+ 缓存需清掉才会重拉
+        （否则命中旧缓存、窗口不变）。清缓存后才真正"省一半预热"、因子序列截断到 2015 起。"""
         self._cache = Path(cache_dir)
         self._cache.mkdir(parents=True, exist_ok=True)
         self._fin_cache = self._cache / "financial"   # PIT 财报披露表缓存（按股票）
