@@ -53,6 +53,6 @@
 
 ## 池子矩阵（2026-10-10）
 
-- RankIC: {'sz50': nan, 'hs300': -0.0088, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
-- ICIR: {'sz50': nan, 'hs300': -0.04, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
-- IC 最高池（**观测值，非推荐**）: hs300
+- RankIC: {'sz50': 0.0008, 'hs300': nan, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
+- ICIR: {'sz50': 0.0, 'hs300': nan, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
+- IC 最高池（**观测值，非推荐**）: sz50
