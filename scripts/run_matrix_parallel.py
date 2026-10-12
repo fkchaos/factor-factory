@@ -38,6 +38,10 @@ def main() -> None:
     ap.add_argument("--plan", default=DEFAULT_PLAN,
                     help="池:块数 的逗号分隔表；块数≈该池预估CPU小时/目标墙钟")
     ap.add_argument("--start", default="2020-01-01")
+    # 2026-10-12：因子按"是否联网"分批（见 scripts/classify_factors_io.py）。
+    # 联网类因子必须低并发 + 先预热，否则会把数据源打封（历史事故：16 路并发 → WinError 10054 刷 9 万次）。
+    ap.add_argument("--exclude", default="", help="排除这些因子（逗号分隔）")
+    ap.add_argument("--only", default="", help="只跑这些因子（逗号分隔），优先级高于 --exclude")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -45,6 +49,14 @@ def main() -> None:
     import factors  # noqa: F401  触发全量注册
     from factors.interface import list_factors
     names = list_factors()
+    if args.only:
+        keep = {n.strip() for n in args.only.split(",") if n.strip()}
+        names = [n for n in names if n in keep]
+    elif args.exclude:
+        drop = {n.strip() for n in args.exclude.split(",") if n.strip()}
+        names = [n for n in names if n not in drop]
+    if not names:
+        raise SystemExit("[err] 过滤后没有可跑的因子，检查 --only/--exclude")
 
     plan: list[tuple[str, int]] = []
     for item in args.plan.split(","):

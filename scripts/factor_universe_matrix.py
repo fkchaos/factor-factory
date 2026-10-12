@@ -179,6 +179,13 @@ def main() -> None:
             dsr_mat.loc[f.name, pool] = m["dsr"]
             print(f"  {f.name}: RankIC={m['rank_ic']:+.4f} ICIR={m['icir']:+.2f} "
                   f"DSR={m['dsr']} PBO={m['pbo']}", flush=True)
+            # 🔴 2026-10-12 血泪：**每算完一个因子立刻落盘**。
+            # 旧逻辑只在「整池算完后」flush 一次 → 2026-10-10 那轮 16 块并行跑了 43 小时、
+            # 日志里累计完成 401 单元，磁盘上却只有 84 个（只有跑完整池的 sz50 落了盘）。
+            # 其余 317 个单元全在内存里，进程一挂（重启/超时/OOM）两天白干。
+            # 单个因子在大池要几十分钟甚至更久，"整池才落盘"等于把 checkpoint 间隔设成了几小时。
+            # CSV 只有 96×7，写完一次几毫秒，成本可以忽略。
+            _flush_csv()
         _flush_csv()  # 每池落盘一次，断点可续
         print(f"  ↳ 已落盘 {out_dir.name}/ic_matrix_{file_tag}.csv", flush=True)
 
