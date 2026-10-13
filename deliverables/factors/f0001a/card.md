@@ -52,8 +52,8 @@
 - 跨池检验记录：`../universe_matrix/ic_matrix_<最新日期>.csv` 及同批 icir / dsr 三表（本因子行以矩阵实际收录为准）
 - 说明：上述为同一交付物的聚合 / 检验视图，由 `scripts/export_to_strategy_json.py` / `scripts/factor_universe_matrix.py` 生成，与本卡同源，不另立交付编号。
 
-## 池子矩阵（2026-10-12）
+## 池子矩阵（2026-10-13）
 
-- RankIC: {'sz50': 0.0275, 'hs300': nan, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
-- ICIR: {'sz50': 0.11, 'hs300': nan, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
-- IC 最高池（**观测值，非推荐**）: sz50
+- RankIC: {'sz50': 0.0275, 'hs300': 0.0314, 'zz500': 0.0276, 'hs800': 0.0285, 'zz1000': 0.0322, 'hs1800': 0.0298, 'ALL': 0.0335}
+- ICIR: {'sz50': 0.11, 'hs300': 0.17, 'zz500': 0.17, 'hs800': 0.18, 'zz1000': 0.22, 'hs1800': 0.2, 'ALL': 0.24}
+- IC 最高池（**观测值，非推荐**）: ALL
