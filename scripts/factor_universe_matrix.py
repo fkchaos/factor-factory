@@ -95,28 +95,42 @@ def main() -> None:
     factor_names = [f.name for f in factors]
 
     # 断点续算：载入最近的已有矩阵（不论日期），保留已填列/行，只算缺失单元格（根因1/2）
-    def _latest_existing() -> Path | None:
-        if args.tag:  # 分片模式：只认自己的分片文件，绝不读主矩阵
-            p = out_dir / f"ic_matrix_{args.tag}.csv"
-            return p if p.exists() else None
-        cands = sorted(out_dir.glob("ic_matrix_*.csv"))
-        return cands[-1] if cands else None
+    def _load_merged(kind: str):
+        """取「主矩阵 ∪ 本分片矩阵」的并集（后者优先），缺失一律返回 None。
 
-    prev = _latest_existing()
+        为什么必须取并集而不是二选一（2026-10-13 血泪）：
+        只认本分片 → 换了并行计划（块数/分块方式变了）后，新块读到的分片是上一次
+        计划的产物，只覆盖部分因子，实测 hs300 分片只有 5 个单元而主矩阵有 52 个
+        → 47 个已算单元被静默重算。
+        "本分片不存在才回退主矩阵"也不够：分片存在但内容残缺的情况同样会丢进度。
+        因此一律 combine_first（主矩阵打底，本分片的有值单元格覆盖上去）。
 
-    def _read_companion(kind: str):
-        """读同 tag 的 icir/dsr 分片；🔴 缺失一律返回 None，绝不抛异常。
-
-        2026-10-10 血泪：三张矩阵是**逐个文件**落盘的（ic → icir → dsr），
-        进程在 flush 中间被杀就会留下"ic 有、dsr 无"的孤儿分片。
-        旧逻辑直接 `pd.read_csv(伙伴路径)` → FileNotFoundError 让整块任务启动即崩，
-        且崩的是**续算路径**（新 tag 无 prev 反而正常跑），表现为"有的块跑、有的块秒退"。
-        孤儿分片内容本身也不一致（ic 有值而 icir/dsr 缺失），故一律按"无进度"处理重算。
+        🔴 伙伴文件缺失绝不抛异常：三张矩阵是**逐个文件**落盘的（ic → icir → dsr），
+        进程在 flush 中间被杀就会留下"ic 有、dsr 无"的孤儿组（2026-10-10 血泪），
+        旧逻辑直接 read_csv → FileNotFoundError 让整块任务启动即崩。
         """
-        if prev is None:
+        frames = []
+        main_dir = ROOT / "deliverables" / "universe_matrix"
+        cands = sorted(main_dir.glob(f"{kind}_matrix_*.csv"))
+        if cands:
+            frames.append(pd.read_csv(cands[-1], index_col=0))
+        if args.tag:
+            p = out_dir / f"{kind}_matrix_{args.tag}.csv"
+            if p.exists():
+                frames.append(pd.read_csv(p, index_col=0))
+        if not frames:
             return None
-        p = out_dir / f"{kind}_matrix_{file_tag}.csv"
-        return pd.read_csv(p, index_col=0) if p.exists() else None
+        merged = frames[0]
+        for f in frames[1:]:
+            merged = merged.combine_first(f)
+        return merged
+
+    old_ic = _load_merged("ic")
+    old_ici = _load_merged("icir")
+    old_dsr = _load_merged("dsr")
+    prev_name = ("主矩阵∪" + args.tag) if (args.tag and old_ic is not None) else (
+        sorted((ROOT / "deliverables" / "universe_matrix").glob("ic_matrix_*.csv"))[-1].name
+        if old_ic is not None else None)
 
     # 🔴 2026-10-10 修复断点续算 index 对齐 bug（已造成一次真实数据丢失）：
     # 旧逻辑先按"当前因子集"建空矩阵，再 `ic_mat[col] = old[col]` 按 index 复制——
@@ -124,13 +138,9 @@ def main() -> None:
     # 随后 flush 把 93×7 完整矩阵压成几行，静默抹掉历史进度。
     # 修复：矩阵 index 取"当前因子 ∪ 旧矩阵全部 index"，复制时 index 对齐不会丢行；
     # 同时去掉 `not isna().all()` 守卫，全列整列复制（全 NaN 列复制是空操作，无害）。
-    if prev is not None:
-        old_ic = pd.read_csv(prev, index_col=0)
-        old_ici = _read_companion("icir")
-        old_dsr = _read_companion("dsr")
+    if old_ic is not None:
         full_index = old_ic.index.union(pd.Index(factor_names))
     else:
-        old_ic = old_ici = old_dsr = None
         full_index = pd.Index(factor_names)
 
     # 全列宽表：永远 7 列；index 取并集，避免"只传部分池/部分因子"时冲掉已完成行
@@ -139,7 +149,7 @@ def main() -> None:
     icir_mat = pd.DataFrame(index=full_index, columns=ALL_POOLS, dtype=float)
     dsr_mat = pd.DataFrame(index=full_index, columns=ALL_POOLS, dtype=float)
 
-    if prev is not None:
+    if old_ic is not None:
         for col in ALL_POOLS:
             if col in old_ic.columns:
                 ic_mat[col] = old_ic[col]
@@ -148,7 +158,7 @@ def main() -> None:
             if old_dsr is not None and col in old_dsr.columns:
                 dsr_mat[col] = old_dsr[col]
         filled = int(ic_mat.notna().sum().sum())
-        print(f"[resume] 载入已有矩阵 {prev.name}，保留已填单元格 {filled}/{len(full_index) * len(ALL_POOLS)}", flush=True)
+        print(f"[resume] 载入已有矩阵 {prev_name}，保留已填单元格 {filled}/{len(full_index) * len(ALL_POOLS)}", flush=True)
 
     def _flush_csv() -> None:
         ic_mat.to_csv(out_dir / f"ic_matrix_{file_tag}.csv")

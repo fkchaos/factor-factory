@@ -97,10 +97,19 @@ def _rank_ic(factor: pd.Series, fwd_ret: pd.Series) -> float:
     return stats.spearmanr(factor.loc[common], fwd_ret.loc[common]).correlation
 
 
+# 🔴 必须与 scripts/build_deliverable.py::FIELDS 保持一致（2026-10-13 修复）。
+# 旧默认值漏了 "turnover" → 7 个换手率类因子（avg_turnover_5d/10d/120d/240d、
+# beta_qvol_interact、turnover_excess_group、dispersion_agent）在池子矩阵里
+# 全池 KeyError 整行全空，而它们的交付卡片却是有值的（build_deliverable 用含
+# turnover 的面板算的）→ 同一因子两套口径，卡片数字与矩阵数字互相打脸。
+# 改这里前先确认对面 build_deliverable.FIELDS 是否同步。
+DEFAULT_FIELDS = ["open", "high", "low", "close", "volume", "amount", "turnover", "market_cap"]
+
+
 def validate_factor(factor: Factor, provider: Any,
                     config: Optional[BacktestConfig] = None, fields=None) -> dict:
     config = config or BacktestConfig()
-    fields = fields or ["open", "high", "low", "close", "volume", "amount", "market_cap"]
+    fields = fields or list(DEFAULT_FIELDS)
 
     panel = provider.get_panel(fields, None, None)
     dates = sorted(panel.index.get_level_values("date").unique())

@@ -44,3 +44,6 @@ deliverables/universe_matrix/*.csv.bak
 
 # ---- 矩阵分片并行中间产物（由 scripts/merge_universe_matrix.py 合并回主矩阵）----
 deliverables/universe_matrix/parts/
+
+# ---- 临时冒烟/探针日志 ----
+deliverables/universe_matrix/_smoke_*.log

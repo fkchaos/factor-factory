@@ -19,19 +19,27 @@ from __future__ import annotations
 
 import argparse
 import inspect
+import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
 # 联网/外部取数入口关键字：命中任一即判为 online
+# （2026-10-13 收紧：旧判据 `all(x for _ in [0])` 是恒真式写法错误，
+#   导致整段过滤失效；hs800 批次因此混入真联网因子，刷 1080 次 WinError。）
 ONLINE_KEYS = (
     "pit_fundamentals", "PitFinancialsService", "get_pit_financials",
-    "get indust", "akshare", "import akshare", "ak.stock_", "stock_financial",
+    "get indust", "akshare", "ak.stock_", "stock_financial",
     "bs.query", "baostock",
 )
-# 已知的本地 parquet 外部面板（离线安全），若模块只用到这些仍判离线
+# 模块里出现「本地 parquet 面板」字样时，允许它同时提到 akshare（多为注释/构建说明）
 LOCAL_CACHE_KEYS = ("moneyflow_cache", "lhb_", "margin_balance_panel")
+
+
+def _import_block(src: str) -> str:
+    """只取 import 行，避免注释/docstring 里的 akshare 字样误判。"""
+    return "\n".join(l for l in src.splitlines() if re.match(r"\s*(from|import)\s", l))
 
 
 def classify(names: list[str]) -> tuple[list[str], list[str], dict[str, str]]:
@@ -43,13 +51,21 @@ def classify(names: list[str]) -> tuple[list[str], list[str], dict[str, str]]:
             src = inspect.getsource(mod) if mod is not None else ""
         except Exception:
             src = ""
-        hits = [k for k in ONLINE_KEYS if k in src]
-        # 只依赖本地 parquet 面板的不算联网（即便文件里提到 akshare 字样用于注释/构建脚本）
-        if hits and not all(any(lk in src for lk in LOCAL_CACHE_KEYS) for _ in [0]):
+        imp = _import_block(src)
+        hits = [k for k in ONLINE_KEYS if k in imp]
+        # import 没命中，再看代码主体里有没有真实调用（如 PitFinancialsService(）
+        if not hits:
+            hits = [k for k in ONLINE_KEYS if k in src]
+            if hits:
+                hits = [h + "@body" for h in hits]
+        # 豁免：只用本地 parquet 面板的（龙虎榜/两融），即便注释里提到数据源名
+        if hits and not any(lk in src for lk in LOCAL_CACHE_KEYS):
             online.append(n)
             why[n] = ",".join(hits)
         else:
             offline.append(n)
+            if hits:
+                why[n] = "本地面板豁免:" + ",".join(hits)
     return offline, online, why
 
 
