@@ -119,10 +119,37 @@ def validate_factor(factor: Factor, provider: Any,
     fwd_ret_1: dict = {}
     fwd_ret_n: dict[int, dict] = {h: {} for h in (5, 10, 20)}
 
+    # 🔴 快路径（2026-10-15 从 scripts/build_deliverable.py::compute_factor_series 移植）
+    # 旧实现在下面的循环里逐日调用 prepare_panel_for_factor → get_panel(start=滑动窗口, end=t)。
+    # start 随 idx 滑动，日频全历史面板缓存**必然 miss**，于是每个交易日把 3000+ 只票的
+    # parquet 重拼一遍：O(N) 次面板重建，1500 个交易日就是 1500 次（hs1800/ALL 池实测
+    # 单因子 3 小时）。这正是池子矩阵比出包脚本慢 10~50 倍的根因。
+    #
+    # 更严重的是口径不一致：出包脚本已经走 compute_panel 快路径，而矩阵走慢路径。
+    # 两者理论上等价，但一旦 fields 不一致就会各自降级（2026-10-13 的 turnover 事故：
+    # 矩阵侧缺 turnover → pit_float_mcap 算不出 → 市值中性化被跳过 → 与卡片数字对不上）。
+    # 这里与出包脚本采用**完全相同的分支判据**，保证同一因子在卡片与矩阵里同口径。
+    #
+    # PIT 安全：快路径把整个 panel 交给 factor.compute_panel，由因子自身保证
+    # 只用 t 日及之前的数据；前视审计（assert_no_lookahead）仍照常执行。
+    bulk = getattr(factor, "compute_panel", None)
+    full = None
+    if bulk is not None:
+        try:
+            full = bulk(panel)  # DataFrame: index=date, columns=asset
+        except Exception:
+            full = None  # 快路径失败就退回慢路径，绝不静默丢结果
+
     for idx, t in enumerate(dates):
         ctx = {"start": str(dates[max(0, idx - config.train_days)])}
-        sub = prepare_panel_for_factor(provider, factor, t, fields, ctx)
-        fv = factor.compute(sub, t, ctx).dropna()
+        if full is not None:
+            try:
+                fv = full.loc[t].dropna()
+            except KeyError:
+                fv = pd.Series(dtype=float)
+        else:
+            sub = prepare_panel_for_factor(provider, factor, t, fields, ctx)
+            fv = factor.compute(sub, t, ctx).dropna()
         # 预处理：MAD 去极值 -> 行业/市值中性化（数据可得时）-> 截面 Z
         fv = winsorize_mad(fv)
         fv = _neutralize_cross_section(fv, panel, t, provider)
