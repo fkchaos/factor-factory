@@ -84,3 +84,6 @@ from . import solvency  # noqa: F401  （f0092a-f0094a Phase A：流动/速动�
 from . import lhb_netbuy_intensity  # noqa: F401  （f0095a 龙虎榜净买入强度，Phase 2 资金面）
 from . import lhb_attention  # noqa: F401  （f0096a 龙虎榜上榜关注度，Phase 2 资金面）
 from . import margin_balance  # noqa: F401  （f0097a 融资余额5日增幅，Phase 2 资金面）
+from . import ideal_amplitude  # noqa: F401  （f0098a 理想振幅，纯 OHLCV 区间振幅代理）
+from . import arbr_sentiment  # noqa: F401  （f0099a ARBR 人气意愿情绪，纯 OHLCV）
+from . import asset_growth  # noqa: F401  （f0100a 总资产同比增长，PIT 资产负债表）

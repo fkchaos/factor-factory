@@ -9,6 +9,12 @@
 
 ## [Unreleased]
 
+### 2026-10-15 晚 推进器（活跃 drain 轮：drain 3 出包，冗余闸门命中 2 twin，净独立新增 1）
+
+- `2026-10-15 | factor | f0100a | 总资产同比增长（asset_growth，PIT total_assets 同比 t vs t-4） | deliverables/factors/f0100a/`（hs300 RankIC −0.0063 / hs800 −0.0068；DSR=1.0；全局矩阵独立无冗余twin；独立有效新增）
+- `2026-10-15 | factor | f0098a | 理想振幅（ideal_amplitude，纯 OHLCV 区间振幅） | deliverables/factors/f0098a/`（hs300 RankIC −0.0181 / hs800 −0.0263；DSR=1.0；**冗余twin**：↔f0077a(DRIF) ρ=0.888 / ↔f0002a(特质波动率) ρ=−0.769；标 twin 保留参考）
+- `2026-10-15 | factor | f0099a | ARBR人气意愿（arbr_sentiment，纯 OHLCV） | deliverables/factors/f0099a/`（hs300 RankIC −0.0086 / hs800 −0.0149；DSR=1.0；**冗余twin**：↔f0088a(SIMOM) ρ=0.71；标 twin 保留参考）
+
 ### 补录（2026-10-10 人工核查 · 推进器漏登 + 对外发货 JSON 陈旧修复）
 
 > 2026-10-10 主理人交互核查发现两处**产物与仓库不同步**。均非代码缺陷，是流程缺口，本次一并修复。
