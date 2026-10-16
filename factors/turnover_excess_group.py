@@ -88,8 +88,13 @@ class TurnoverExcessGroupFactor:
             "to": TO.stack(),
             "grp": grp.stack(),
         }).dropna()
+        # 🔴 空值分支修正（2026-10-16）：旧写法返回 `pd.Series(dtype=float)`，
+        # 它只有 RangeIndex —— compute_panel 里的 `.unstack(level="asset")` 会直接崩
+        # （索引没有 asset 层），compute 里的 `.xs(t, level="date")` 同理。
+        # 必须返回**带 (date, asset) 两层 MultiIndex 的空 Series**，
+        # 这样两个出口都能正常降级为空结果，而不是抛异常。
         if long.empty:
-            return pd.Series(dtype=float)
+            return pd.Series(dtype=float, index=to.index[:0], name=self.name)
         dates = long.index.get_level_values(0)
         thr_tbl = long.groupby([dates, long["grp"]])["to"].quantile(Q)
         key = pd.MultiIndex.from_arrays([dates, long["grp"].values])

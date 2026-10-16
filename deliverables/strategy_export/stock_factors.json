@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-10 21:13",
+  "generated": "2026-10-16 10:39",
   "source": "external",
   "producer": "factor-factory",
   "factors": [
@@ -8445,7 +8445,7 @@
       "category": "technical",
       "direction": "positive",
       "data_source": "baostock/qfq",
-      "calc_logic": "lhb_netbuy_intensity | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_netbuy_intensity --pool hs300",
+      "calc_logic": "龙虎榜净买入强度：近 20 日上榜日「净买额 / 流通市值」之和，度量游资抢筹力度。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_netbuy_intensity --pool hs300",
       "ic_mean": 0.00033713063927472473,
       "ir": 0.002772336805531215,
       "dsr": 1.0,
@@ -8457,7 +8457,7 @@
       "expiry_date": null,
       "source": "external",
       "status": "current",
-      "description": "龙虎榜净买入强度（f0095a）｜lhb_netbuy_intensity",
+      "description": "龙虎榜净买入强度（f0095a）｜龙虎榜净买入强度：近 20 日上榜日「净买额 / 流通市值」之和，度量游资抢筹力度。",
       "_factory_extra": {
         "fcode": "f0095a",
         "factor_impl": "lhb_netbuy_intensity",
@@ -8523,7 +8523,7 @@
       "category": "technical",
       "direction": "positive",
       "data_source": "baostock/qfq",
-      "calc_logic": "lhb_attention | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_attention --pool hs300",
+      "calc_logic": "龙虎榜上榜关注度：近 20 日内登上龙虎榜的天数，度量游资/机构曝光热度。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor lhb_attention --pool hs300",
       "ic_mean": 0.0012792414909815898,
       "ir": 0.010358347623183588,
       "dsr": 1.0,
@@ -8535,7 +8535,7 @@
       "expiry_date": null,
       "source": "external",
       "status": "current",
-      "description": "龙虎榜上榜关注度（f0096a）｜lhb_attention",
+      "description": "龙虎榜上榜关注度（f0096a）｜龙虎榜上榜关注度：近 20 日内登上龙虎榜的天数，度量游资/机构曝光热度。",
       "_factory_extra": {
         "fcode": "f0096a",
         "factor_impl": "lhb_attention",
@@ -8601,7 +8601,7 @@
       "category": "technical",
       "direction": "unknown",
       "data_source": "baostock/qfq",
-      "calc_logic": "margin_balance_5d | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor margin_balance_5d --pool hs300",
+      "calc_logic": "融资余额 5 日增幅：杠杆资金短期加仓速度（预期反向——激进追涨后易回吐）。 | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor margin_balance_5d --pool hs300",
       "ic_mean": -0.009892748214611528,
       "ir": -0.1315302013847149,
       "dsr": 1.0,
@@ -8613,7 +8613,7 @@
       "expiry_date": null,
       "source": "external",
       "status": "current",
-      "description": "融资余额5日增幅（f0097a）｜margin_balance_5d",
+      "description": "融资余额5日增幅（f0097a）｜融资余额 5 日增幅：杠杆资金短期加仓速度（预期反向——激进追涨后易回吐）。",
       "_factory_extra": {
         "fcode": "f0097a",
         "factor_impl": "margin_balance_5d",
@@ -8667,6 +8667,285 @@
         "contract_version": "1",
         "package_path": "deliverables/factors/f0097a",
         "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor margin_balance_5d --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0098a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "ideal_amplitude | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor ideal_amplitude --pool hs300",
+      "ic_mean": -0.018128691171149496,
+      "ir": -0.13996444936625807,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.4247619047619048,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "理想振幅（f0098a）｜ideal_amplitude",
+      "_factory_extra": {
+        "fcode": "f0098a",
+        "factor_impl": "ideal_amplitude",
+        "display_name": "理想振幅（f0098a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.018128691171149496,
+            "ir": -0.13996444936625807,
+            "ic_win_rate": 0.4247619047619048,
+            "n_days": 1575,
+            "sharpe_net": 1.0282566542791685,
+            "max_dd_net": -0.34810238630291257,
+            "gate_7_2_verdict": "gray"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.026296168620591826,
+            "ir": -0.19443377331913878,
+            "ic_win_rate": 0.4114285714285714,
+            "n_days": 1575,
+            "sharpe_net": 0.5244608846546047,
+            "max_dd_net": -0.5344200329675495,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "gray",
+        "gate_7_2_at_home_pool": "gray",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0098a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor ideal_amplitude --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0099a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "arbr_sentiment | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor arbr_sentiment --pool hs300",
+      "ic_mean": -0.008620633544866205,
+      "ir": -0.07806188816691177,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.47609942638623326,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "ARBR人气意愿（f0099a）｜arbr_sentiment",
+      "_factory_extra": {
+        "fcode": "f0099a",
+        "factor_impl": "arbr_sentiment",
+        "display_name": "ARBR人气意愿（f0099a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.008620633544866205,
+            "ir": -0.07806188816691177,
+            "ic_win_rate": 0.47609942638623326,
+            "n_days": 1569,
+            "sharpe_net": 0.9157307038600354,
+            "max_dd_net": -0.45716907410393615,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.014921893466728047,
+            "ir": -0.14028704670745523,
+            "ic_win_rate": 0.45124282982791586,
+            "n_days": 1569,
+            "sharpe_net": 0.9511395488737181,
+            "max_dd_net": -0.4079147272196595,
+            "gate_7_2_verdict": "gray"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0099a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor arbr_sentiment --pool hs300",
+        "todo": [
+          "regime_dependency 待 P0『分 regime IC』补丁量化",
+          "decay_status 待 P0『IC 衰减/半衰期』补丁量化"
+        ]
+      }
+    },
+    {
+      "name": "f0100a",
+      "type": "stock",
+      "category": "technical",
+      "direction": "unknown",
+      "data_source": "baostock/qfq",
+      "calc_logic": "asset_growth | 数据口径：provider=baostock，复权=qfq，窗口自 2020-01-01 起 | 中性化：industry+mktcap(PIT: amount/turnover)；PIT 认证：True | 复现：FF_PROVIDER=baostock python scripts/real_research.py --factor asset_growth --pool hs300",
+      "ic_mean": -0.006309799104998763,
+      "ir": -0.0644817335427753,
+      "dsr": 1.0,
+      "pbo": null,
+      "pbo_computed": false,
+      "ic_win_rate": 0.4628730048577377,
+      "regime_dependency": "unknown",
+      "decay_status": "unknown",
+      "expiry_date": null,
+      "source": "external",
+      "status": "current",
+      "description": "总资产同比增长（f0100a）｜asset_growth",
+      "_factory_extra": {
+        "fcode": "f0100a",
+        "factor_impl": "asset_growth",
+        "display_name": "总资产同比增长（f0100a）",
+        "home_pool": "hs300",
+        "home_pool_rule": "基准池 = manifest 声明的第一个池（口径锚点，非最优池）",
+        "reference_pool": "hs300",
+        "pool_selection_warning": "本厂不指定『主场池』：按全样本 IC/ICIR 挑池属**后视选池**（与用未来市值选股同类），会虚高回测表现。顶层 ic_mean/ir 取自『基准池』（= manifest 声明的第一个池，与卡片一致、可复现），不代表该因子在这个池最强。配池请用 _factory_extra.metrics_by_pool 全池明细自行判断。",
+        "metrics_by_pool": [
+          {
+            "pool": "hs300",
+            "ic_mean": -0.006309799104998763,
+            "ir": -0.0644817335427753,
+            "ic_win_rate": 0.4628730048577377,
+            "n_days": 1441,
+            "sharpe_net": 0.4414598003456098,
+            "max_dd_net": -0.444225677133924,
+            "gate_7_2_verdict": "refuted"
+          },
+          {
+            "pool": "hs800",
+            "ic_mean": -0.006826568900567159,
+            "ir": -0.07403151923503065,
+            "ic_win_rate": 0.4712005551700208,
+            "n_days": 1441,
+            "sharpe_net": 0.35155582822203235,
+            "max_dd_net": -0.5241407404743283,
+            "gate_7_2_verdict": "refuted"
+          }
+        ],
+        "gate_7_2_at_reference_pool": "refuted",
+        "gate_7_2_at_home_pool": "refuted",
+        "gate_7_2_rule": {
+          "valid": [
+            "|IC|>0.03",
+            "|IR|>0.3"
+          ],
+          "refuted": [
+            "|IC|<0.01",
+            "|IR|<0.1"
+          ]
+        },
+        "overfit_audit": {
+          "pool": "hs300",
+          "dsr": 1.0,
+          "pbo": null,
+          "verdict": "PASS",
+          "n_trials": 8,
+          "n_splits": 12,
+          "by_pool": {
+            "hs300": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            },
+            "hs800": {
+              "dsr": 1.0,
+              "pbo": null,
+              "verdict": "PASS"
+            }
+          }
+        },
+        "neutralization": "industry+mktcap(PIT: amount/turnover)",
+        "pit_certified": true,
+        "window_start": "2020-01-01",
+        "contract_version": "1",
+        "package_path": "deliverables/factors/f0100a",
+        "reproduce": "FF_PROVIDER=baostock python scripts/real_research.py --factor asset_growth --pool hs300",
         "todo": [
           "regime_dependency 待 P0『分 regime IC』补丁量化",
           "decay_status 待 P0『IC 衰减/半衰期』补丁量化"

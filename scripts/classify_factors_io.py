@@ -18,6 +18,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import inspect
 import re
 import sys
@@ -42,24 +43,75 @@ def _import_block(src: str) -> str:
     return "\n".join(l for l in src.splitlines() if re.match(r"\s*(from|import)\s", l))
 
 
+def _code_tokens(src: str) -> str:
+    """把源码解析成**代码词元**（标识符 / 属性名 / 导入模块名），丢掉注释与 docstring。
+
+    🔴 修正（2026-10-16）：旧版正文回退判定用 `k in src` 直接扫原始源码，
+    docstring 与注释里的数据源名字也算命中 → 误判。实测 `turnover_excess_group`
+    的 docstring 里有一句「当前 baostock 面板契约（open/high/…）不含行业分类列」，
+    它其实只 import 了 numpy/pandas/factors.interface，是**纯离线**因子，
+    却被判成 online → 白白排除在高并发批次之外（本批 23 个里就有 3 个这类误判）。
+    AST 词元只保留真实出现在语法树里的名字，注释/字符串天然不参与。
+    """
+    try:
+        tree = ast.parse(src)
+    except SyntaxError:
+        return ""
+    toks: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name):
+            toks.add(node.id)
+        elif isinstance(node, ast.Attribute):
+            toks.add(node.attr)
+        elif isinstance(node, ast.alias):
+            toks.add(node.name)
+            if node.asname:
+                toks.add(node.asname)
+        elif isinstance(node, ast.ImportFrom):
+            toks.add(node.module or "")
+    return " ".join(sorted(toks))
+
+
+def _sources(obj_or_cls) -> tuple[str, str]:
+    """返回 (import 行, 代码词元)，**合并自身模块 + MRO 上全部基类模块**。
+
+    🔴 修正（2026-10-16 第二处）：旧版只看因子自身模块。
+    实测 `current_ratio` / `quick_ratio` / `rd_intensity` / `forecast_yoy` / `forecast_kind`
+    自身源码里没有联网入口 —— 它们继承 FundamentalFactorBase / ForecastFactorBase，
+    取数走基类 → 必须顺着 MRO 看基类模块，否则漏判成 offline，
+    高并发跑起来就是把数据源账号打封（10-12 那次 9.3 万次 WinError 的复现路径）。
+    """
+    cls = obj_or_cls if isinstance(obj_or_cls, type) else type(obj_or_cls)
+    mods = []
+    for k in [cls] + list(cls.__mro__):
+        m = sys.modules.get(k.__module__)
+        if m is not None and m not in mods:
+            mods.append(m)
+    imps, toks = [], []
+    for m in mods:
+        try:
+            s = inspect.getsource(m)
+        except Exception:
+            continue
+        imps.append(_import_block(s))
+        toks.append(_code_tokens(s))
+    return "\n".join(imps), " ".join(toks)
+
+
 def classify(names: list[str]) -> tuple[list[str], list[str], dict[str, str]]:
     offline, online, why = [], [], {}
     for n in names:
         f = _registry_get(n)
-        mod = sys.modules.get(type(f).__module__)
-        try:
-            src = inspect.getsource(mod) if mod is not None else ""
-        except Exception:
-            src = ""
-        imp = _import_block(src)
+        imp, toks = _sources(f)
         hits = [k for k in ONLINE_KEYS if k in imp]
-        # import 没命中，再看代码主体里有没有真实调用（如 PitFinancialsService(）
+        # import 没命中，再看**代码词元**（不含注释/docstring）里有没有真实调用
         if not hits:
-            hits = [k for k in ONLINE_KEYS if k in src]
+            hits = [k for k in ONLINE_KEYS if k in toks]
             if hits:
                 hits = [h + "@body" for h in hits]
         # 豁免：只用本地 parquet 面板的（龙虎榜/两融），即便注释里提到数据源名
-        if hits and not any(lk in src for lk in LOCAL_CACHE_KEYS):
+        # （同样只看代码词元：豁免会把人推向 offline，属"漏判"方向，宜窄不宜宽）
+        if hits and not any(lk in toks for lk in LOCAL_CACHE_KEYS):
             online.append(n)
             why[n] = ",".join(hits)
         else:

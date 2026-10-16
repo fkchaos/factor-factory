@@ -9,6 +9,35 @@
 
 ## [Unreleased]
 
+### ⚠️ 口径修复 + 池子矩阵全量重算（2026-10-16 · 影响全部 96 个因子的矩阵列，卡片已同步）
+
+**背景（两处静默不一致，均为流程缺口而非取数错误）**：
+
+1. **字段集不一致 → 矩阵与卡片不同口径**（2026-10-13 定位）：`scripts/build_deliverable.py::FIELDS`
+   含 `turnover`，而 `validate/validator.py::DEFAULT_FIELDS` **漏了它**。缺 turnover 时
+   `data/pit.py::pit_float_mcap()` 算不出 PIT 流通市值 → 中性化静默降级为「只做行业、跳过市值」，
+   与交付卡片（行业+市值都做）不是同一口径。实测偏差可达 1.7 倍（ivol 卡片 0.0185 vs 矩阵 0.0321）。
+2. **矩阵慢路径 vs 出包快路径**（2026-10-15 修复）：矩阵走逐日 `compute(sub,t,ctx)`，
+   出包走事件驱动 `compute_panel(panel)`。慢的真凶是逐日 `get_panel(start=滑动窗口)` 使面板缓存
+   必然 miss，每个交易日重拼 3000+ 只票（大池单因子 ~3 小时）。已把出包的 `compute_panel` 快路径
+   移植进验证器，并在 `reversal_60d@sz50` 做双路径等价性实测：**ΔIC=0 / ΔICIR=0**，快 2.2×。
+
+**处理动作**：
+
+- 清空旧口径单元格 372 个，仅保留有运行日志可追溯的 110 个新口径单元（`scripts/purge_stale_units.py`）；
+  分片并行重算（`run_matrix_parallel.py` + `merge_universe_matrix.py`），7 块全部 exit=0、无网错、无孤立分片。
+- 矩阵现状：**96 因子 × 7 池，445/672 = 66.2%**。6 池各 73/96；ALL 池 7/96（**暂停待补**，用户拍板"先保正确性"）；
+  23 个全空行 = 需联网取数的财报类因子，按低并发批次单独补。
+- **73 张卡片的「池子矩阵」段全部重写**（新增 `scripts/refresh_card_universe_section.py`），
+  并逐格交叉核对「卡片 `metrics_*.json` 的分池 IC」vs「矩阵 IC」：134 个可比单元格中 **122 格逐格一致**，
+  12 格残差 1e-4~3e-3 待裁决（已复算定位归属，结论见下批 CHANGELOG）。
+- 顺带修复：`factors/turnover_excess_group.py` 空值分支返回无 MultiIndex 的 Series（unstack 会崩）；
+  `scripts/classify_factors_io.py` 判据改为 AST 代码词元 + 沿 MRO 合并基类模块，修正 3 个误判为联网
+  （turnover_excess_group / intraday_battle_intensity / beta_qvol_interact，实为纯价量）与
+  4 个漏判为离线（value_bm / delta_roe / growth_convexity / asset_growth，走基类 PIT 财报取数）；
+  `delta_roe` 的 `NotImplementedError` 因快路径移植**顺带消除**（该因子只实现 `compute_panel`）。
+- 对外发货 JSON 同步刷新：`deliverables/strategy_export/stock_factors.json` → **98 条**（含 f0075a–f0100a）。
+
 ### 2026-10-15 晚 推进器（活跃 drain 轮：drain 3 出包，冗余闸门命中 2 twin，净独立新增 1）
 
 - `2026-10-15 | factor | f0100a | 总资产同比增长（asset_growth，PIT total_assets 同比 t vs t-4） | deliverables/factors/f0100a/`（hs300 RankIC −0.0063 / hs800 −0.0068；DSR=1.0；全局矩阵独立无冗余twin；独立有效新增）

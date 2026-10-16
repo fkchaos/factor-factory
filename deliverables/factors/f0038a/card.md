@@ -48,8 +48,9 @@
 - 说明：上述为同一交付物的聚合 / 检验视图，由 `scripts/export_to_strategy_json.py` / `scripts/factor_universe_matrix.py` 生成，与本卡同源，不另立交付编号。
 - 已知陷阱：特定牛熊阶段 / 流动性枯竭。
 
-## 池子矩阵（2026-10-15）
+## 池子矩阵（2026-10-16）
 
-- RankIC: {'sz50': nan, 'hs300': 0.0026, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
-- ICIR: {'sz50': nan, 'hs300': 0.03, 'zz500': nan, 'hs800': nan, 'zz1000': nan, 'hs1800': nan, 'ALL': nan}
+- RankIC: {'sz50': 0.0002, 'hs300': 0.0026, 'zz500': 0.0003, 'hs800': 0.0013, 'zz1000': 0.001, 'hs1800': 0.001, 'ALL': nan}
+- ICIR: {'sz50': 0.0, 'hs300': 0.03, 'zz500': 0.0, 'hs800': 0.02, 'zz1000': 0.01, 'hs1800': 0.01, 'ALL': nan}
 - IC 最高池（**观测值，非推荐**）: hs300
+- 覆盖: 6/7 池已算（未算池为 NaN，非 0）
