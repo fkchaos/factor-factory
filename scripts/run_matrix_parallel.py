@@ -23,10 +23,13 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LOG_DIR = ROOT / "deliverables" / "universe_matrix"
+# 被覆盖前的历史批次日志归档处（按 tag 原名 + 旧文件最后写入时间戳命名）
+ARCHIVE_DIR = LOG_DIR / "logs_archive"
 
 # 块数按"各池预估 CPU 小时"分配（池子越大越慢 → 切越多块）。
 # 依据 2026-10-10 实测：sz50≈2.9 分/单元、hs300≈4、zz500≈6、hs800≈9、zz1000≈9、hs1800≈18、ALL≈35。
@@ -89,6 +92,16 @@ def main() -> None:
     procs = []
     for tag, _, argv in jobs:
         log = LOG_DIR / f"_p4_{tag}.log"
+        # 🔴 2026-10-16 修正：日志名与 tag 绑定，**同一 tag 重跑会直接覆盖上一批的日志**。
+        # 事故：补算 3 个因子的第二批用同样的 tag，把口径重算批次（23.6h）的
+        # `_p4_{sz50,hs300,zz500,hs800,zz1000}.log` 全部截断成几百字节。
+        # 这些日志是**唯一能追溯"某单元是哪一版口径算出来的"的证据**
+        # （分片 CSV 整文件重写，本身不含时间戳），purge_stale_units.py 就靠它。
+        # 修法：动手前先把上一批日志归档到 logs_archive/，文件名带其最后写入时间戳。
+        if log.exists():
+            ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
+            stamp = time.strftime("%Y%m%d-%H%M%S", time.localtime(log.stat().st_mtime))
+            log.rename(ARCHIVE_DIR / f"p4_{tag}_{stamp}.log")
         fh = open(log, "w", encoding="utf-8")
         procs.append((tag, subprocess.Popen(argv, cwd=str(ROOT), stdout=fh, stderr=subprocess.STDOUT), fh))
 

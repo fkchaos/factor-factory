@@ -37,16 +37,27 @@ CUT = time.mktime(time.strptime("2026-10-13 22:00:00", "%Y-%m-%d %H:%M:%S"))
 
 
 def collect_new_units() -> set[tuple[str, str]]:
-    """扫描批次日志，返回新口径的 (因子名, 池子) 集合。"""
+    """扫描批次日志（含归档目录），返回新口径的 (因子名, 池子) 集合。
+
+    🔴 2026-10-16：`run_matrix_parallel.py` 现在会在覆盖前把上一批日志归档到
+    `logs_archive/p4_<tag>_<旧最后写入时间>.log`。本函数必须**两个目录都扫**，
+    否则换过 tag 名的批次（如 -c1/-c2 分片）在归档后会被漏读，
+    导致"新口径集合"缩水 → 把**已经算对的单元误清空**。
+    """
     new: set[tuple[str, str]] = set()
-    for f in sorted(OUT.glob("_p4_*.log")):
+    cands = list(OUT.glob("_p4_*.log")) + list((OUT / "logs_archive").glob("p4_*.log"))
+    for f in sorted(cands):
         if f.name == "_p4_run_2026-10-10.log":
             continue  # 最老的一轮，肯定旧口径
         if f.stat().st_mtime < CUT:
             continue  # 修复之前启动/最后写入的批次
         text = f.read_text(encoding="utf-8", errors="ignore")
-        # 文件名 _p4_<tag>.log → pool = tag 去掉 -cN 分片后缀
-        pool = f.stem[4:].split("-c")[0]
+        # 文件名：在跑 _p4_<tag>.log ／ 归档 p4_<tag>_<stamp>.log；tag 去掉 -cN 分片后缀
+        if f.name.startswith("_p4_"):
+            tag = f.stem[4:]
+        else:
+            tag = re.sub(r"_\d{8}-\d{6}$", "", f.stem[3:])
+        pool = tag.split("-c")[0]
         for m in re.finditer(r"^\s*([\w_]+):\s*RankIC=", text, re.M):
             new.add((m.group(1), pool))
     return new

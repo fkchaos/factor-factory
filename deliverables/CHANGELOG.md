@@ -26,16 +26,31 @@
 
 - 清空旧口径单元格 372 个，仅保留有运行日志可追溯的 110 个新口径单元（`scripts/purge_stale_units.py`）；
   分片并行重算（`run_matrix_parallel.py` + `merge_universe_matrix.py`），7 块全部 exit=0、无网错、无孤立分片。
-- 矩阵现状：**96 因子 × 7 池，445/672 = 66.2%**。6 池各 73/96；ALL 池 7/96（**暂停待补**，用户拍板"先保正确性"）；
-  23 个全空行 = 需联网取数的财报类因子，按低并发批次单独补。
-- **73 张卡片的「池子矩阵」段全部重写**（新增 `scripts/refresh_card_universe_section.py`），
-  并逐格交叉核对「卡片 `metrics_*.json` 的分池 IC」vs「矩阵 IC」：134 个可比单元格中 **122 格逐格一致**，
-  12 格残差 1e-4~3e-3 待裁决（已复算定位归属，结论见下批 CHANGELOG）。
+- 矩阵现状：**96 因子 × 7 池，463/672 = 68.9%**。6 池各 76/96；ALL 池 7/96（**暂停待补**，用户拍板"先保正确性"）；
+  20 个全空行 = 需联网取数的财报类因子，按低并发批次单独补（另 3 个误判为联网的纯价量因子已补完，见下）。
+- **73+3 张卡片的「池子矩阵」段全部重写**（新增 `scripts/refresh_card_universe_section.py`），
+  并逐格交叉核对「卡片 `metrics_*.json` 的分池 IC」vs「矩阵 IC」：134 个可比单元格中 **122 格一致**（<1e-4），
+  **12 格残差 1e-4~3e-3**。已用**当前代码复算裁判**定位成因（见下），结论：**非口径错误，是数据版本/批次差异**。
+- **12 格残差裁决（复算对照，决定性证据）**：
+  - `delta_roe@hs300`：复算 0.0102824 vs 矩阵 0.0102824 → **Δ=7.6e-17**（机器精度）→ 矩阵格忠实反映当前代码与数据；
+    残差来自卡片侧（该卡片 09-09 生成，已陈旧 5 周）。
+  - `value_bm@hs800`：卡片 0.011776 / 矩阵 0.009018 / 复算 0.009960 → 三者互不相等 → 该格是**更早批次**的遗留值
+    （增量续算继承），说明**矩阵本身是"混合版本"产物**：同一因子的不同池可能来自不同批次的数据版本。
+  - 成因量化：前复权（qfq）价格随分红/拆分**全历史重算** + 指数成分快照更新，使 IC 存在 1e-4~1e-3 量级的版本漂移。
+    已在卡片「池子矩阵」段加**口径说明**固定声明该现象（避免下游误读为口径不一致）。
+  - ⚠️ 待办建议：若跨池对比需要精度，同一因子应**整行同批算完**（当前 672 格一次性重算约需 30-40h，未执行）。
+- 补算：3 个被误判为联网的纯价量因子（`turnover_excess_group` / `intraday_battle_intensity` /
+  `beta_qvol_interact`）六池 18 格已补齐，6 块 exit=0，15m42s；`turnover_excess_group` 六池 RankIC
+  −0.0086/−0.0103/−0.0217/−0.0154/−0.0336/−0.0228（大池强，zz1000 最强）。
 - 顺带修复：`factors/turnover_excess_group.py` 空值分支返回无 MultiIndex 的 Series（unstack 会崩）；
   `scripts/classify_factors_io.py` 判据改为 AST 代码词元 + 沿 MRO 合并基类模块，修正 3 个误判为联网
   （turnover_excess_group / intraday_battle_intensity / beta_qvol_interact，实为纯价量）与
   4 个漏判为离线（value_bm / delta_roe / growth_convexity / asset_growth，走基类 PIT 财报取数）；
   `delta_roe` 的 `NotImplementedError` 因快路径移植**顺带消除**（该因子只实现 `compute_panel`）。
+- 流程修复（新发现的静默风险）：`run_matrix_parallel.py` 的日志名 `_p4_{tag}.log` 与 tag 绑定，
+  **同一 tag 重跑会覆盖上一批日志**（而日志是唯一能追溯"某格是哪版口径算的"的证据，且被 .gitignore → 不可恢复）。
+  本次补算批次已实际冲掉重算批次的 5 个池日志。已改为**覆盖前归档到 `logs_archive/`**，
+  并让 `purge_stale_units.py` 同时扫归档目录（漏扫会导致新口径集合缩水、误清已算对的格）。
 - 对外发货 JSON 同步刷新：`deliverables/strategy_export/stock_factors.json` → **98 条**（含 f0075a–f0100a）。
 
 ### 2026-10-15 晚 推进器（活跃 drain 轮：drain 3 出包，冗余闸门命中 2 twin，净独立新增 1）

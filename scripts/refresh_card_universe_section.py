@@ -112,6 +112,9 @@ def main() -> int:
             f"- ICIR: {icir.loc[name].round(2).to_dict()}\n"
             f"- IC 最高池（**观测值，非推荐**）: {home or 'N/A'}\n"
             f"- 覆盖: {len(valid)}/{len(ic.columns)} 池已算（未算池为 NaN，非 0）\n"
+            f"- 口径说明: 本段为**最新检验批**口径（与上方「分池 IC」表同源同流程，中性化含 PIT 市值）。\n"
+            f"  与上方表格若存在 ≤3e-3 的差异，来自**数据版本与计算批次**（前复权价随分红/拆分全历史重算、\n"
+            f"  指数成分快照更新），不是口径不一致；矩阵是增量累积的，同一因子各池可能来自不同批次。\n"
         )
         text = card.read_text(encoding="utf-8")
         marker = "\n## 池子矩阵（"
